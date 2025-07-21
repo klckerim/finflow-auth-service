@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using FinFlow.Application.Interfaces;
 using FinFlow.Persistence.Repositories;
 using MediatR;
-
+using FinFlow.Application.Commands.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +16,15 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // MediatR
 builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Controllers
+builder.Services.AddControllers();
+
 
 var app = builder.Build();
 
@@ -30,6 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapControllers();
 app.UseHttpsRedirection();
 
 var summaries = new[]

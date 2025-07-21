@@ -1,4 +1,7 @@
-// RegisterUserCommand.cs
 using MediatR;
+using System;
 
-public record RegisterUserCommand(string Email, string Password) : IRequest<Guid>;
+namespace FinFlow.Application.Commands.Users
+{
+    public record RegisterUserCommand(string Email, string Password) : IRequest<Guid>;
+}
