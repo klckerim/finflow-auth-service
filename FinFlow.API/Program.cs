@@ -2,23 +2,32 @@ using FinFlow.Persistence;
 using Microsoft.EntityFrameworkCore;
 using FinFlow.Application.Interfaces;
 using FinFlow.Persistence.Repositories;
+using MediatR;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddDbContext<FinFlowDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// DB Context
+builder.Services.AddDbContext<FinFlowDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+// MediatR
+builder.Services.AddMediatR(typeof(Program).Assembly);
 
+// Swagger / OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Swagger middleware
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -43,6 +52,8 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast");
 
 app.Run();
+app.UseAuthorization();
+app.MapControllers(); 
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
