@@ -1,0 +1,6 @@
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/obj/Debug/net9.0/FinFlow.Persistence.csproj.AssemblyReference.cache
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/obj/Debug/net9.0/FinFlow.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/obj/Debug/net9.0/FinFlow.Persistence.AssemblyInfoInputs.cache
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/obj/Debug/net9.0/FinFlow.Persistence.AssemblyInfo.cs
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/obj/Debug/net9.0/FinFlow.Persistence.csproj.CoreCompileInputs.cache
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/obj/Debug/net9.0/FinFlow.Persistence.sourcelink.json
