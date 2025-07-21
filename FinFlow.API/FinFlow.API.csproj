@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FinFlow.Application\FinFlow.Application.csproj" />
+    <ProjectReference Include="..\FinFlow.Persistence\FinFlow.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

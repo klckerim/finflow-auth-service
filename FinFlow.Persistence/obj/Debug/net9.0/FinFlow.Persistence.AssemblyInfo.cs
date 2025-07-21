@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FinFlow.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad88be9bd6f68deca4a03061d190e00eb62e9523")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e34591d120ef5e5662cddd8cfe22783c0e96acbc")]
 [assembly: System.Reflection.AssemblyProductAttribute("FinFlow.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FinFlow.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

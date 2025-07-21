@@ -1,4 +1,6 @@
-using FinFlow.Application.Interfaces.Repositories;
+using FinFlow.Application.Interfaces;
+using FinFlow.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinFlow.Persistence.Repositories
 {

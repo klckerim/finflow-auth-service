@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FinFlow.Domain\FinFlow.Domain.csproj" />
-    <ProjectReference Include="..\FinFlow.Infrastructure\FinFlow.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
