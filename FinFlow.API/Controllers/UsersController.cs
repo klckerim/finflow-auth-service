@@ -16,18 +16,25 @@ namespace FinFlow.API.Controllers
             _mediator = mediator;
         }
 
+
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUserCommand command)
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                var userId = await _mediator.Send(command);
-                return Ok(new { UserId = userId });
+                var userId = await _mediator.Send(command, cancellationToken);
+                return Ok(new { userId });
             }
-            catch (System.Exception ex)
+            catch (OperationCanceledException e)
             {
-                return BadRequest(new { error = ex.Message });
+                return BadRequest(e.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
+
+
     }
 }

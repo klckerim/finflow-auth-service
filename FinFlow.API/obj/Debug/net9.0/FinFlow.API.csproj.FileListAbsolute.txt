@@ -11,6 +11,7 @@
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/MediatR.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/MediatR.Contracts.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/MediatR.Extensions.Microsoft.DependencyInjection.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.AspNetCore.OpenApi.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Bcl.AsyncInterfaces.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Build.Locator.dll
@@ -26,6 +27,7 @@
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Relational.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.Caching.Abstractions.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.Caching.Memory.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.Configuration.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.Configuration.Abstractions.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
@@ -34,6 +36,12 @@
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.Logging.Abstractions.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.Options.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.Extensions.Primitives.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Microsoft.OpenApi.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Mono.TextTemplating.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/Npgsql.dll
@@ -47,6 +55,7 @@
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/System.Composition.Hosting.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/System.Composition.Runtime.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/System.Composition.TypedParts.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/System.Text.Json.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.resources.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.resources.dll

@@ -31,7 +31,7 @@ namespace FinFlow.Application.Commands.Users
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _userRepository.AddAsync(user);
+            await _userRepository.AddAsync(user, cancellationToken);
             return user.Id;
         }
 

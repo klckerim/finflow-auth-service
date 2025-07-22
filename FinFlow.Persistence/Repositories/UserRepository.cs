@@ -18,10 +18,15 @@ namespace FinFlow.Persistence.Repositories
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
 
-        public async Task AddAsync(User user)
+        public async Task AddAsync(User user, CancellationToken cancellationToken)
         {
-            await _context.Users.AddAsync(user);
+            await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }
