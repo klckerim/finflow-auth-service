@@ -16,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Configuration & Services
 // ------------------------------
 
+// Url binding
+builder.WebHost.UseUrls("http://+:80");
+
 // DbContext
 builder.Services.AddDbContext<FinFlowDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -57,91 +60,49 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-// Swagger
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FinFlow API", Version = "v1" });
-
-    // JWT için destek
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header. Örnek: Bearer {token}"
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
+              new OpenApiSecurityScheme
+              {
+                  Reference = new OpenApiReference
+                  {
+                      Type=ReferenceType.SecurityScheme,
+                      Id="Bearer"
+                  }
+              },
+              new string[]{}
         }
     });
 });
 
-
-
-// ------------------------------
-// Build the App
-// ------------------------------
 var app = builder.Build();
 
-// ------------------------------
-// Middleware Pipeline
-// ------------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FinFlow API V1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization(); // JWT Authentication middleware eklenecekse Authentication da eklenmeli
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
-
-// ------------------------------
-// 🧪 Test Endpoint (Opsiyonel)
-// ------------------------------
-/*
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
-*/
-
-// ------------------------------
 app.Run();

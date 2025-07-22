@@ -1,7 +1,9 @@
+version: '3.9'
 
 services:
   postgres:
     image: postgres:15
+    container_name: finflow-postgres
     environment:
       POSTGRES_USER: finflowuser
       POSTGRES_PASSWORD: finflowpass
@@ -10,7 +12,29 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - finflow-net
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: finflow-api
+    ports:
+      - "5283:80"
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=finflowdb;Username=finflowuser;Password=finflowpass
+      Jwt__Key: 8e04aJboR63wLHyntYkA+NqetwFglo13cUkdoRJbkmc=
+      Jwt__Issuer: FinFlowAPI
+      Jwt__Audience: FinFlowUsers
+    networks:
+      - finflow-net
 
 volumes:
   pgdata:
 
+networks:
+  finflow-net:
