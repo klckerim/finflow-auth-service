@@ -2,7 +2,7 @@ using FinFlow.Application.Interfaces;
 using FinFlow.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinFlow.Persistence.Repositories
+namespace FinFlow.Infrastructure.Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {

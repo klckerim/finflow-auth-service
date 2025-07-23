@@ -1256,19 +1256,20 @@
           "bin/placeholder/FinFlow.Domain.dll": {}
         }
       },
-      "FinFlow.Persistence/1.0.0": {
+      "FinFlow.Infrastructure/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "FinFlow.Application": "1.0.0",
           "FinFlow.Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "9.0.7",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
         },
         "compile": {
-          "bin/placeholder/FinFlow.Persistence.dll": {}
+          "bin/placeholder/FinFlow.Infrastructure.dll": {}
         },
         "runtime": {
-          "bin/placeholder/FinFlow.Persistence.dll": {}
+          "bin/placeholder/FinFlow.Infrastructure.dll": {}
         }
       }
     }
@@ -3767,16 +3768,15 @@
       "path": "../FinFlow.Domain/FinFlow.Domain.csproj",
       "msbuildProject": "../FinFlow.Domain/FinFlow.Domain.csproj"
     },
-    "FinFlow.Persistence/1.0.0": {
+    "FinFlow.Infrastructure/1.0.0": {
       "type": "project",
-      "path": "../FinFlow.Persistence/FinFlow.Persistence.csproj",
-      "msbuildProject": "../FinFlow.Persistence/FinFlow.Persistence.csproj"
+      "path": "../FinFlow.Infrastructure/FinFlow.Infrastructure.csproj",
+      "msbuildProject": "../FinFlow.Infrastructure/FinFlow.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "FinFlow.Application >= 1.0.0",
-      "FinFlow.Persistence >= 1.0.0",
+      "FinFlow.Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.7",
       "Microsoft.AspNetCore.OpenApi >= 9.0.6",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.7",
@@ -3809,11 +3809,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Application/FinFlow.Application.csproj": {
-              "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Application/FinFlow.Application.csproj"
-            },
-            "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/FinFlow.Persistence.csproj": {
-              "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/FinFlow.Persistence.csproj"
+            "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/FinFlow.Infrastructure.csproj": {
+              "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/FinFlow.Infrastructure.csproj"
             }
           }
         }

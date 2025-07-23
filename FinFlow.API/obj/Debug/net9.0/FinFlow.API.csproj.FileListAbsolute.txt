@@ -124,9 +124,9 @@
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Application.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Domain.dll
-/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Persistence.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Infrastructure.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Infrastructure.pdb
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Application.pdb
-/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Persistence.pdb
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/bin/Debug/net9.0/FinFlow.Domain.pdb
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/obj/Debug/net9.0/FinFlow.API.csproj.AssemblyReference.cache
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/obj/Debug/net9.0/rpswa.dswa.cache.json

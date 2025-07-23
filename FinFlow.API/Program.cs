@@ -1,13 +1,13 @@
 using FinFlow.Application.Commands.Users;
 using FinFlow.Application.Interfaces;
-using FinFlow.Persistence;
-using FinFlow.Persistence.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using FinFlow.Infrastructure.Persistence;
+using FinFlow.Infrastructure.Persistence.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +25,7 @@ builder.Services.AddDbContext<FinFlowDbContext>(options =>
 
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 
 // MediatR
 builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
@@ -92,15 +93,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "FinFlow API V1");
-        c.RoutePrefix = string.Empty;
+        c.RoutePrefix = "swagger";
     });
-}
+
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -26,11 +26,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Application/FinFlow.Application.csproj": {
-                "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Application/FinFlow.Application.csproj"
-              },
-              "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/FinFlow.Persistence.csproj": {
-                "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/FinFlow.Persistence.csproj"
+              "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/FinFlow.Infrastructure.csproj": {
+                "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/FinFlow.Infrastructure.csproj"
               }
             }
           }
@@ -245,14 +242,14 @@
         }
       }
     },
-    "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/FinFlow.Persistence.csproj": {
+    "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/FinFlow.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/FinFlow.Persistence.csproj",
-        "projectName": "FinFlow.Persistence",
-        "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/FinFlow.Persistence.csproj",
+        "projectUniqueName": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/FinFlow.Infrastructure.csproj",
+        "projectName": "FinFlow.Infrastructure",
+        "projectPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/FinFlow.Infrastructure.csproj",
         "packagesPath": "/Users/abdulkerimkilic/.nuget/packages/",
-        "outputPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Persistence/obj/",
+        "outputPath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Infrastructure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/abdulkerimkilic/.nuget/NuGet/NuGet.Config"
@@ -292,6 +289,16 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[9.0.4, )"

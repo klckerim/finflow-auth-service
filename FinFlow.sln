@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinFlow.Domain", "FinFlow.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinFlow.Infrastructure", "FinFlow.Infrastructure\FinFlow.Infrastructure.csproj", "{4AB77400-7532-48E0-9CDF-81DC15357839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinFlow.Persistence", "FinFlow.Persistence\FinFlow.Persistence.csproj", "{74E85E1E-867F-44C5-B279-36EF45E3D3F1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinFlow.Tests", "FinFlow.Tests\FinFlow.Tests.csproj", "{532E57FA-7663-464A-8110-913802E56C79}"
 EndProject
 Global

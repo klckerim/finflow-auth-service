@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./FinFlow.API ./FinFlow.API
 COPY ./FinFlow.Application ./FinFlow.Application
 COPY ./FinFlow.Domain ./FinFlow.Domain
-COPY ./FinFlow.Persistence ./FinFlow.Persistence
+COPY ./FinFlow.Infrastructure ./FinFlow.Infrastructure
 
 # Restore ve publish işlemleri
 RUN dotnet restore ./FinFlow.API/FinFlow.API.csproj

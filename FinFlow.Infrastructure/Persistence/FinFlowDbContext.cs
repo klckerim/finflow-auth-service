@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using FinFlow.Domain.Entities;
 
-namespace FinFlow.Persistence
+namespace FinFlow.Infrastructure.Persistence
 {
     public class FinFlowDbContext : DbContext
     {

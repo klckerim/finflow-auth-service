@@ -8,8 +8,7 @@
     ".NETCoreApp,Version=v9.0": {
       "FinFlow.API/1.0.0": {
         "dependencies": {
-          "FinFlow.Application": "1.0.0",
-          "FinFlow.Persistence": "1.0.0",
+          "FinFlow.Infrastructure": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.7",
           "Microsoft.AspNetCore.OpenApi": "9.0.6",
           "Microsoft.EntityFrameworkCore.Design": "9.0.7",
@@ -834,14 +833,15 @@
           }
         }
       },
-      "FinFlow.Persistence/1.0.0": {
+      "FinFlow.Infrastructure/1.0.0": {
         "dependencies": {
           "FinFlow.Application": "1.0.0",
           "FinFlow.Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "9.0.7",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
         },
         "runtime": {
-          "FinFlow.Persistence.dll": {
+          "FinFlow.Infrastructure.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -1292,7 +1292,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "FinFlow.Persistence/1.0.0": {
+    "FinFlow.Infrastructure/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
