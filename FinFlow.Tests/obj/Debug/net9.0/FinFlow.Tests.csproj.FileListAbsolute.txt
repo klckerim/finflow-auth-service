@@ -8,6 +8,7 @@
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FinFlow.Tests.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FinFlow.Tests.pdb
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FluentValidation.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FluentValidation.DependencyInjectionExtensions.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/MediatR.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/MediatR.Contracts.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/MediatR.Extensions.Microsoft.DependencyInjection.dll

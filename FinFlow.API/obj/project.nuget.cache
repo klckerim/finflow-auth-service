@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "Xh4n5kKfJRg=",
+  "dgSpecHash": "RcP7AXaWrrg=",
   "success": true,
   "projectFilePath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.API/FinFlow.API.csproj",
   "expectedPackageFiles": [
     "/Users/abdulkerimkilic/.nuget/packages/fluentvalidation/12.0.0/fluentvalidation.12.0.0.nupkg.sha512",
+    "/Users/abdulkerimkilic/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.0.0/fluentvalidation.dependencyinjectionextensions.12.0.0.nupkg.sha512",
     "/Users/abdulkerimkilic/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/abdulkerimkilic/.nuget/packages/mediatr/11.1.0/mediatr.11.1.0.nupkg.sha512",
     "/Users/abdulkerimkilic/.nuget/packages/mediatr.contracts/1.0.1/mediatr.contracts.1.0.1.nupkg.sha512",

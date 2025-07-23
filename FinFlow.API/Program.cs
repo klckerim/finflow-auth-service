@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using FinFlow.Infrastructure.Persistence;
 using FinFlow.Infrastructure.Persistence.Repositories;
+using FluentValidation;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,14 @@ builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
 
 // Controllers
 builder.Services.AddControllers();
+
+// FluentValidation
+builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembly);
+
+// Pipeline Behaviors
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(jwtKey))

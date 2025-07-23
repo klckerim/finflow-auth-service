@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "HwA1ph9SIm0=",
+  "dgSpecHash": "3AwG9EQRO28=",
   "success": true,
   "projectFilePath": "/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/FinFlow.Tests.csproj",
   "expectedPackageFiles": [
     "/Users/abdulkerimkilic/.nuget/packages/coverlet.collector/6.0.2/coverlet.collector.6.0.2.nupkg.sha512",
     "/Users/abdulkerimkilic/.nuget/packages/fluentvalidation/12.0.0/fluentvalidation.12.0.0.nupkg.sha512",
+    "/Users/abdulkerimkilic/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.0.0/fluentvalidation.dependencyinjectionextensions.12.0.0.nupkg.sha512",
     "/Users/abdulkerimkilic/.nuget/packages/mediatr/11.1.0/mediatr.11.1.0.nupkg.sha512",
     "/Users/abdulkerimkilic/.nuget/packages/mediatr.contracts/1.0.1/mediatr.contracts.1.0.1.nupkg.sha512",
     "/Users/abdulkerimkilic/.nuget/packages/mediatr.extensions.microsoft.dependencyinjection/11.1.0/mediatr.extensions.microsoft.dependencyinjection.11.1.0.nupkg.sha512",
