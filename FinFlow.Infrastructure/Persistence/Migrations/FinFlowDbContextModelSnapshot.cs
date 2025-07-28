@@ -69,6 +69,12 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("PasswordResetTokenExpiry")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
@@ -105,6 +111,35 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
                     b.ToTable("Wallets");
                 });
 
+            modelBuilder.Entity("ResetPasswordToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ResetPasswordTokens");
+                });
+
             modelBuilder.Entity("FinFlow.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("FinFlow.Domain.Entities.Wallet", "Wallet")
@@ -120,6 +155,17 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("FinFlow.Domain.Entities.User", "User")
                         .WithMany("Wallets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ResetPasswordToken", b =>
+                {
+                    b.HasOne("FinFlow.Domain.Entities.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

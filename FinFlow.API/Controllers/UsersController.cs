@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using FinFlow.Application.Commands.Users;
-using System.Threading.Tasks;
 
 namespace FinFlow.API.Controllers
 {
@@ -35,6 +34,18 @@ namespace FinFlow.API.Controllers
             }
         }
 
+        [HttpPost("forgot-password")]
+        public IActionResult ForgotPassword([FromBody] ResetPasswordCommand request)
+        {
+            // Basit validasyon
+            if (string.IsNullOrEmpty(request.Email))
+                return BadRequest(new { message = "Email is required" });
 
+            // Sahte token üretelim
+            var token = Guid.NewGuid().ToString();
+
+            // Gerçekte burada email gönderilir ama şimdilik simüle ediyoruz
+            return Ok(new { token });
+        }
     }
 }

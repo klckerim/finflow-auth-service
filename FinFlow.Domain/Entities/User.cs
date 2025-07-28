@@ -18,5 +18,8 @@ public class User
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public string? PasswordResetToken { get; set; }
+    public DateTime? PasswordResetTokenExpiry { get; set; }
+
     public ICollection<Wallet> Wallets { get; set; } = new List<Wallet>();
 }

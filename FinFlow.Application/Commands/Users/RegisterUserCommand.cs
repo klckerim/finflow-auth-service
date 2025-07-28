@@ -1,5 +1,4 @@
 using MediatR;
-using System;
 
 namespace FinFlow.Application.Commands.Users
 {

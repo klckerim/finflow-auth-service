@@ -1,4 +1,3 @@
-using FinFlow.Application.Commands.Users;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using FinFlow.Application.Interfaces;
 
 
-namespace FinFlow.Application.Handlers.Users
+namespace FinFlow.Application.Commands.Users
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, string>
     {

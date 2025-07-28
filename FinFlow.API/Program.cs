@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ------------------------------
 
 // Url binding
-builder.WebHost.UseUrls("http://+:80");
+// builder.WebHost.UseUrls("http://+:80");
 
 // DbContext
 builder.Services.AddDbContext<FinFlowDbContext>(options =>
@@ -70,6 +70,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins(builder.Configuration["FRONTEND_URL"] ?? "http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -101,16 +113,16 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+// ------------------------------
 
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FinFlow API V1");
+    c.RoutePrefix = "swagger";
+});
 
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FinFlow API V1");
-        c.RoutePrefix = "swagger";
-    });
-
-
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

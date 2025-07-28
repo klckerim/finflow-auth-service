@@ -1,6 +1,9 @@
 using FinFlow.Application.Interfaces;
 using FinFlow.Domain.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace FinFlow.Infrastructure.Persistence.Repositories
 {
@@ -28,5 +31,19 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<User?> GetByPasswordResetTokenAsync(string token)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.PasswordResetTokenExpiry > DateTime.UtcNow);
+        }
+
+        public async Task UpdateAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
+        
+
     }
 }

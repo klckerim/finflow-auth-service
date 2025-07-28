@@ -1,0 +1,54 @@
+"use client";
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("")
+  const router = useRouter()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      // gelen token ile frontend'te reset-password sayfasına yönlendir
+      router.push(`/reset-password?token=${data.token}`)
+    } else {
+      alert(data.message || "Error occurred.")
+    }
+  }
+
+  return (
+    <div className="w-full max-w-md mx-auto mt-20 p-6 rounded-xl shadow-md border bg-white dark:bg-zinc-900">
+      <h2 className="text-2xl font-bold mb-6 text-center">Forgot Password</h2>
+
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <Button type="submit" className="w-full">
+          Send Reset Link
+        </Button>
+      </form>
+    </div>
+  )
+}
