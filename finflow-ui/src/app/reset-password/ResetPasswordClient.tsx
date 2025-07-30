@@ -50,37 +50,40 @@ export default function ResetPasswordClient() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-md p-6">
-        <h2 className="text-2xl font-bold mb-4">Yeni Şifre Belirle</h2>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="password">Yeni Şifre</Label>
-              <Input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="confirmPassword">Yeni Şifre (Tekrar)</Label>
-              <Input
-                type="password"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Gönderiliyor..." : "Şifreyi Sıfırla"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+    <div className="flex flex-col items-center min-h-screen pt-8 sm:pt-12">
+      <div className="max-w-md w-full p-4 border rounded-xl shadow-md">
+        <Card className="w-full max-w-md p-6">
+          <h2 className="text-2xl font-bold mb-4">Yeni Şifre Belirle</h2>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="password">Yeni Şifre</Label>
+                <Input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="confirmPassword">Yeni Şifre (Tekrar)</Label>
+                <Input
+                  type="password"
+                  id="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Gönderiliyor..." : "Şifreyi Sıfırla"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
+
   )
 }

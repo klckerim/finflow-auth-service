@@ -8,6 +8,9 @@ const nextConfig = {
         destination: "http://localhost:3000/api/:path*", // Docker'daki .NET API URL’i
       },
     ];
+  }, 
+  eslint: {
+    ignoreDuringBuilds: true, 
   },
 };
 

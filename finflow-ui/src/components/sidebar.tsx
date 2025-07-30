@@ -1,25 +1,42 @@
+"use client";
 
-import Link from "next/link";
-import { Home, Wallet, Send, Settings } from "lucide-react";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { LogOut, Home, Settings, Folder } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { signOut } from "next-auth/react"
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/dashboard/wallets", label: "Cüzdanlar", icon: Wallet },
-  { href: "/dashboard/transfer", label: "Transfer", icon: Send },
-  { href: "/dashboard/settings", label: "Ayarlar", icon: Settings },
-];
+export function Sidebar({ user }: { user: { name?: string } }) {
+  const pathname = usePathname()
 
-export function Sidebar() {
+  const navItems = [
+    { href: "/dashboard", icon: <Home size={18} />, label: "Dashboard" },
+    { href: "/modules", icon: <Folder size={18} />, label: "Modüller" },
+    { href: "/settings", icon: <Settings size={18} />, label: "Ayarlar" },
+  ]
+
   return (
-    <aside className="h-full w-60 bg-white border-r shadow-sm hidden md:block">
-      <nav className="flex flex-col gap-2 p-4">
-        {navItems.map(({ href, label, icon: Icon }) => (
-          <Link key={href} href={href} className="flex items-center gap-3 p-2 rounded hover:bg-gray-100 text-sm">
-            <Icon size={18} />
-            {label}
-          </Link>
-        ))}
-      </nav>
-    </aside>
-  );
+    <div className="w-64 h-screen p-4 bg-muted border-r flex flex-col justify-between fixed">
+      <div>
+        <div className="mb-6">
+          <p className="text-sm font-medium text-muted-foreground">Merhaba</p>
+          <p className="font-semibold">{user?.name || "Kullanıcı"}</p>
+        </div>
+        <nav className="space-y-2">
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 ${pathname === item.href ? "bg-primary/10 text-primary" : "text-muted-foreground"}`}>
+                {item.icon}
+                <span>{item.label}</span>
+              </div>
+            </Link>
+          ))}
+        </nav>
+      </div>
+      <Button variant="ghost" onClick={() => signOut()} className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive">
+        <LogOut size={18} />
+        Çıkış Yap
+      </Button>
+    </div>
+  )
 }

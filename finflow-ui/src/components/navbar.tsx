@@ -1,14 +1,16 @@
-// components/Navbar.tsx
+
 "use client";
 
+import { logout } from "@/lib/auth"
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "./theme-toggle";
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Geçici auth durumu
+  const [isLoggedIn] = useState(false); // Geçici auth durumu
 
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 shadow-md">
@@ -19,17 +21,17 @@ export default function Navbar() {
 
       {/* Desktop Links */}
       <div className="hidden md:flex items-center space-x-6">
-        <Link href="/">Home</Link>
-        <Link href="/wallets">Wallets</Link>
-        <Link href="/transactions">Transactions</Link>
-        <Link href="/about">About</Link>
+        <ThemeToggle />
 
         {isLoggedIn ? (
           <>
+            <Link href="/">Home</Link>
+            <Link href="/wallets">Wallets</Link>
+            <Link href="/transactions">Transactions</Link>
+            <Link href="/about">About</Link>
             <Link href="/profile">Profile</Link>
-            <Button variant="outline" onClick={() => setIsLoggedIn(false)}>
-              Logout
-            </Button>
+           
+            <Button variant="outline" onClick={logout}>Logout</Button>
           </>
         ) : (
           <Link href="/login">
@@ -48,16 +50,16 @@ export default function Navbar() {
           </SheetTrigger>
           <SheetContent side="left">
             <div className="flex flex-col gap-4 mt-6">
-              <Link href="/">Home</Link>
-              <Link href="/wallets">Wallets</Link>
-              <Link href="/transactions">Transactions</Link>
-              <Link href="/about">About</Link>
+              <ThemeToggle />
               {isLoggedIn ? (
                 <>
+                  <Link href="/">Home</Link>
+                  <Link href="/wallets">Wallets</Link>
+                  <Link href="/transactions">Transactions</Link>
+                  <Link href="/about">About</Link>
                   <Link href="/profile">Profile</Link>
-                  <Button variant="outline" onClick={() => setIsLoggedIn(false)}>
-                    Logout
-                  </Button>
+
+                  <Button onClick={logout}>Logout</Button>
                 </>
               ) : (
                 <Link href="/login">

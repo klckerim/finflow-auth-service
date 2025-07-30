@@ -1,15 +1,17 @@
+"use client";
 
 import { Sidebar } from "../../components/sidebar";
-import Navbar from "@/components/navbar";
+import { useUser } from "@/hooks/useUser";
 import type { ReactNode } from "react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const { user } = useUser()
+
   return (
     <div className="h-screen flex flex-col">
-      <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto p-4 bg-gray-50">
+        <Sidebar user={user} />
+        <main className="flex-1 p-6 bg-white dark:bg-black">
           {children}
         </main>
       </div>

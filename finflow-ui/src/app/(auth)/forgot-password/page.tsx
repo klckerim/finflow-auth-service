@@ -29,26 +29,29 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto mt-20 p-6 rounded-xl shadow-md border bg-white dark:bg-zinc-900">
-      <h2 className="text-2xl font-bold mb-6 text-center">Forgot Password</h2>
+    <div className="flex flex-col items-center min-h-screen pt-8 sm:pt-12">
+      <div className="max-w-md w-full p-4 border rounded-xl shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Forgot Password</h2>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-        <Button type="submit" className="w-full">
-          Send Reset Link
-        </Button>
-      </form>
+          <Button type="submit" className="w-full">
+            Send Reset Link
+          </Button>
+        </form>
+      </div>
     </div>
+
   )
 }
