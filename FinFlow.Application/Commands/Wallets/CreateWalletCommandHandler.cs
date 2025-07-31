@@ -19,7 +19,6 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, G
             Balance = 0,
             CreatedAt = DateTime.UtcNow,
             Transactions = new List<Transaction>()
-
         };
 
         await _walletRepository.AddAsync(wallet);

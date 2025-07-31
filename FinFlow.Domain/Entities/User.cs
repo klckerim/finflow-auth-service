@@ -5,6 +5,7 @@ namespace FinFlow.Domain.Entities;
 public class User
 {
     public Guid Id { get; set; } = Guid.NewGuid();
+    public string Username { get; set; } = string.Empty;
 
     public string FullName { get; set; } = string.Empty;
 
@@ -20,6 +21,7 @@ public class User
 
     public string? PasswordResetToken { get; set; }
     public DateTime? PasswordResetTokenExpiry { get; set; }
+    public List<RefreshToken> RefreshTokens { get; set; } = new();
 
     public ICollection<Wallet> Wallets { get; set; } = new List<Wallet>();
 }

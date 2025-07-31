@@ -7,7 +7,7 @@ public class Transaction
 
     public Guid WalletId { get; set; }
 
-    public Wallet Wallet { get; set; }
+    public required Wallet Wallet { get; set; }
 
     public decimal Amount { get; set; }
 

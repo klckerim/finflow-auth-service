@@ -3,17 +3,20 @@ using System;
 using FinFlow.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FinFlow.Infrastructure.Persistence.Migrations
+namespace FinFlow.Infrastructure.Migrations
 {
     [DbContext(typeof(FinFlowDbContext))]
-    partial class FinFlowDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250731110222_InitialAuthSchema")]
+    partial class InitialAuthSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,19 +25,47 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("FinFlow.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("FinFlow.Domain.Entities.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
@@ -52,6 +83,7 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("FinFlow.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -81,7 +113,15 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -89,10 +129,13 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("FinFlow.Domain.Entities.Wallet", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -100,6 +143,11 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
                     b.Property<string>("Currency")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -140,6 +188,17 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
                     b.ToTable("ResetPasswordTokens");
                 });
 
+            modelBuilder.Entity("FinFlow.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("FinFlow.Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FinFlow.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("FinFlow.Domain.Entities.Wallet", "Wallet")
@@ -175,6 +234,8 @@ namespace FinFlow.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("FinFlow.Domain.Entities.User", b =>
                 {
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("Wallets");
                 });
 

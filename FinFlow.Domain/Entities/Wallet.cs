@@ -11,6 +11,8 @@ public class Wallet
 
     public User User { get; set; }
 
+    public string Name { get; set; } = string.Empty;
+
     public string Currency { get; set; } = "TRY";
 
     public decimal Balance { get; set; } = 0;
