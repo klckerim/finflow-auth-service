@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/navbar";
+import { Sidebar } from "lucide-react";
 
 
 export const metadata: Metadata = {
@@ -11,9 +12,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr">
-      <body className="bg-background text-foreground">
+      <body className="bg-background text-foreground min-h-screen">
         <Navbar />
-        <main className="p-4">{children}</main>
+        <div className="flex">
+          <Sidebar />
+          <main className="flex-1 p-4 ml-64 bg-muted min-h-screen overflow-auto">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

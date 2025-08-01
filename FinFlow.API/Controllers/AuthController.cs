@@ -75,7 +75,7 @@ namespace FinFlow.API.Controllers
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized(new { message = "Kullanıcı kimliği bulunamadı." });
-
+                
             var response = new
             {
                 UserId = userId,
