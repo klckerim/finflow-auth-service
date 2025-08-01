@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace FinFlow.Domain.Entities;
 
 
@@ -21,7 +23,11 @@ public class User
 
     public string? PasswordResetToken { get; set; }
     public DateTime? PasswordResetTokenExpiry { get; set; }
-    public List<RefreshToken> RefreshTokens { get; set; } = new();
+
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     public ICollection<Wallet> Wallets { get; set; } = new List<Wallet>();
+
+    [Timestamp]
+    public byte[]? RowVersion { get; set; }
 }

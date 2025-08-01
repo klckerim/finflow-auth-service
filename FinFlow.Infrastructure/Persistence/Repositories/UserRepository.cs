@@ -16,9 +16,9 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<bool> ExistsByEmailAsync(string email)
+        public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email);
+            return await _context.Users.AnyAsync(u => u.Email == email, cancellationToken);
         }
 
         public async Task AddAsync(User user, CancellationToken cancellationToken)
@@ -27,23 +27,87 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User?> GetByEmailAsync(string email)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        public async Task<User?> GetByPasswordResetTokenAsync(string token)
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
             return await _context.Users
-                .FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.PasswordResetTokenExpiry > DateTime.UtcNow);
+            .Include(u => u.RefreshTokens)
+            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task<User?> GetByPasswordResetTokenAsync(string token, CancellationToken cancellationToken)
         {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            return await _context.Users
+            .Include(u => u.RefreshTokens)
+                .FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.PasswordResetTokenExpiry > DateTime.UtcNow, cancellationToken);
         }
-        
+
+        public async Task<User?> GetUserByRefreshTokenAsync(string token)
+        {
+            return await _context.Users
+                .Include(u => u.RefreshTokens)
+                .FirstOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == token));
+        }
+
+        public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
+        {
+            return await _context.Users
+                .Include(u => u.RefreshTokens)
+                .FirstOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == refreshToken && rt.IsActive));
+        }
+
+        public async Task UpdateAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
+        {
+
+
+            // var existingUser = await _context.Users
+            //     .Include(u => u.RefreshTokens)
+            //     .FirstOrDefaultAsync(u => u.Id == user.Id, cancellationToken);
+
+            // if (existingUser != null)
+            // {
+            //     existingUser.RefreshTokens = user.RefreshTokens;
+            // }
+
+            // // _context.Entry(user).State = EntityState.Modified; // Durumunu güncelle
+            // _context.Users.Attach(user);
+            // _context.Entry(user).State = EntityState.Modified;
+            // await _context.SaveChangesAsync(cancellationToken);
+
+            try
+            {
+                
+                // RefreshToken'ı doğrudan context'e ekle
+                _context.RefreshTokens.Add(refreshToken);
+
+                await _context.SaveChangesAsync();
+
+
+
+                // _context.Users.Update(user);
+                // await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var entry = ex.Entries.Single();
+                var databaseValues = await entry.GetDatabaseValuesAsync();
+
+                if (databaseValues == null)
+                {
+                    // Record was deleted
+                    throw new Exception("The record was deleted by another user.");
+                }
+                else
+                {
+                    // Record was updated
+                    entry.OriginalValues.SetValues(databaseValues);
+                    // Retry the operation or inform the user
+                }
+            }
+
+
+
+        }
+
 
     }
 }

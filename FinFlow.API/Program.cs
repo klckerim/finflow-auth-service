@@ -9,6 +9,10 @@ using Microsoft.IdentityModel.Tokens;
 using FinFlow.Infrastructure.Persistence;
 using FinFlow.Infrastructure.Persistence.Repositories;
 using FluentValidation;
+using FinFlow.Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
+using FinFlow.Domain.Entities;
+using FinFlow.Infrastructure.Authentication;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +31,9 @@ builder.Services.AddDbContext<FinFlowDbContext>(options =>
 // Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 // MediatR
 builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
@@ -77,7 +84,8 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(builder.Configuration["FRONTEND_URL"] ?? "http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 

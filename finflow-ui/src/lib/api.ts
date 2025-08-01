@@ -3,14 +3,4 @@ export const getWallets = async () => {
   return res.json();
 };
 
-export async function getMe() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/auth/me`, {
-    credentials: "include",
-  });
 
-  if (!res.ok) {
-    throw new Error("Kullanıcı bilgisi alınamadı");
-  }
-
-  return res.json();
-}

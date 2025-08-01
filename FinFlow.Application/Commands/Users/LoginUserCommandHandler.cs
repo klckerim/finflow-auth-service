@@ -1,59 +1,53 @@
 using MediatR;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
+using FinFlow.Application.Commands.Users;
+using FinFlow.Application.Models;
+using FinFlow.Domain.Entities;
 using FinFlow.Application.Interfaces;
 
 
-namespace FinFlow.Application.Commands.Users
+namespace FinFlow.Application.Auth.Handlers;
+
+public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginResponseDto>
 {
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, string>
+    private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly ITokenService _tokenService;
+
+    public LoginUserCommandHandler(
+        IUserRepository userRepository,
+        IPasswordHasher<User> passwordHasher,
+        ITokenService tokenService)
     {
-        private readonly IConfiguration _configuration;
-        private readonly IUserRepository _userRepository;
+        _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
+        _tokenService = tokenService;
+    }
 
-        public LoginUserCommandHandler(IConfiguration configuration, IUserRepository userRepository)
-        {
-            _configuration = configuration;
-            _userRepository = userRepository;
-        }
+    public async Task<LoginResponseDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+        if (user is null)
+            throw new UnauthorizedAccessException("Invalid credentials.");
 
-        public async Task<string> Handle(LoginUserCommand request, CancellationToken cancellationToken)
-        {
-            var user = await _userRepository.GetByEmailAsync(request.Email);
-            if (user == null || !VerifyPassword(request.Password, user.PasswordHash))
-                throw new UnauthorizedAccessException("Invalid credentials");
+        var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+        if (result != PasswordVerificationResult.Success)
+            throw new UnauthorizedAccessException("Invalid credentials.");
 
-            var claims = new[]
-            {
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+        var accessToken = _tokenService.GenerateAccessToken(user);
+        var refreshToken = _tokenService.GenerateRefreshToken(user);
 
-            var jwtKey = _configuration["Jwt:Key"];
-            if (string.IsNullOrEmpty(jwtKey))
-                throw new InvalidOperationException("JWT key is not configured.");
+        // user.RefreshTokens.Add(refreshToken);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        await _userRepository.UpdateAsync(refreshToken, cancellationToken);
 
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: creds
-            );
+       
+        return new LoginResponseDto(
+            user,
+            accessToken,
+            refreshToken.Token,
+            refreshToken.ExpiresAt 
+        );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-    
-        private bool VerifyPassword(string password, string passwordHash)
-        {
-            // Basit bir hash kontrolü yapıyoruz, gerçek uygulamada daha güvenli bir yöntem kullanılmalı
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(password)) == passwordHash;
-        }
     }
 }

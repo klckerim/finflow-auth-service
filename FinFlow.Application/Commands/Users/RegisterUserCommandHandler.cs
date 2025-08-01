@@ -1,39 +1,40 @@
 using MediatR;
 using FinFlow.Domain.Entities;
 using FinFlow.Application.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinFlow.Application.Commands.Users
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Guid>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository)
+        public RegisterUserCommandHandler(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
         {
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<Guid> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var userExists = await _userRepository.ExistsByEmailAsync(request.Email);
-            if (userExists)
-                throw new Exception("User already exists.");
+            if (await _userRepository.ExistsByEmailAsync(request.Email, cancellationToken))
+            {
+                throw new InvalidOperationException("User with this email already exists.");
+            }
 
             var user = new User
             {
-                Id = Guid.NewGuid(),
+                Username = request.Username,
                 Email = request.Email,
-                PasswordHash = HashPassword(request.Password),
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _userRepository.AddAsync(user, cancellationToken);
-            return user.Id;
-        }
+            user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
-        private string HashPassword(string password)
-        {
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
+            await _userRepository.AddAsync(user, cancellationToken);
+
+            return user.Id;
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FinFlow.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5da6fbce5d4ee98e8c20b524f22b2fe8ff5c523")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2b5b7339aa4f2b604d261280f739fbe7b48a8e90")]
 [assembly: System.Reflection.AssemblyProductAttribute("FinFlow.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FinFlow.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
