@@ -51,19 +51,6 @@ namespace FinFlow.API.Controllers
         }
 
 
-
-        [Authorize]
-        [HttpGet("mes")]
-        public IActionResult GetMyProfiles()
-        {
-            // var email = User?.Identity?.Name;
-            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
-            return Ok(new { email });
-        }
-
-
-
         [Authorize]
         [HttpGet("me")]
         public IActionResult GetMyProfile()
