@@ -3,9 +3,14 @@ import { cn } from "@/lib/utils";
 
 export type CardProps = React.InputHTMLAttributes<HTMLInputElement>;
 
+// Add to wallet card:
+// className="hover:scale-[1.02] transition-transform duration-300"
+// "rounded-2xl border p-6 shadow-md dark:bg-gray-950",
+
 export function Card({ className, ...props }: CardProps) {
   return (
     <div
+    
       className={cn(
         "rounded-2xl border p-6 shadow-md dark:bg-gray-950",
         className

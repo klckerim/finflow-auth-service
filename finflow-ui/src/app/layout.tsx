@@ -1,28 +1,31 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar";
-import { Sidebar } from "lucide-react";
+import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/context/auth-context";
 
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FinFlow",
-  description: "Your Digital Wallet"
+  title: "FinFlow | Dijital Cüzdan",
+  description: "Modern ve minimalist dijital cüzdan çözümü",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="tr">
-      <body className="bg-background text-foreground min-h-screen">
-        <AuthProvider>
-          <Navbar />
-          <div className="flex">
-            <Sidebar />
-            <main className="flex-1 p-4 ml-64 bg-muted min-h-screen overflow-auto">
-              {children}
-            </main>
-          </div>
-        </AuthProvider>
+    <html lang="tr" suppressHydrationWarning className={inter.className}>
+      <body suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={true}
+        >
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,38 +1,39 @@
-
-"use client";
-
-import { logout } from "@/lib/auth"
+// components/Navbar.tsx
+/**
+ * Main navigation bar - Fixed at top.
+ * Contains logo, app name, theme toggle, and profile dropdown.
+ */
 import Link from "next/link";
-import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ThemeToggle } from "./theme-toggle";
-import { useUser } from "@/hooks/useUser";
+import ProfileDropdown from "./profiledropdown";
+import ThemeToggle from "./theme-toggle";
 
-
-export default function Navbar() {
-  
+const Navbar = () => {
   return (
-    <nav className="fixed w-full h-16 bg-white dark:bg-gray-900 border-b shadow-sm flex items-center justify-between px-6 z-50">
-      <Link href="/" className="text-xl font-bold text-primary">FinFlow</Link>
-      <div className="flex items-center gap-4">
-        <ThemeToggle />
-        <UserMenu />
+    <header className="fixed top-0 w-full bg-background z-50 border-b">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Link href="/">
+            <div className="flex items-center space-x-3">
+              <Image 
+                src="/finflow.jpg" 
+                alt="FinFlow Logo"
+                width={36}
+                height={36}
+              />
+              <span className="text-xl font-bold">FinFlow</span>
+            </div>
+          </Link>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <ThemeToggle />
+          <ProfileDropdown />
+        </div>
       </div>
-    </nav>
+    </header>
   );
-}
+};
 
-
-function UserMenu() {
-  const { user } = useUser();
-  if (!user) return <Link href="/login"><Button>Giriş Yap</Button></Link>;
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">{user.fullname}</span>
-      <Button variant="ghost" onClick={logout}>Çıkış</Button>
-    </div>
-  );
-}
-
+export default Navbar;

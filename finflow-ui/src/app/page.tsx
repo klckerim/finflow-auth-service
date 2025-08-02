@@ -1,27 +1,64 @@
 "use client"
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+/**
+ * Dashboard main page - Protected route.
+ * Shows welcome message, user metrics cards, quick actions, and analytics placeholder.
+ */
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ProtectedRoute from "@/components/utils/ProtectedRoute";
+import QuickActions from "@/components/quickactions";
+import { useAuth } from "@/context/auth-context";
+import AnalyticsWidget from "@/components/AnalyticsWidget";
+import { getGreeting } from "@/components/ui/label";
 
-export default function Home() {
+const Dashboard = () => {
+  // const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const greeting = getGreeting();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-background px-4">
-      <div className="text-center space-y-8 max-w-xl">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-          FinFlow’a Hoş Geldin
+    <ProtectedRoute>
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold">👋 FinFlow’a Hoş Geldin, {user?.name || user?.email || "Kullanıcı"}</h1>
+        <h1 className="text-3xl font-bold">
+          {greeting}, {user?.name || user?.email || "Kullanıcı"} 👋
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          Kişisel finansını yönetmenin en akıllı yolu. Dijital cüzdan oluştur, transfer işlemleri yap ve bütçeni yönet.
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link href="/login">
-            <Button size="lg" variant="default">Giriş Yap</Button>
-          </Link>
-          <Link href="/register">
-            <Button size="lg" variant="outline">Kayıt Ol</Button>
-          </Link>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Aktif Başvurular</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">3</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Puanın</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">1245</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Cüzdan Sayısı test </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">2</p>
+            </CardContent>
+          </Card>
         </div>
+
+        <QuickActions />
+        <AnalyticsWidget />
       </div>
-    </div>
-  )
-}
+    </ProtectedRoute>
+  );
+};
+
+export default Dashboard;
+
+

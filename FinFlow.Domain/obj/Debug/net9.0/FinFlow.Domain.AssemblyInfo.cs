@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FinFlow.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6436500ca20bdbd9ba6f68e010d126e54dc78a6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+883cbdc167920c1f1b1e16d2802c5e84730939bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("FinFlow.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FinFlow.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

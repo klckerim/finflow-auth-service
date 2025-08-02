@@ -1,11 +1,24 @@
-"use client";
+// app/dashboard/layout.tsx
+// "use client"
 
-import { ReactNode } from "react";
+import Navbar from "@/components/navbar"
+import Sidebar from "@/components/sidebar"
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <div className="h-screen flex flex-col">
-      {children}
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <Navbar />
+        <main className="flex-1 overflow-y-auto pt-16 p-4">
+          {children}
+        </main>
+      </div>
     </div>
-  );
+  )
 }
+

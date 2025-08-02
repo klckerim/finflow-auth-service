@@ -1,21 +1,24 @@
+// components/ThemeToggle.tsx
 "use client"
 
-import { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useThemeToggle } from "@/hooks/useTheme"
 
-export function ThemeToggle() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    darkMode ? root.classList.add("dark") : root.classList.remove("dark");
-  }, [darkMode]);
-
+export default function ThemeToggle() {
+  const { theme, toggleTheme } = useThemeToggle()
+  
   return (
-    <button
-      onClick={() => setDarkMode(!darkMode)}
-      className="text-sm border px-3 py-1 rounded"
+    <Button 
+      variant="outline" 
+      size="icon"
+      onClick={toggleTheme}
     >
-      {darkMode ? "☀️" : "🌙"}
-    </button>
-  );
+      {theme === "dark" ? (
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
+      ) : (
+        <Moon className="h-[1.2rem] w-[1.2rem]" />
+      )}
+    </Button>
+  )
 }

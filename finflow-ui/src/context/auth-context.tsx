@@ -1,63 +1,57 @@
+"use client"
 
-"use client";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react"
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+interface User {
+  id: string
+  name: string
+  email: string
+  role?: string
+}
 
-type AuthContextType = {
-  user: any;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (token: string, userData: any) => void;
-  logout: () => void;
-};
+interface AuthContextType {
+  user: User | null
+  login: (userData: User) => void
+  logout: () => void
+  isLoading: boolean
+}
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
-
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-      setIsAuthenticated(true);
+    // Check for user in localStorage on initial load
+    const storedUser = localStorage.getItem("finflow_user")
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
+    setIsLoading(false)
+  }, [])
 
-    setIsLoading(false);
-  }, []);
-
-  const login = (token: string, userData: any) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData);
-    setIsAuthenticated(true);
-  };
+  const login = (userData: User) => {
+    setUser(userData)
+    localStorage.setItem("finflow_user", JSON.stringify(userData))
+  }
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    setIsAuthenticated(false);
-    router.push("/login");
-  };
+    setUser(null)
+    localStorage.removeItem("finflow_user")
+  }
 
   return (
-    <AuthContext.Provider
-      value={{ user, isAuthenticated, isLoading, login, logout }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
-};
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider")
+  }
+  return context
+}
