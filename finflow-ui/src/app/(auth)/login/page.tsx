@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,18 @@ import { useAuth } from "@/context/auth-context";
 import { getMe } from "@/lib/auth";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      router.replace("/dashboard");
+    }
+  }, [user, router]);
 
   const handleLogin = async () => {
     setError("");
@@ -34,16 +41,9 @@ export default function LoginPage() {
         throw new Error(data.message || "Giriş başarısız");
       }
 
-      
       localStorage.setItem("token", data.token);
-
-      // Kullanıcıyı getMe ile getir
       const me = await getMe();
-
-      // Context'e set et
       login(me);
-
-      // Dashboard'a yönlendir
       router.push("/dashboard");
 
     } catch (err) {

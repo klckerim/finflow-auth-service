@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FadeInWrapper } from "@/components/fadeinwrapper";
 import Link from "next/link";
+import { useAuth } from "@/context/auth-context";
 
 export default function RegisterPage() {
+  const { user } = useAuth();
   const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -16,6 +19,12 @@ export default function RegisterPage() {
   });
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      router.replace("/dashboard");
+    }
+  }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -42,6 +51,9 @@ export default function RegisterPage() {
       setError(err instanceof Error ? err.message : "Sunucu hatası");
     }
   };
+
+  if (user) return null;
+
 
   return (
     <FadeInWrapper>
