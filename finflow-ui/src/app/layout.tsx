@@ -7,7 +7,7 @@ import { AuthProvider } from "@/context/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FinFlow | Dijital Cüzdan",
+  title: "FinFlow",
   description: "Modern ve minimalist dijital cüzdan çözümü",
 };
 

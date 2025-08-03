@@ -114,10 +114,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/context/auth-context"
 import { User, Settings, Globe, SunMoon, History, Info, LogOut } from "lucide-react"
-import { useUser } from "@/hooks/useUser"
 
 export default function ProfileDropdown() {
-    const { user, isLoading} = useUser()
+    const { user, isLoading} = useAuth()
 
     return (
         <DropdownMenu>
@@ -129,7 +128,7 @@ export default function ProfileDropdown() {
             <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel className="flex items-center">
                     <User className="mr-2 h-4 w-4" />
-                    <span>{user?.fullname || user?.email || "Hesabım"}</span>
+                    <span>{user?.name || user?.email || "Hesabım"}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
 
