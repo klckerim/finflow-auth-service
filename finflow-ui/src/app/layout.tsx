@@ -19,13 +19,15 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning className={inter.className}>
       <body suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={true}
-        >
-          <AuthProvider>{children}</AuthProvider>
-        </ThemeProvider>
+        <div className="bg-background min-h-screen p-6 md:p-10 max-w-6xl mx-auto space-y-10">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem={true}
+          >
+            <AuthProvider>{children}</AuthProvider>
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );

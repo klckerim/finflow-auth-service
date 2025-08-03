@@ -1,39 +1,14 @@
-// components/Navbar.tsx
-/**
- * Main navigation bar - Fixed at top.
- * Contains logo, app name, theme toggle, and profile dropdown.
- */
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/theme-toggle";
 import ProfileDropdown from "./profiledropdown";
-import ThemeToggle from "./theme-toggle";
 
-const Navbar = () => {
+
+export default function Navbar() {
   return (
-    <header className="fixed top-0 w-full bg-background z-50 border-b">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <Link href="/">
-            <div className="flex items-center space-x-3">
-              <Image 
-                src="/finflow.jpg" 
-                alt="FinFlow Logo"
-                width={36}
-                height={36}
-              />
-              <span className="text-xl font-bold">FinFlow</span>
-            </div>
-          </Link>
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <ThemeToggle />
-          <ProfileDropdown />
-        </div>
+    <header className="fixed top-0 left-64 w-[calc(100%-16rem)] h-16 bg-muted/30 z-40">
+      <div className="px-6 h-full flex items-center justify-end space-x-4">
+        <ThemeToggle />
+        <ProfileDropdown />
       </div>
     </header>
   );
-};
-
-export default Navbar;
+}
