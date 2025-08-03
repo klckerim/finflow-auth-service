@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
-import { useUser } from "@/hooks/useUser";
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

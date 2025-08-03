@@ -23,18 +23,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check for user in localStorage on initial load
-    const storedUser = localStorage.getItem("finflow_user")
+    const storedUser = localStorage.getItem("finflow_user");
+
     if (storedUser) {
-      setUser(JSON.parse(storedUser))
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser) {
+          setUser(parsedUser);
+        }
+      } catch (err) {
+        console.error("Geçersiz kullanıcı verisi:", err);
+        localStorage.removeItem("finflow_user"); // bozuk veriyi temizle
+      }
     }
-    setIsLoading(false)
-  }, [])
+
+    setIsLoading(false);
+  }, []);
+
 
   const login = (userData: User) => {
-    setUser(userData)
-    localStorage.setItem("finflow_user", JSON.stringify(userData))
-  }
+    if (!userData) return;
+
+    setUser(userData);
+    localStorage.setItem("finflow_user", JSON.stringify(userData));
+  };
+
 
   const logout = () => {
     setUser(null)

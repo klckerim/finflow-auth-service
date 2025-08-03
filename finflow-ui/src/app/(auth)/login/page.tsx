@@ -6,8 +6,11 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FadeInWrapper } from "@/components/fadeinwrapper";
+import { useAuth } from "@/context/auth-context";
+import { getMe } from "@/lib/auth";
 
 export default function LoginPage() {
+  const { login } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,9 +34,18 @@ export default function LoginPage() {
         throw new Error(data.message || "Giriş başarısız");
       }
 
-      // Başarılı giriş sonrası token'ı localStorage'a kaydet
+      
       localStorage.setItem("token", data.token);
+
+      // Kullanıcıyı getMe ile getir
+      const me = await getMe();
+
+      // Context'e set et
+      login(me);
+
+      // Dashboard'a yönlendir
       router.push("/dashboard");
+
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sunucu hatası");
     }
