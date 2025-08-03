@@ -3,7 +3,6 @@
 
 import AnalyticsWidget from "@/components/AnalyticsWidget";
 import QuickActions from "@/components/quickactions";
-import Sidebar from "@/components/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
@@ -24,7 +23,6 @@ export default function DashboardPage() {
   if (isLoading || !user) {
     return (
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
         <main className="flex-1 p-6 pt-20 space-y-6">
           <Skeleton className="h-8 w-[300px]" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -41,7 +39,6 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
         <main className="flex-1 p-6 pt-20 overflow-y-auto">
           <section className="space-y-6">
             <h1 className="text-2xl font-bold">👋 Hoş geldin, {user.email}</h1>
