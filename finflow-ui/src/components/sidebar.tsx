@@ -20,16 +20,15 @@ import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 const mainMenu = [
-  { name: "Ana Sayfa", href: "/dashboard", icon: Home },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Cüzdanlarım", href: "/dashboard/wallets", icon: Wallet },
-    { name: "Transfer", href: "/dashboard/transfer", icon: Repeat },
-
+  { name: "Transfer", href: "/dashboard/transfer", icon: Repeat },
   { name: "Kartlar", href: "/dashboard/cards", icon: CreditCard },
   { name: "İşlemler", href: "/dashboard/transactions", icon: History },
   { name: "Alıcılar", href: "/dashboard/recipients", icon: Users },
-  { name: "Özet", href: "/dashboard/summary", icon: FileText },
 ];
 
 const paymentsSubmenu = [
@@ -45,9 +44,8 @@ export default function Sidebar() {
     <Link
       key={item.name}
       href={item.href}
-      className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
-        pathname === item.href ? "bg-primary text-white" : "hover:bg-muted"
-      }`}
+      className={`flex items-center px-4 py-2 rounded-lg transition-colors ${pathname === item.href ? "bg-primary text-white" : "hover:bg-muted"
+        }`}
     >
       <item.icon className="w-5 h-5 mr-3" />
       {item.name}
@@ -56,22 +54,53 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Menu className="w-5 h-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0">
-            <div className="h-16 flex items-center px-4 border-b">
-              <Link href="/" className="flex items-center space-x-3">
-                <Image src="/finflow.jpg" alt="Logo" width={32} height={32} />
-                <span className="text-lg font-semibold">FinFlow</span>
-              </Link>
-            </div>
-            <div className="py-6 px-4 space-y-2">
+      <ProtectedRoute>
+
+        {/* Mobile toggle */}
+        <div className="md:hidden fixed top-4 left-4 z-50">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Menu className="w-5 h-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0">
+              <div className="h-16 flex items-center px-4 border-b">
+                <Link href="/" className="flex items-center space-x-3">
+                  <Image src="/finflow.jpg" alt="Logo" width={32} height={32} />
+                  <span className="text-lg font-semibold">FinFlow</span>
+                </Link>
+              </div>
+              <div className="py-6 px-4 space-y-2">
+                {mainMenu.map(renderNavItem)}
+                <button
+                  onClick={() => setOpenPayments(!openPayments)}
+                  className="flex items-center w-full px-4 py-2 rounded-lg transition-colors hover:bg-muted"
+                >
+                  <Banknote className="w-5 h-5 mr-3" />
+                  <span className="flex-1 text-left">Ödemeler</span>
+                  {openPayments ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+                {openPayments && (
+                  <div className="ml-8 space-y-1">
+                    {paymentsSubmenu.map(renderNavItem)}
+                  </div>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:flex md:flex-col fixed top-0 left-0 w-64 h-screen bg-muted/30 z-40">
+          <div className="h-16 flex items-center px-4">
+            <Link href="/" className="flex items-center space-x-3">
+              <Image src="/finflow.jpg" alt="FinFlow Logo" width={32} height={32} />
+              <span className="text-lg font-semibold">FinFlow</span>
+            </Link>
+          </div>
+          <div className="flex flex-col justify-between h-full py-6">
+            <nav className="space-y-1 px-4">
               {mainMenu.map(renderNavItem)}
               <button
                 onClick={() => setOpenPayments(!openPayments)}
@@ -86,38 +115,11 @@ export default function Sidebar() {
                   {paymentsSubmenu.map(renderNavItem)}
                 </div>
               )}
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
+            </nav>
+          </div>
+        </aside>
+      </ProtectedRoute>
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:flex-col fixed top-0 left-0 w-64 h-screen bg-muted/30 z-40">
-        <div className="h-16 flex items-center px-4">
-          <Link href="/" className="flex items-center space-x-3">
-            <Image src="/finflow.jpg" alt="FinFlow Logo" width={32} height={32} />
-            <span className="text-lg font-semibold">FinFlow</span>
-          </Link>
-        </div>
-        <div className="flex flex-col justify-between h-full py-6">
-          <nav className="space-y-1 px-4">
-            {mainMenu.map(renderNavItem)}
-            <button
-              onClick={() => setOpenPayments(!openPayments)}
-              className="flex items-center w-full px-4 py-2 rounded-lg transition-colors hover:bg-muted"
-            >
-              <Banknote className="w-5 h-5 mr-3" />
-              <span className="flex-1 text-left">Ödemeler</span>
-              {openPayments ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </button>
-            {openPayments && (
-              <div className="ml-8 space-y-1">
-                {paymentsSubmenu.map(renderNavItem)}
-              </div>
-            )}
-          </nav>
-        </div>
-      </aside>
     </>
   );
 }
