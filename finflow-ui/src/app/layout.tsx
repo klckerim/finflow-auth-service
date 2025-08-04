@@ -5,7 +5,6 @@ import "./globals.css";
 import { AuthProvider } from "@/context/auth-context";
 import Sidebar from "@/components/sidebar";
 import Navbar from "@/components/navbar";
-import { ThemeProvider } from "@/context/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +17,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" suppressHydrationWarning className={inter.className}>
       <body suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
             <div className="flex min-h-screen w-full flex-col md:flex-row bg-background text-foreground">
               <Sidebar />
@@ -28,7 +26,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </div>
           </AuthProvider>
-        </ThemeProvider>
       </body>
     </html>
   );

@@ -4,10 +4,13 @@ import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getGreeting } from "@/components/ui/label";
 
 export default function HomePage() {
   const { user, logout } = useAuth();
   const router = useRouter();
+
+  const greeting = getGreeting();
 
   return (
     <div className="p-6 md:p-10 max-w-6xl mx-auto space-y-10">
@@ -15,6 +18,8 @@ export default function HomePage() {
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
           FinFlow'a Hoş Geldin {user ? `, ${user.name}` : ""}
         </h1>
+        <h1 className="text-3xl font-bold">{greeting}</h1>
+
         <p className="text-lg text-muted-foreground">
           Gelir-gider takibi, bütçe planlaması ve finansal farkındalık tek bir yerde.
         </p>
