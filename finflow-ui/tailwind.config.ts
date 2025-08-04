@@ -12,8 +12,8 @@ module.exports = {
       },
       colors: {
         primary: "#2563eb", // Tailwind'in blue-600 tonu
-        darkBg: "#0f0f0f",
-        cardBg: "#1f2937",
+        darkBg: "#142638ff",
+        cardBg: "#1b2636ff",
         inputBg: "#374151",
       },
     },

@@ -1,13 +1,13 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-// export function cn(...inputs: ClassValue[]) {
-//   return twMerge(clsx(inputs))
-// }
-
-export function cn(...inputs: (string | undefined | boolean)[]): string {
-  return inputs.filter(Boolean).join(" ");
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
+
+// export function cn(...inputs: (string | undefined | boolean)[]): string {
+//   return inputs.filter(Boolean).join(" ");
+// }
 
 export async function fetcher(url: string) {
   const res = await fetch(url, { headers: { 'Content-Type': 'application/json' } });

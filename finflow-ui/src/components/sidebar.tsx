@@ -12,6 +12,8 @@ import {
   ChevronDown,
   ChevronUp,
   Menu,
+  Wallet,
+  Repeat,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -22,15 +24,18 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 const mainMenu = [
   { name: "Ana Sayfa", href: "/dashboard", icon: Home },
-  { name: "Kartlar", href: "/cards", icon: CreditCard },
-  { name: "İşlemler", href: "/transactions", icon: History },
-  { name: "Alıcılar", href: "/recipients", icon: Users },
-  { name: "Özet", href: "/summary", icon: FileText },
+  { name: "Cüzdanlarım", href: "/dashboard/wallets", icon: Wallet },
+    { name: "Transfer", href: "/dashboard/transfer", icon: Repeat },
+
+  { name: "Kartlar", href: "/dashboard/cards", icon: CreditCard },
+  { name: "İşlemler", href: "/dashboard/transactions", icon: History },
+  { name: "Alıcılar", href: "/dashboard/recipients", icon: Users },
+  { name: "Özet", href: "/dashboard/summary", icon: FileText },
 ];
 
 const paymentsSubmenu = [
-  { name: "Ödeme Talepleri", href: "/payments/requests", icon: Receipt },
-  { name: "Fatura Bölüşme", href: "/payments/split", icon: Banknote },
+  { name: "Ödeme Talepleri", href: "/dashboard/payments/requests", icon: Receipt },
+  { name: "Fatura Bölüşme", href: "/dashboard/payments/split", icon: Banknote },
 ];
 
 export default function Sidebar() {

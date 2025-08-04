@@ -10,7 +10,7 @@ export type CardProps = React.InputHTMLAttributes<HTMLInputElement>;
 export function Card({ className, ...props }: CardProps) {
   return (
     <div
-    
+
       className={cn(
         "rounded-2xl border p-6 shadow-md dark:bg-gray-950",
         className
@@ -47,11 +47,40 @@ export function CardTitle({
   );
 }
 
+export function CardDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
+  return (
+    <p
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+
 export function CardContent({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn("space-y-4", className)} {...props} />
+  );
+}
+
+
+export function CardFooter({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "mt-6 flex items-center justify-between border-t pt-4 text-sm text-muted-foreground",
+        className
+      )}
+      {...props}
+    />
   );
 }

@@ -7,6 +7,8 @@
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FinFlow.Tests.runtimeconfig.json
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FinFlow.Tests.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FinFlow.Tests.pdb
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/AutoMapper.dll
+/Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FluentValidation.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/FluentValidation.DependencyInjectionExtensions.dll
 /Users/abdulkerimkilic/Desktop/projects/finflow/finflow-auth-service/FinFlow/FinFlow.Tests/bin/Debug/net9.0/MediatR.dll

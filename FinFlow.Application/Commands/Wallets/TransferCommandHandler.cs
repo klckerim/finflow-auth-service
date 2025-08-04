@@ -11,11 +11,11 @@ public class TransferCommandHandler : IRequestHandler<TransferCommand>
 
     public async Task<Unit> Handle(TransferCommand request, CancellationToken cancellationToken)
     {
-        var fromWallet = await _walletRepository.GetByIdAsync(request.FromWalletId);
+        var fromWallet = await _walletRepository.GetByIdAsync(request.FromWalletId, cancellationToken);
         if (fromWallet == null)
             throw new KeyNotFoundException($"Source wallet with id {request.FromWalletId} not found.");
 
-        var toWallet = await _walletRepository.GetByIdAsync(request.ToWalletId);
+        var toWallet = await _walletRepository.GetByIdAsync(request.ToWalletId, cancellationToken);
         if (toWallet == null)
             throw new KeyNotFoundException($"Destination wallet with id {request.ToWalletId} not found.");
 

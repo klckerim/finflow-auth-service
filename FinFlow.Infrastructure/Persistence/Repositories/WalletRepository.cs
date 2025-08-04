@@ -23,19 +23,21 @@ public class WalletRepository : IWalletRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Wallet?> GetByIdAsync(Guid walletId)
+    public async Task<Wallet?> GetByIdAsync(Guid walletId, CancellationToken cancellationToken)
     {
         return await _dbContext.Wallets
             .Include(w => w.Transactions)
-            .FirstOrDefaultAsync(w => w.Id == walletId);
+            .FirstOrDefaultAsync(w => w.Id == walletId, cancellationToken);
     }
 
-    public async Task<List<Wallet>> GetByUserIdAsync(Guid userId)
+
+    public async Task<List<Wallet>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {
         return await _dbContext.Wallets
             .Where(w => w.UserId == userId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
+
 
     public async Task UpdateAsync(Wallet wallet)
     {

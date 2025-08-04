@@ -19,14 +19,18 @@ public class WalletsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = walletId }, new { walletId });
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetByUserId(Guid userId)
     {
-        var wallet = await _mediator.Send(new GetWalletByIdQuery(id));
-        if (wallet == null)
-            return NotFound();
+        var wallets = await _mediator.Send(new GetWalletsByUserIdQuery(userId));
+        return Ok(wallets);
+    }
 
-        return Ok(wallet);
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetWalletByIdQuery(id), cancellationToken);
+        return result is null ? NotFound() : Ok(result);
     }
 
     [HttpPost("{walletId}/deposit")]

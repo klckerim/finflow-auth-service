@@ -38,6 +38,9 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 // MediatR
 builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
 
+//AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+
 // Controllers
 builder.Services.AddControllers();
 

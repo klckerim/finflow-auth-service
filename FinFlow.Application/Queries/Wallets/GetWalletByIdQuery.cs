@@ -1,4 +1,5 @@
-using FinFlow.Domain.Entities;
+
 using MediatR;
 
-public record GetWalletByIdQuery(Guid Id) : IRequest<Wallet?>;
+public record GetWalletByIdQuery(Guid WalletId) : IRequest<WalletDto>;
+

@@ -16,7 +16,8 @@ public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, G
         {
             UserId = request.UserId,
             Currency = request.Currency,
-            Balance = 0,
+            Name = request.Name,
+            Balance = request.Balance,
             CreatedAt = DateTime.UtcNow,
             Transactions = new List<Transaction>()
         };
