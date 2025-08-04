@@ -27,7 +27,8 @@ namespace FinFlow.Application.Commands.Users
             {
                 Username = request.Username,
                 Email = request.Email,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                FullName = request.FullName
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);

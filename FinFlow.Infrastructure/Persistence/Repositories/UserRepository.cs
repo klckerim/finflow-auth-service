@@ -57,34 +57,12 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
 
         public async Task UpdateAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
         {
-
-
-            // var existingUser = await _context.Users
-            //     .Include(u => u.RefreshTokens)
-            //     .FirstOrDefaultAsync(u => u.Id == user.Id, cancellationToken);
-
-            // if (existingUser != null)
-            // {
-            //     existingUser.RefreshTokens = user.RefreshTokens;
-            // }
-
-            // // _context.Entry(user).State = EntityState.Modified; // Durumunu güncelle
-            // _context.Users.Attach(user);
-            // _context.Entry(user).State = EntityState.Modified;
-            // await _context.SaveChangesAsync(cancellationToken);
-
             try
             {
-                
                 // RefreshToken'ı doğrudan context'e ekle
                 _context.RefreshTokens.Add(refreshToken);
 
                 await _context.SaveChangesAsync();
-
-
-
-                // _context.Users.Update(user);
-                // await _context.SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateConcurrencyException ex)
             {
