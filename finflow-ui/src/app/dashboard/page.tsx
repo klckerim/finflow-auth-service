@@ -41,7 +41,7 @@ export default function DashboardPage() {
       <div className="flex flex-1 overflow-hidden">
         <main className="flex-1 p-6 pt-20 overflow-y-auto">
           <section className="space-y-6">
-            <h1 className="text-2xl font-bold">👋 Hoş geldin, {user.email}</h1>
+            <h1 className="text-2xl font-bold">👋 Hoş geldin, {user.fullName}</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card>
@@ -74,13 +74,6 @@ export default function DashboardPage() {
 
             <QuickActions />
             <AnalyticsWidget />
-
-            <Card className="mt-6">
-              <CardContent className="p-6 space-y-2 text-sm">
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Rol:</strong> {user.role || "Kullanıcı"}</p>
-              </CardContent>
-            </Card>
           </section>
         </main>
       </div>

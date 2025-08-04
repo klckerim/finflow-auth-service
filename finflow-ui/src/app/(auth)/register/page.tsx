@@ -13,9 +13,10 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const [form, setForm] = useState({
-    name: "",
+    userName: "",
     email: "",
     password: "",
+    fullName: ""
   });
 
   const [error, setError] = useState("");
@@ -86,8 +87,8 @@ export default function RegisterPage() {
                 <label className="text-sm mb-1 block text-gray-300">Full Name</label>
                 <Input
                   type="text"
-                  name="name"
-                  value={form.name}
+                  name="fullName"
+                  value={form.fullName}
                   onChange={handleChange}
                   placeholder="Your full name"
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"

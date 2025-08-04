@@ -16,7 +16,7 @@ export default function HomePage() {
     <div className="p-6 md:p-10 max-w-6xl mx-auto space-y-10">
       <section className="text-center space-y-3">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-          FinFlow'a Hoş Geldin {user ? `, ${user.name}` : ""}
+          FinFlow'a Hoş Geldin {user ? `, ${user.fullName}` : ""}
         </h1>
         <h1 className="text-3xl font-bold">{greeting}</h1>
 

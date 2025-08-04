@@ -7,11 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Edit3, TrendingUp, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit3, Trash2, LucideTimer } from "lucide-react";
 import { toast } from "sonner";
 import { Wallet as WalletType } from "@/types/wallet";
 
-  
+
 async function getWalletById(id: string): Promise<WalletType | null> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
@@ -91,7 +91,7 @@ const WalletDetailPage = () => {
             Bakiye: ₺{wallet.balance.toLocaleString()}
           </div>
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4" />
+            <LucideTimer className="w-4 h-4" />
             <span className="text-sm">Oluşturulma Tarihi: {new Date(wallet.createdAt).toLocaleDateString()}</span>
           </div>
           <div className="text-sm">Cüzdan ID: <span className="font-mono text-xs">{wallet.id}</span></div>

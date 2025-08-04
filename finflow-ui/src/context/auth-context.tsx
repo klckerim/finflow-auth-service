@@ -4,9 +4,10 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 
 interface User {
   userId: string
-  name: string
+  fullName: string
   email: string
   role?: string
+  userName: string
 }
 
 interface AuthContextType {

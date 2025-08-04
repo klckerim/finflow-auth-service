@@ -45,7 +45,7 @@ const ProfileDropdown = () => {
             <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel className="flex items-center">
                     <User className="mr-2 h-4 w-4" />
-                    <span>{user?.name || "Hesabım"}</span>
+                    <span>{user?.fullName || "Hesabım"}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 
