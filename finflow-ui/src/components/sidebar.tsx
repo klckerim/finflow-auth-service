@@ -8,7 +8,6 @@ import {
   FileText,
   Banknote,
   Receipt,
-  LogOut,
   ChevronDown,
   ChevronUp,
   Menu,
@@ -17,7 +16,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
@@ -87,10 +86,6 @@ export default function Sidebar() {
                   {paymentsSubmenu.map(renderNavItem)}
                 </div>
               )}
-              <Button variant="ghost" className="w-full justify-start mt-6">
-                <LogOut className="w-5 h-5 mr-3" />
-                Çıkış Yap
-              </Button>
             </div>
           </SheetContent>
         </Sheet>
@@ -121,12 +116,6 @@ export default function Sidebar() {
               </div>
             )}
           </nav>
-          <div className="px-4 mt-auto">
-            <Button variant="ghost" className="w-full justify-start">
-              <LogOut className="w-5 h-5 mr-3" />
-              Çıkış Yap
-            </Button>
-          </div>
         </div>
       </aside>
     </>
