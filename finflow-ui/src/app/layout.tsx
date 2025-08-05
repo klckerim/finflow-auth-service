@@ -19,12 +19,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="tr" suppressHydrationWarning className={inter.className}>
       <body suppressHydrationWarning>
         <AuthProvider>
+          <Toaster position="top-center" />
           <div className="flex min-h-screen w-full flex-col md:flex-row bg-background text-foreground">
             <Sidebar />
             <div className="flex-1 flex flex-col">
               <Navbar />
               <main className="p-6 md:p-10 space-y-10">{children}
-                <Toaster position="top-center" />
               </main>
             </div>
           </div>

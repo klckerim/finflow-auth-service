@@ -14,16 +14,6 @@ const QuickActions = () => {
       path: "/dashboard/wallets/add" 
     },
     { 
-      icon: <Send className="h-6 w-6" />, 
-      label: "Hızlı Transfer", 
-      path: "/dashboard/transfer" 
-    },
-    { 
-      icon: <CreditCard className="h-6 w-6" />, 
-      label: "Ödeme Yap", 
-      path: "/dashboard/payments" 
-    },
-    { 
       icon: <History className="h-6 w-6" />, 
       label: "Son İşlemler", 
       path: "/dashboard/transactions" 
