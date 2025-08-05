@@ -31,8 +31,8 @@ export async function transferAmount(walletId: string, data: {
 
 
 export async function getLastTransfers(walletId: string) {
-   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${walletId}/transactions?limit=5`, {
-    cache: "no-store" 
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${walletId}/transactions?limit=5`, {
+    cache: "no-store"
   });
 
   return res.json();
@@ -55,4 +55,45 @@ export async function getWalletById(id: string): Promise<WalletType | null> {
     return null;
   }
 }
+
+
+export async function updateWalletById(id: string, data: { name: string; balance: number }) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        walletId: id,
+        name: data.name,
+        balance: data.balance
+      }),
+    });
+
+
+    if (!res.ok) return null;
+
+    return await res.json();
+  } catch (error) {
+    return null;
+  }
+}
+
+export const deleteWalletById = async (id: string) => {
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      throw new Error("Silme işlemi başarısız");
+    }
+    if (!res.ok) return null;
+
+    return res.status === 204 ? true : await res.json();
+  } catch (error) {
+    return null;
+  }
+};
 

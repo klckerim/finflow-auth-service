@@ -19,6 +19,32 @@ public class WalletsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = walletId }, new { walletId });
     }
 
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalletCommand command)
+    {
+        if (id != command.WalletId)
+            return BadRequest("URL ve body ID'leri eşleşmiyor.");
+
+        var success = await _mediator.Send(command);
+
+        if (!success)
+            return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _mediator.Send(new DeleteWalletCommand(id));
+
+        if (!result)
+            return NotFound();
+
+        return NoContent();
+    }
+
+
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetByUserId(Guid userId)
     {
@@ -49,6 +75,4 @@ public class WalletsController : ControllerBase
         await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount));
         return NoContent();
     }
-
-
 }

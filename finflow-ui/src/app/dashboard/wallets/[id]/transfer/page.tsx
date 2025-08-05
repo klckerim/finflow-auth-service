@@ -101,7 +101,7 @@ export default function TransferPage() {
         <CardContent className="space-y-4">
           <div className="text-sm text-muted-foreground">
             <p>Mevcut Cüzdan: <strong>{currentWallet?.name || `Cüzdan #${walletId}`}</strong></p>
-            <p>Bakiye: <strong>{currentWallet?.balance?.toFixed(2)} ₺</strong></p>
+            <p>Bakiye: <strong>{currentWallet?.balance?.toFixed(2)}</strong></p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -114,7 +114,7 @@ export default function TransferPage() {
                 <SelectContent>
                   {walletOptions.map((wallet) => (
                     <SelectItem key={wallet.id} value={wallet.id}>
-                      {wallet.name || `Cüzdan #${wallet.id}`} — {wallet.balance.toFixed(2)} ₺
+                      {wallet.name || `Cüzdan #${wallet.id}`} — {wallet.balance.toFixed(2)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -122,7 +122,7 @@ export default function TransferPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Tutar (₺)</label>
+              <label className="block text-sm font-medium mb-1">Tutar</label>
               <Input
                 type="number"
                 placeholder="Tutar"
@@ -158,7 +158,7 @@ export default function TransferPage() {
                 className="flex items-center justify-between text-sm border-b pb-1 last:border-0"
               >
                 <span className="font-medium">{tx.toWalletName || tx.toWalletId}</span>
-                <span className="text-right">{tx.amount} ₺</span>
+                <span className="text-right">{tx.amount}</span>
               </div>
             ))
           )}

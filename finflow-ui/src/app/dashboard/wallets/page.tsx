@@ -75,7 +75,7 @@ const WalletsPage = () => {
                 </CardHeader>
 
                 <CardContent>
-                  <div className="text-3xl font-bold">₺{wallet.balance.toLocaleString()}</div>
+                  <div className="text-3xl font-bold">{wallet.balance.toLocaleString()}</div>
                   <div className="flex justify-between items-center mt-4">
                     <Button
                       variant="ghost"

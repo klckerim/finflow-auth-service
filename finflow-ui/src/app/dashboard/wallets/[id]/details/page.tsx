@@ -7,15 +7,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Edit3, Trash2, LucideTimer, Copy, Send, Download } from "lucide-react";
+import { ArrowLeft, Edit3, Trash2, LucideTimer, Copy, Send } from "lucide-react";
 import { toast } from "sonner";
-import { getWalletById } from "@/lib/api";
+import { getWalletById, deleteWalletById } from "@/lib/api";
 
 const WalletDetailPage = () => {
   const { id } = useParams();
   const router = useRouter();
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -32,6 +33,24 @@ const WalletDetailPage = () => {
   const handleCopyId = () => {
     navigator.clipboard.writeText(wallet?.id || "");
     toast.success("Cüzdan ID kopyalandı");
+  };
+
+  const handleDelete = async () => {
+    if (!wallet?.id) return;
+
+    const confirm = window.confirm("Bu cüzdanı silmek istediğinizden emin misiniz?");
+    if (!confirm) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteWalletById(wallet.id);
+      toast.success("Cüzdan başarıyla silindi");
+      router.push("/dashboard/wallets");
+    } catch (error) {
+      toast.error("Cüzdan silinirken hata oluştu");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   if (loading) {
@@ -57,8 +76,14 @@ const WalletDetailPage = () => {
           <Button variant="secondary" className="gap-2" onClick={() => router.push(`/dashboard/wallets/${wallet.id}/edit`)}>
             <Edit3 className="w-4 h-4" /> Düzenle
           </Button>
-          <Button variant="destructive" className="gap-2">
-            <Trash2 className="w-4 h-4" /> Sil
+          <Button
+            variant="destructive"
+            className="gap-2"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            <Trash2 className="w-4 h-4" />
+            {isDeleting ? "Siliniyor..." : "Sil"}
           </Button>
         </div>
       </div>
@@ -75,7 +100,7 @@ const WalletDetailPage = () => {
 
         <CardContent className="space-y-4 text-muted-foreground">
           <div className="text-4xl font-bold text-foreground">
-            Bakiye: ₺{wallet.balance.toLocaleString()}
+            Bakiye: {wallet.balance.toLocaleString()}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4 text-sm">
@@ -85,9 +110,9 @@ const WalletDetailPage = () => {
             </div>
             <div className="flex items-center gap-2">
               ID: <span className="font-mono text-xs break-all">{wallet.id}</span>
-              <Copy   className="w-4 h-4 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={handleCopyId} />
+              <Copy className="w-4 h-4 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={handleCopyId} />
             </div>
-            <div>Durum: <Badge variant="default">{wallet.isActive}</Badge></div>
+            <div>Durum: <Badge variant="default">{wallet.isActive ? "Aktif" : "Pasif"}</Badge></div>
           </div>
         </CardContent>
       </Card>
@@ -101,9 +126,6 @@ const WalletDetailPage = () => {
         <CardContent className="flex gap-4">
           <Button variant="default" className="gap-2">
             <Send className="w-4 h-4" /> Para Gönder
-          </Button>
-          <Button variant="secondary" className="gap-2">
-            <Download className="w-4 h-4" /> Para Çek
           </Button>
         </CardContent>
       </Card>
@@ -137,7 +159,8 @@ const WalletDetailPage = () => {
           <CardTitle>Son Transferler</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
-
+          {/* Transfer listesi eklenecek */}
+          
         </CardContent>
       </Card>
     </div>
