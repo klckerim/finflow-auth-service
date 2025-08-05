@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, DollarSign, Euro, Wallet as WalletIcon } from "lucide-react";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
+import { useWalletStore } from "@/app/store/walletStore";
 
 const WalletsPage = () => {
   const router = useRouter();
@@ -20,9 +21,19 @@ const WalletsPage = () => {
   useEffect(() => {
     if (!user) return;
 
-    getWalletsByUser(user.userId)
-      .then(setWallets)
-      .finally(() => setLoading(false));
+    const fetchWallets = async () => {
+      try {
+        const wallets = await getWalletsByUser(user.userId);
+        useWalletStore.getState().setWallets(wallets); // store'a yaz
+        setWallets(wallets); // local state'e yaz
+      } catch (error) {
+        console.error("Wallets fetch failed", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWallets();
   }, [user]);
 
   const currencyIcon = (currency: string) => {
