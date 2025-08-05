@@ -13,6 +13,7 @@ import { getWalletsByUser } from "@/lib/api";
 import { Progress } from "@/components/ui/progress";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Wallet } from "@/types/wallet";
+import currencyData from "@/data/currency/currency.json";
 
 
 const EXCHANGE_API = "https://data.fixer.io/api/latest";
@@ -52,13 +53,15 @@ export default function DashboardPage() {
     (async () => {
       try {
         setRatesLoading(true);
-        const today = new Date().toISOString().split("T")[0];
-        const res = await fetch(
-          `${EXCHANGE_API}?access_key=${ACCESS_KEY}&base=${baseCurrency}&date=${today}`
-        );
-        console.log("api fetched");
-        const data = await res.json();
-        if (data && data.rates) setExchangeRates(data.rates);
+        // const today = new Date().toISOString().split("T")[0];
+        // const res = await fetch(
+        //   `${EXCHANGE_API}?access_key=${ACCESS_KEY}&base=${baseCurrency}&date=${today}`
+        // );
+        // console.log("api fetched");
+        // const data = await res.json();
+        // if (data && data.rates) setExchangeRates(data.rates);
+
+        if (currencyData && currencyData.rates) setExchangeRates(currencyData.rates);
       } catch (err) {
         console.error("Exchange rates fetch failed", err);
       } finally {
