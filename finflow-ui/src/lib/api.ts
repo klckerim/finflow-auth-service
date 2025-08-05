@@ -1,3 +1,5 @@
+import { Wallet as WalletType } from "@/types/wallet";
+
 
 export async function getWalletsByUser(userId: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/user/${userId}`);
@@ -36,4 +38,21 @@ export async function getLastTransfers(walletId: string) {
   return res.json();
 }
 
+
+export async function getWalletById(id: string): Promise<WalletType | null> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (!res.ok) return null;
+
+    return await res.json();
+  } catch (error) {
+    return null;
+  }
+}
 

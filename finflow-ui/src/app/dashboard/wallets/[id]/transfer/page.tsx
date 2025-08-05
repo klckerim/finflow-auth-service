@@ -37,27 +37,47 @@ export default function TransferPage() {
   const [lastTransfers, setLastTransfers] = useState<any[]>([]);
 
   const otherWallets = useWalletStore((state) => state.wallets);
+  const currentWallet = otherWallets.find((w) => w.id === walletId);
+  const selectedToWallet = otherWallets.find((w) => w.id === toWalletId);
 
   useEffect(() => {
-    setWalletOptions(otherWallets);
+    setWalletOptions(otherWallets.filter((w) => w.id !== walletId));
     // getLastTransfers(walletId as string).then(setLastTransfers);
-  }, [walletId]);
+  }, [walletId, otherWallets]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const numericAmount = parseFloat(amount);
+
+    if (!toWalletId || !numericAmount) {
+      toast.error("Lütfen tüm alanları doldurun.");
+      return;
+    }
+
+    if (numericAmount <= 0) {
+      toast.error("Tutar pozitif bir sayı olmalıdır.");
+      return;
+    }
+
+    if (numericAmount > (currentWallet?.balance ?? 0)) {
+      toast.error("Yetersiz bakiye ❌");
+      return;
+    }
+
     setLoading(true);
     try {
       await transferAmount(walletId as string, {
         fromWalletId: walletId as string,
         toWalletId,
-        amount: parseFloat(amount),
+        amount: numericAmount,
       });
 
       setShowSuccess(true);
       setAmount("");
       setToWalletId("");
     } catch {
-      toast.error("Transfer başarısız ❌");
+      toast.error("Transfer sırasında bir hata oluştu ❌");
     } finally {
       setLoading(false);
     }
@@ -78,7 +98,12 @@ export default function TransferPage() {
         <CardHeader>
           <CardTitle className="text-lg font-semibold">Transfer Bilgileri</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <div className="text-sm text-muted-foreground">
+            <p>Mevcut Cüzdan: <strong>{currentWallet?.name || `Cüzdan #${walletId}`}</strong></p>
+            <p>Bakiye: <strong>{currentWallet?.balance?.toFixed(2)} ₺</strong></p>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">Hedef Cüzdan</label>
@@ -89,7 +114,7 @@ export default function TransferPage() {
                 <SelectContent>
                   {walletOptions.map((wallet) => (
                     <SelectItem key={wallet.id} value={wallet.id}>
-                      {wallet.name || `Cüzdan #${wallet.id}`}
+                      {wallet.name || `Cüzdan #${wallet.id}`} — {wallet.balance.toFixed(2)} ₺
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -97,7 +122,7 @@ export default function TransferPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Tutar</label>
+              <label className="block text-sm font-medium mb-1">Tutar (₺)</label>
               <Input
                 type="number"
                 placeholder="Tutar"

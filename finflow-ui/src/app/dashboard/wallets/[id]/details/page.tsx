@@ -9,25 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Edit3, Trash2, LucideTimer } from "lucide-react";
 import { toast } from "sonner";
-import { Wallet as WalletType } from "@/types/wallet";
-
-
-async function getWalletById(id: string): Promise<WalletType | null> {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
-      cache: "no-store",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (!res.ok) return null;
-
-    return await res.json();
-  } catch (error) {
-    return null;
-  }
-}
+import { getWalletById } from "@/lib/api";
 
 
 const WalletDetailPage = () => {
