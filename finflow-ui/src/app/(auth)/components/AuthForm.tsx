@@ -19,7 +19,7 @@ export function AuthForm() {
     e.preventDefault();
     // TODO: API bağlantısı yapılacak
     alert(`${isLogin ? "Giriş" : "Kayıt"} başarılı!`);
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (

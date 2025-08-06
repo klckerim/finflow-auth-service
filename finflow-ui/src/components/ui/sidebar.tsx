@@ -67,7 +67,7 @@ export default function Sidebar() {
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0 bg-background">
               <div className="h-16 flex items-center px-6 border-b border-muted/30">
-                <Link href="/" className="flex items-center space-x-3">
+                <Link href="/dashboard" className="flex items-center space-x-3">
                   <Image
                     src="/finflow.jpg"
                     alt="FinFlow Logo"
@@ -131,7 +131,7 @@ export default function Sidebar() {
         {/* Desktop Sidebar */}
         <aside className="hidden md:flex flex-col fixed top-0 left-0 w-64 h-screen bg-background border-r border-muted/30 z-40">
           <div className="h-16 flex items-center px-6 border-b border-muted/30">
-            <Link href="/" className="flex items-center space-x-3">
+            <Link href="/dashboard" className="flex items-center space-x-3">
               <Image
                 src="/finflow.jpg"
                 alt="FinFlow Logo"

@@ -14,24 +14,44 @@ import { Progress } from "@/components/ui/progress";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Wallet } from "@/types/wallet";
 import currencyData from "@/data/currency/currency.json";
-
+import { getGreeting } from "@/components/ui/label";
+import dynamic from "next/dynamic";
+import { expensesData, mockMonthlyTrendData } from "@/data/mock/data";
+import { Lightbulb } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const EXCHANGE_API = "https://data.fixer.io/api/latest";
 const ACCESS_KEY = "YOUR_ACCESS_KEY" //https://fixer.io/
 
+
+const ExpensesPieChart = dynamic(() => import("@/components/charts/expenses-pie-chart"));
+const MonthlyTrendLineChart = dynamic(() => import("@/components/charts/monthly-trend-line-chart"));
+
 export default function DashboardPage() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading , logout} = useAuth();
   const router = useRouter();
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [walletsLoading, setWalletsLoading] = useState(true);
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
   const [ratesLoading, setRatesLoading] = useState(true);
   const [baseCurrency, setBaseCurrency] = useState("EUR");
+  const greeting = getGreeting();
+  const [quote, setQuote] = useState("");
 
   // Fetch wallets
   useEffect(() => {
     if (!isLoading && !user) router.push("/login");
   }, [isLoading, user, router]);
+
+  useEffect(() => {
+    const quotes = [
+      "Bugünün planı, yarının başarısıdır.",
+      "Paranı yönet, geleceğini şekillendir.",
+      "Küçük adımlar, büyük farklar yaratır.",
+      "Finansal özgürlük bir alışkanlıktır.",
+    ];
+    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -113,15 +133,17 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="flex flex-1 overflow-hidden">
+    <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-12 transition-colors duration-500">
         <main className="flex-1 p-6 pt-20 overflow-y-auto bg-gradient-to-br from-zinc-50 to-white dark:from-black dark:to-zinc-900">
-          <section className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold tracking-tight">
-                👋 Hoş geldin, {user.fullName}
-              </h1>
-              <ThemeToggle />
-            </div>
+
+          <section className="text-center space-y-3">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+              FinFlow'a Hoş Geldin{user ? `, ${user.fullName}` : ""}
+            </h1>
+            <p className="text-2xl text-primary">{greeting}</p>
+            <p className="text-lg text-muted-foreground">
+              Cüzdanlarını yönet, kartlarını takip et ve finansal hedeflerine ulaş.
+            </p>
 
             {/* Para birimi seçimi */}
             <div className="mb-6 flex items-center gap-4">
@@ -247,6 +269,75 @@ export default function DashboardPage() {
             <QuickActions />
             <AnalyticsWidget />
           </section>
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="p-6 text-center text-lg font-medium hover:shadow-xl transition">
+              🧾 Cüzdan ve Kartlarını Kolayca Yönet
+            </Card>
+            <Card className="p-6 text-center text-lg font-medium hover:shadow-xl transition">
+              📈 Finansal Durumunu Anında Gör
+            </Card>
+            <Card className="p-6 text-center text-lg font-medium hover:shadow-xl transition">
+              🧠 Akıllı Tavsiyelerle Harcamalarını Optimize Et
+            </Card>
+          </section>
+
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Kişiselleştirilmiş Tavsiyeler</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
+                <p><Lightbulb className="inline mr-2 text-yellow-500" /> Gıda harcamalarını %10 azaltmayı deneyebilirsin.</p>
+                <p><Lightbulb className="inline mr-2 text-yellow-500" /> Hedefine ulaşmak için haftalık ₺400 kenara koy.</p>
+                <p><Lightbulb className="inline mr-2 text-yellow-500" /> Bu ay ulaşım giderlerin ortalamanın üzerinde.</p>
+              </CardContent>
+            </Card>
+          </section>
+
+          <section className="grid md:grid-cols-2 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>En Çok Harcama Yaptığın Kategoriler</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ExpensesPieChart data={expensesData} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Aylık Gelir/Gider Trendin</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <MonthlyTrendLineChart data={mockMonthlyTrendData} />
+              </CardContent>
+            </Card>
+          </section>
+
+
+          <section className="flex flex-wrap justify-center gap-4">
+            {user ? (
+              <>
+                <Button onClick={() => router.push("/dashboard")}>📂 Dashboard</Button>
+                <Button variant="outline" onClick={logout}>🚪 Çıkış Yap</Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={() => router.push("/register")}>🚀 Kayıt Ol</Button>
+                <Button variant="outline" onClick={() => router.push("/login")}>🔐 Giriş Yap</Button>
+              </>
+            )}
+          </section>
+
+
+
+          <section className="text-center mt-8">
+            <p className="italic text-muted-foreground text-sm">"{quote}"</p>
+          </section>
+
+
         </main>
       </div>
     </ProtectedRoute>
