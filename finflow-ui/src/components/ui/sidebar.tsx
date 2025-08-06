@@ -21,6 +21,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./sheet";
 import ProtectedRoute from "../utils/ProtectedRoute";
+import { logout } from "@/lib/auth";
 
 const mainMenu = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -191,7 +192,8 @@ export default function Sidebar() {
             </div>
             <div className="border-t border-muted/30 pt-4 px-4 space-y-2">
               <Link
-                href="/logout"
+                href="/"
+                onClick={logout}
                 className="flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
               >
                 <LogOut className="w-5 h-5 mr-2" />
