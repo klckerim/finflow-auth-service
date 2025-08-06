@@ -192,7 +192,7 @@ export default function Sidebar() {
             </div>
             <div className="border-t border-muted/30 pt-4 px-4 space-y-2">
               <Link
-                href="/"
+                href="/login"
                 onClick={logout}
                 className="flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
               >
