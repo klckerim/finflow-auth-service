@@ -7,7 +7,7 @@ import { getWalletsByUser } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, DollarSign, Euro, Wallet as WalletIcon } from "lucide-react";
+import { ArrowRight, DollarSign, Euro, Plus, Wallet as WalletIcon } from "lucide-react";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
 import { useWalletStore } from "@/app/store/walletStore";
@@ -51,7 +51,7 @@ const WalletsPage = () => {
   return (
     <ProtectedRoute>
       <motion.div
-        className="p-6 space-y-6"
+    className="p-6 pb-24 space-y-6 max-w-screen-md mx-auto"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -65,11 +65,12 @@ const WalletsPage = () => {
               <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold tracking-tight">💼 Cüzdanlarım</h1>
                 <Button variant="outline" onClick={() => router.push("/dashboard/wallets/add")}>
+                  <Plus size={18} />
                   Yeni Cüzdan Ekle
                 </Button>
               </div>
             )}
-
+            
             {loading ? (
               <p>Yükleniyor...</p>
             ) : wallets.length === 0 ? (
