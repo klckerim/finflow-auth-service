@@ -50,15 +50,30 @@ const WalletsPage = () => {
   return (
     <ProtectedRoute>
       <div className="space-y-8 px-4 py-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold tracking-tight">💼 Cüzdanlarım</h1>
-          <Button variant="outline" onClick={() => router.push("/dashboard/wallets/add")}>
-            Yeni Cüzdan Ekle
-          </Button>
-        </div>
+        {wallets.length === 0 ? (
+          <div></div>
+        ) : (
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold tracking-tight">💼 Cüzdanlarım</h1>
+            <Button variant="outline" onClick={() => router.push("/dashboard/wallets/add")}>
+              Yeni Cüzdan Ekle
+            </Button>
+          </div>
+        )}
 
         {loading ? (
           <p>Yükleniyor...</p>
+        ) : wallets.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-center space-y-6">
+            <img src={"/wallet.svg"} alt="Empty Wallet" className="w-64 h-64 opacity-100" />
+            <h2 className="text-2xl font-semibold">Henüz bir cüzdan eklemedin</h2>
+            <p className="text-muted-foreground max-w-md">
+              Bütçeni yönetmeye başlamak için ilk cüzdanını oluştur.
+            </p>
+            <Button size="lg" onClick={() => router.push("/dashboard/wallets/add")}>
+              🚀 İlk Cüzdanını Oluştur
+            </Button>
+          </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {wallets.map((wallet) => (
