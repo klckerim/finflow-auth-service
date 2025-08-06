@@ -35,6 +35,7 @@ const mainMenu = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [openSettings, setOpenSettings] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const renderNavItem = (item: any) => {
     const isActive = pathname === item.href;
@@ -42,11 +43,11 @@ export default function Sidebar() {
       <Link
         key={item.name}
         href={item.href}
-        className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${
-          isActive
+        onClick={() => setIsOpen(false)} // 🔥 burası efsane kritik
+        className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${isActive
             ? "bg-primary text-white shadow-lg"
             : "hover:bg-muted hover:text-primary"
-        }`}
+          }`}
       >
         <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
         <span className="font-medium">{item.name}</span>
@@ -59,7 +60,7 @@ export default function Sidebar() {
       <ProtectedRoute>
         {/* Mobile Sidebar */}
         <div className="md:hidden fixed top-4 left-4 z-50">
-          <Sheet>
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" aria-label="Menüyü aç">
                 <Menu className="w-6 h-6" />
@@ -67,7 +68,7 @@ export default function Sidebar() {
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0 bg-background">
               <div className="h-16 flex items-center px-6 border-b border-muted/30">
-                <Link href="/dashboard" className="flex items-center space-x-3">
+                <Link href="/dashboard" onClick={() => setIsOpen(false)} className="flex items-center space-x-3">
                   <Image
                     src="/finflow.jpg"
                     alt="FinFlow Logo"
@@ -103,21 +104,22 @@ export default function Sidebar() {
                   >
                     <Link
                       href="/dashboard/settings/profile"
-                      className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${
-                        pathname === "/dashboard/settings/profile"
-                          ? "bg-primary text-white"
-                          : ""
-                      }`}
+                      onClick={() => setIsOpen(false)}
+                      className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/profile"
+                        ? "bg-primary text-white"
+                        : ""
+                        }`}
                     >
                       Profil
                     </Link>
                     <Link
                       href="/dashboard/settings/security"
-                      className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${
-                        pathname === "/dashboard/settings/security"
-                          ? "bg-primary text-white"
-                          : ""
-                      }`}
+                      onClick={() => setIsOpen(false)}
+
+                      className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/security"
+                        ? "bg-primary text-white"
+                        : ""
+                        }`}
                     >
                       Güvenlik
                     </Link>
@@ -166,21 +168,21 @@ export default function Sidebar() {
                 >
                   <Link
                     href="/dashboard/settings/profile"
-                    className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${
-                      pathname === "/dashboard/settings/profile"
-                        ? "bg-primary text-white"
-                        : ""
-                    }`}
+                    onClick={() => setIsOpen(false)}
+                    className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/profile"
+                      ? "bg-primary text-white"
+                      : ""
+                      }`}
                   >
                     Profil
                   </Link>
                   <Link
                     href="/dashboard/settings/security"
-                    className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${
-                      pathname === "/dashboard/settings/security"
-                        ? "bg-primary text-white"
-                        : ""
-                    }`}
+                    onClick={() => setIsOpen(false)}
+                    className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/security"
+                      ? "bg-primary text-white"
+                      : ""
+                      }`}
                   >
                     Güvenlik
                   </Link>
