@@ -8,7 +8,9 @@ export function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
 
 export function getGreeting(): string {
   const hour = new Date().getHours();
-  if (hour < 12) return "Günaydın 🌞";
-  if (hour < 17) return "İyi günler 🙌🏻";
-  return "İyi akşamlar 🌙";
+
+  if (hour >= 5 && hour < 12) return "Günaydın 🌞";
+  if (hour >= 12 && hour < 17) return "İyi günler 🙌🏻";
+  if (hour >= 17 && hour < 22) return "İyi akşamlar 🌙";
+  return "İyi geceler 🌌";
 }
