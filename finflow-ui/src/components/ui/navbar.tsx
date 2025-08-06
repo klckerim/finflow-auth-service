@@ -1,7 +1,7 @@
 "use client";
 
 import ProfileDropdown from "./profiledropdown";
-import ProtectedRoute from "./utils/ProtectedRoute";
+import ProtectedRoute from "../utils/ProtectedRoute";
 
 
 export default function Navbar() {

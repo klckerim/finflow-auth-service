@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FadeInWrapper } from "@/components/fadeinwrapper";
+import { FadeInWrapper } from "@/components/ui/fadeinwrapper";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 

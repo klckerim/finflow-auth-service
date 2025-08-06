@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "./button";
 
 export default function ActionButton({ label, href }: { label: string; href: string }) {
   return (

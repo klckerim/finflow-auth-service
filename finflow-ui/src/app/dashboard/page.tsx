@@ -1,7 +1,7 @@
 "use client";
 
-import AnalyticsWidget from "@/components/AnalyticsWidget";
-import QuickActions from "@/components/quickactions";
+import AnalyticsWidget from "@/components/ui/AnalyticsWidget";
+import QuickActions from "@/components/ui/quickactions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";

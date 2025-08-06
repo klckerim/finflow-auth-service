@@ -25,7 +25,7 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger } from "./ui/dropdown-menu";
+    DropdownMenuTrigger } from "./dropdown-menu";
 
 const ProfileDropdown = () => {
     const [language, setLanguage] = useState("TR");
