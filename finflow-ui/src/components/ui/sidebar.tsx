@@ -21,7 +21,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./sheet";
 import ProtectedRoute from "../utils/ProtectedRoute";
-import { useGlobalContext } from "@/context/globalcontext";
 
 const mainMenu = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -36,7 +35,6 @@ const mainMenu = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [openSettings, setOpenSettings] = useState(false);
-  const { user } = useGlobalContext();
 
   const renderNavItem = (item: any) => {
     const isActive = pathname === item.href;
