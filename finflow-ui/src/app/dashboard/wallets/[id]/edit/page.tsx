@@ -84,14 +84,14 @@ const EditWalletPage = () => {
     };
 
     if (loading || !wallet) {
-        return <div className="p-6">Yükleniyor...</div>;
+        return <div className="p-6">Loading...</div>;
     }
 
     return (
         <div className="p-6 max-w-2xl mx-auto space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>CEdit Wallet</CardTitle>
+                    <CardTitle>Edit Wallet</CardTitle>
                     <CardDescription>Update wallet information</CardDescription>
                 </CardHeader>
 

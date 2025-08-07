@@ -20,7 +20,7 @@ const AddWalletPage = () => {
   const [balance, setBalance] = useState("");
 
   const handleSubmit = async () => {
-    if (!user) return alert("Önce giriş yapmalısınız.");
+    if (!user) return alert("Please login first!");
 
     try {
 
@@ -53,36 +53,36 @@ const AddWalletPage = () => {
       <div className="flex justify-center items-center min-h-[80vh] px-4">
         <Card className="w-full max-w-md shadow-md">
           <CardHeader>
-            <CardTitle className="text-2xl font-semibold">🆕 Yeni Cüzdan Ekle</CardTitle>
+            <CardTitle className="text-2xl font-semibold">🆕 Add New Wallet</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="name">Cüzdan Adı</Label>
+              <Label htmlFor="name">Wallet Name</Label>
               <Input
                 id="name"
-                placeholder="Örneğin: Günlük Harcamalar"
+                placeholder="i.e. Daily Expenses"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
 
             <div>
-              <Label htmlFor="currency">Para Birimi</Label>
+              <Label htmlFor="currency">Currency</Label>
               <Select value={currency} onValueChange={setCurrency}>
                 <SelectTrigger id="currency">
-                  <SelectValue placeholder="Bir para birimi seçin" />
+                  <SelectValue placeholder="Select a currency" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="TRY">₺ Türk Lirası (TRY)</SelectItem>
-                  <SelectItem value="USD">$ Amerikan Doları (USD)</SelectItem>
+                  <SelectItem value="TRY">₺ Turkish Lira (TRY)</SelectItem>
+                  <SelectItem value="USD">$ Dollar (USD)</SelectItem>
                   <SelectItem value="EUR">€ Euro (EUR)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <Label htmlFor="balance">Başlangıç Bakiyesi (isteğe bağlı)</Label>
+              <Label htmlFor="balance">Initial Balance (optional)</Label>
               <Input
                 id="balance"
                 type="number"
@@ -95,10 +95,10 @@ const AddWalletPage = () => {
 
           <CardFooter className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => router.back()}>
-              Vazgeç
+              Cancel
             </Button>
             <Button onClick={handleSubmit} disabled={!name || !currency}>
-              Cüzdanı Oluştur
+              Create Wallet
             </Button>
           </CardFooter>
         </Card>

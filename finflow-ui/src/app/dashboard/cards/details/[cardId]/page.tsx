@@ -39,12 +39,12 @@ export default function CardDetailsPage() {
           <Separator />
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Card Owner:</span>
-            <span className="font-medium">Can</span>
+            <span className="font-medium">Can A.</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Durum:</span>
+            <span className="text-muted-foreground">State:</span>
             <span className="flex items-center gap-1 text-green-600 font-medium">
-              <BadgeCheck className="w-4 h-4" /> Aktif
+              <BadgeCheck className="w-4 h-4" /> Active
             </span>
           </div>
           <div className="flex justify-between items-center">
