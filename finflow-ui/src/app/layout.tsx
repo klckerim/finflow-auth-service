@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "FinFlow",
-  description: "Modern ve minimalist dijital cüzdan çözümü",
+  description: "Modern and minimalist digital wallet solution",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

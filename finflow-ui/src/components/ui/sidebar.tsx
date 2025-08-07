@@ -44,7 +44,7 @@ export default function Sidebar() {
       <Link
         key={item.name}
         href={item.href}
-        onClick={() => setIsOpen(false)} // 🔥 burası efsane kritik
+        onClick={() => setIsOpen(false)}
         className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${isActive
           ? "bg-primary text-white shadow-lg"
           : "hover:bg-muted hover:text-primary"
@@ -63,7 +63,7 @@ export default function Sidebar() {
         <div className="md:hidden fixed top-4 left-4 z-50">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Menüyü aç">
+              <Button variant="outline" size="icon" aria-label="Open menu">
                 <Menu className="w-6 h-6" />
               </Button>
             </SheetTrigger>
@@ -91,7 +91,7 @@ export default function Sidebar() {
                   aria-controls="settings-submenu"
                 >
                   <Settings className="w-5 h-5 mr-3 flex-shrink-0" />
-                  <span className="flex-1 text-left font-medium">Ayarlar</span>
+                  <span className="flex-1 text-left font-medium">Settings</span>
                   {openSettings ? (
                     <ChevronUp className="w-4 h-4" />
                   ) : (
@@ -111,7 +111,7 @@ export default function Sidebar() {
                         : ""
                         }`}
                     >
-                      Profil
+                      Profile
                     </Link>
                     <Link
                       href="/dashboard/settings/security"
@@ -122,7 +122,7 @@ export default function Sidebar() {
                         : ""
                         }`}
                     >
-                      Güvenlik
+                      Security
                     </Link>
                   </div>
                 )}
@@ -155,7 +155,7 @@ export default function Sidebar() {
                 aria-controls="settings-submenu"
               >
                 <Settings className="w-5 h-5 mr-3 flex-shrink-0" />
-                <span className="flex-1 text-left font-medium">Ayarlar</span>
+                <span className="flex-1 text-left font-medium">Settings</span>
                 {openSettings ? (
                   <ChevronUp className="w-4 h-4" />
                 ) : (
@@ -175,7 +175,7 @@ export default function Sidebar() {
                       : ""
                       }`}
                   >
-                    Profil
+                    Profile
                   </Link>
                   <Link
                     href="/dashboard/settings/security"
@@ -185,7 +185,7 @@ export default function Sidebar() {
                       : ""
                       }`}
                   >
-                    Güvenlik
+                    Security
                   </Link>
                 </div>
               )}

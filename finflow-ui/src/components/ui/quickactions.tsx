@@ -10,19 +10,19 @@ const QuickActions = () => {
   const actions = [
     { 
       icon: <Plus className="h-6 w-6" />, 
-      label: "Yeni Cüzdan", 
+      label: "New Wallet", 
       path: "/dashboard/wallets/add" 
     },
     { 
       icon: <History className="h-6 w-6" />, 
-      label: "Son İşlemler", 
+      label: "Last Transactions", 
       path: "/dashboard/transactions" 
     },
   ];
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">Hızlı Aksiyonlar</h2>
+      <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {actions.map((action, index) => (
           <Link href={action.path} key={index}>

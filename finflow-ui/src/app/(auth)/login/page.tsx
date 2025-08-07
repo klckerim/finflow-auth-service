@@ -60,7 +60,7 @@ export default function LoginPage() {
         <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
           <h1 className="text-4xl font-bold mb-4">Welcome to FinFlow!</h1>
           <p className="text-lg max-w-md text-gray-300 text-center">
-            Gelir giderlerini takip et, bütçeni kontrol altına al. Finansal özgürlüğe ilk adımını at. ✨
+            Manage your digital wallets. ✨
           </p>
           <img
             src="/finance-illustration.svg"

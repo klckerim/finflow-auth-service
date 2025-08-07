@@ -45,20 +45,20 @@ const ProfileDropdown = () => {
             <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel className="flex items-center">
                     <User className="mr-2 h-4 w-4" />
-                    <span>{user?.fullName || "Hesabım"}</span>
+                    <span>{user?.fullName || "My Account"}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuItem>
                     <History className="mr-2 h-4 w-4" />
-                    <span>İşlemlerim</span>
+                    <span>My Transactions</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem>
                     <div className="flex items-center justify-between w-full">
                         <div className="flex items-center">
                             <Bell className="mr-2 h-4 w-4" />
-                            <span>Bildirimler</span>
+                            <span>Notifications</span>
                         </div>
                         <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-pulse">
                             1
@@ -68,23 +68,23 @@ const ProfileDropdown = () => {
 
                 <DropdownMenuItem>
                     <Settings className="mr-2 h-4 w-4" />
-                    <span>Ayarlar</span>
+                    <span>Settings</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem onClick={toggleLanguage}>
                     <Globe className="mr-2 h-4 w-4" />
-                    <span>Dil: {language}</span>
+                    <span>Language: {language}</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem>
                     <Info className="mr-2 h-4 w-4" />
-                    <span>Hakkında</span>
+                    <span>About</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Çıkış Yap</span>
+                    <span>Logout</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

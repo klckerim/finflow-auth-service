@@ -32,7 +32,7 @@ const EditWalletPage = () => {
         getWalletById(id as string)
             .then((data) => {
                 if (!data) {
-                    toast.error("Cüzdan bilgisi bulunamadı");
+                    toast.error("Wallet not found");
                     router.push("/dashboard/wallets");
                     return;
                 }
@@ -46,7 +46,7 @@ const EditWalletPage = () => {
                 });
             })
             .catch(() => {
-                toast.error("Cüzdan bilgisi getirilemedi");
+                toast.error("Wallet information not found");
                 router.push("/dashboard/wallets");
             })
             .finally(() => setLoading(false));
@@ -74,10 +74,10 @@ const EditWalletPage = () => {
             };
 
             await updateWalletById(wallet.id, payload);
-            toast.success("Cüzdan başarıyla güncellendi");
+            toast.success("Wallet updated successfully");
             router.push(`/dashboard/wallets/${wallet.id}/details`);
         } catch (error) {
-            toast.error("Cüzdan güncellenemedi");
+            toast.error("Wallet could not be updated");
         } finally {
             setUpdating(false);
         }
@@ -91,18 +91,18 @@ const EditWalletPage = () => {
         <div className="p-6 max-w-2xl mx-auto space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Cüzdanı Düzenle</CardTitle>
-                    <CardDescription>Cüzdan bilgilerini güncelleyin</CardDescription>
+                    <CardTitle>CEdit Wallet</CardTitle>
+                    <CardDescription>Update wallet information</CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="name">Cüzdan Adı</Label>
-                        <Input name="name" value={formData.name} onChange={handleChange} placeholder="Örn: Ana Hesap" />
+                        <Label htmlFor="name">Wallet Name</Label>
+                        <Input name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Main Account" />
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="balance">Bakiye</Label>
+                        <Label htmlFor="balance">Balance</Label>
                         <Input
                             name="balance"
                             type="number"
@@ -113,15 +113,15 @@ const EditWalletPage = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="currency">Para Birimi</Label>
+                        <Label htmlFor="currency">Currency</Label>
                         <select
                             name="currency"
                             value={formData.currency}
                             onChange={handleChange}
                             className="w-full border rounded px-3 py-2"
                         >
-                            <option value="TRY">TRY - Türk Lirası</option>
-                            <option value="USD">USD - Amerikan Doları</option>
+                            <option value="TRY">TRY - Turkish Lira</option>
+                            <option value="USD">USD - USD Dollar</option>
                             <option value="EUR">EUR - Euro</option>
                         </select>
                     </div>
@@ -134,12 +134,12 @@ const EditWalletPage = () => {
                             onChange={handleChange}
                             id="isActive"
                         />
-                        <Label htmlFor="isActive">Aktif Durumda</Label>
+                        <Label htmlFor="isActive">Active</Label>
                     </div>
 
                     <Button onClick={handleSubmit} disabled={updating} className="w-full">
                         {updating ? <Loader2 className="animate-spin w-4 h-4 mr-2" /> : null}
-                        Güncelle
+                        Update
                     </Button>
                 </CardContent>
             </Card>
@@ -147,12 +147,11 @@ const EditWalletPage = () => {
             {/* Bilgilendirici Panel */}
             <Card className="bg-muted/30 border-muted">
                 <CardHeader>
-                    <CardTitle>Kullanıcıya Notlar</CardTitle>
+                    <CardTitle>Notes For User</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground space-y-2">
-                    <p>• Cüzdan adı, bakiyesi ve para birimi değiştirilebilir.</p>
-                    <p>• Cüzdan durumu aktif/pasif olarak ayarlanabilir.</p>
-                    <p>• Güncelleme sonrası sistemde otomatik olarak değişiklik uygulanır.</p>
+                    <p>• Wallet name and balance can be changed.</p>
+                    <p>• Changes are automatically applied to the system after the update.</p>
                 </CardContent>
             </Card>
         </div>

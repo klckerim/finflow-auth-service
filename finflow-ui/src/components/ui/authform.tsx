@@ -15,14 +15,14 @@ type AuthFormProps = {
 };
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Geçerli bir e-posta girin" }),
-  password: z.string().min(6, { message: "Şifre en az 6 karakter olmalı" }),
+  email: z.string().email({ message: "Enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
 const registerSchema = loginSchema.extend({
-  confirmPassword: z.string().min(6, { message: "Şifre tekrarı gerekli" }),
+  confirmPassword: z.string().min(6, { message: "Repeat password required" }),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Şifreler eşleşmiyor",
+  message: "Passwords do not match",
   path: ["confirmPassword"],
 });
 
@@ -43,20 +43,20 @@ export default function AuthForm({ mode, onSubmit }: AuthFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-md mx-auto p-6 border rounded shadow">
       <div>
-        <Label htmlFor="email">E-posta</Label>
+        <Label htmlFor="email">E-Mail</Label>
         <Input id="email" type="email" {...register("email")} />
         {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="password">Şifre</Label>
+        <Label htmlFor="password">Password</Label>
         <Input id="password" type="password" {...register("password")} />
         {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>}
       </div>
 
       {mode === "register" && (
         <div>
-          <Label htmlFor="confirmPassword">Şifre Tekrar</Label>
+          <Label htmlFor="confirmPassword">Password Again</Label>
           <Input id="confirmPassword" type="password" {...register("confirmPassword")} />
           {(errors as z.ZodError).issues.find(issue => issue.path[0] === "confirmPassword") && (
             <p className="text-red-600 text-sm mt-1">

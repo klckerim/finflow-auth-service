@@ -32,14 +32,14 @@ export default function CardsPage() {
       >
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">Kartlarım</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">My Cards</h1>
             <p className="text-muted-foreground">
-              Kayıtlı kart bilgilerini burada yönetebilirsin.
+              Manage your cards.
             </p>
           </div>
           <Button variant="outline" className="gap-2" onClick={() => addNewCard()}>
             <Plus size={18} />
-            Yeni Kart Ekle
+            Add New Card
           </Button>
         </div>
 
@@ -57,11 +57,11 @@ export default function CardsPage() {
               <div className="text-sm text-muted-foreground">
                 **** **** **** 567{cardId}
               </div>
-              <div className="text-sm mt-1">Son Kullanma: 12/2{cardId}</div>
-              <div className="text-sm mt-1">Kart Sahibi: Kerim K.</div>
+              <div className="text-sm mt-1">Expiration Date: 12/2{cardId}</div>
+              <div className="text-sm mt-1">Card Owner: Can A.</div>
 
               <Button variant="ghost" className="mt-4 w-full text-primary" onClick={() => handleViewDetails(cardId)}>
-                Detayları Gör
+                See Details
               </Button>
             </CardContent>
           </Card>

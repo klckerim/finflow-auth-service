@@ -57,26 +57,26 @@ const WalletsPage = () => {
         transition={{ duration: 0.4 }}
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">💼 Cüzdanlarım</h1>
+          <h1 className="text-3xl font-bold tracking-tight">💼 My Wallets</h1>
           {wallets.length > 0 && (
             <Button variant="outline" onClick={() => router.push("/dashboard/wallets/add")}>
               <Plus size={18} className="mr-2" />
-              Yeni Cüzdan Ekle
+              Add New Wallet
             </Button>
           )}
         </div>
 
         {loading ? (
-          <p className="text-center text-muted-foreground">Yükleniyor...</p>
+          <p className="text-center text-muted-foreground">Loading...</p>
         ) : wallets.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center gap-6 mt-12">
             <img src="/wallet.svg" alt="Empty Wallet" className="w-48 h-48 sm:w-64 sm:h-64" />
-            <h2 className="text-2xl font-semibold">Henüz bir cüzdan eklemedin</h2>
+            <h2 className="text-2xl font-semibold">No wallet has been added yet</h2>
             <p className="text-muted-foreground max-w-md">
-              Bütçeni yönetmeye başlamak için ilk cüzdanını oluştur.
+              Create your first wallet to manage your budget.
             </p>
             <Button size="lg" onClick={() => router.push("/dashboard/wallets/add")}>
-              🚀 İlk Cüzdanını Oluştur
+              🚀 Create Your First Wallet
             </Button>
           </div>
         ) : (
@@ -102,14 +102,14 @@ const WalletsPage = () => {
                       className="text-sm text-muted-foreground hover:text-primary"
                       onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
                     >
-                      Transfer Yap
+                      Transfer
                     </Button>
                     <Button
                       variant="ghost"
                       className="text-sm text-muted-foreground hover:text-primary"
                       onClick={() => router.push(`/dashboard/wallets/${wallet.id}/details`)}
                     >
-                      Detayları Gör <ArrowRight className="w-4 h-4 ml-1" />
+                      See Details <ArrowRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
                 </CardContent>

@@ -21,11 +21,11 @@ export default function ResetPasswordClient() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!token) {
-      toast.error("Token bulunamadı.")
+      toast.error("Token not found.")
       return
     }
     if (password !== confirmPassword) {
-      toast.error("Şifreler uyuşmuyor.")
+      toast.error("Passwords do not match.")
       return
     }
 
@@ -43,7 +43,7 @@ export default function ResetPasswordClient() {
     setLoading(false)
 
     if (res.ok) {
-      toast.success("Şifreniz başarıyla sıfırlandı.")
+      toast.success("Your password has been successfully reset.")
       router.push("/login")
     } else {
       const msg = await parseApiResponseError(res);
@@ -55,11 +55,11 @@ export default function ResetPasswordClient() {
     <div className="flex flex-col items-center min-h-screen pt-8 sm:pt-12">
       <div className="max-w-md w-full p-4 border rounded-xl shadow-md">
         <Card className="w-full max-w-md p-6">
-          <h2 className="text-2xl font-bold mb-4">Yeni Şifre Belirle</h2>
+          <h2 className="text-2xl font-bold mb-4">Set a New Password</h2>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="password">Yeni Şifre</Label>
+                <Label htmlFor="password">New Password</Label>
                 <Input
                   type="password"
                   id="password"
@@ -69,7 +69,7 @@ export default function ResetPasswordClient() {
                 />
               </div>
               <div>
-                <Label htmlFor="confirmPassword">Yeni Şifre (Tekrar)</Label>
+                <Label htmlFor="confirmPassword">New Password (Again)</Label>
                 <Input
                   type="password"
                   id="confirmPassword"
@@ -79,7 +79,7 @@ export default function ResetPasswordClient() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Gönderiliyor..." : "Şifreyi Sıfırla"}
+                {loading ? "Sending..." : "Reset Password"}
               </Button>
             </form>
           </CardContent>

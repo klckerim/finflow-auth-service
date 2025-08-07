@@ -13,33 +13,33 @@ export default function CardDetailsPage() {
     <div className="p-6 max-w-3xl mx-auto animate-fade-in">
       <Button variant="ghost" onClick={() => router.back()} className="mb-4 flex items-center gap-2 text-muted-foreground">
         <ArrowLeft className="w-4 h-4" />
-        Geri Dön
+        Back
       </Button>
 
       <Card className="rounded-2xl shadow-lg border border-border bg-card/80 backdrop-blur">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold tracking-tight text-primary flex items-center gap-2">
             <CreditCard className="w-6 h-6 text-primary" />
-            FinFlow Sanal Kart
+            FinFlow Virtual Card
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Kart Numarası:</span>
+            <span className="text-muted-foreground">Card Number:</span>
             <span className="font-medium tracking-wider">**** **** **** 5678</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Son Kullanma Tarihi:</span>
+            <span className="text-muted-foreground">Expiration Date:</span>
             <span className="font-medium flex items-center gap-1"><Calendar className="w-4 h-4" /> 12/27</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Güvenlik Kodu:</span>
+            <span className="text-muted-foreground">Security Code:</span>
             <span className="font-medium">•••</span>
           </div>
           <Separator />
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Kart Sahibi:</span>
-            <span className="font-medium">Kerim Kılıç</span>
+            <span className="text-muted-foreground">Card Owner:</span>
+            <span className="font-medium">Can</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">Durum:</span>
@@ -54,7 +54,7 @@ export default function CardDetailsPage() {
           <Separator />
           <div className="text-xs text-muted-foreground">
             <ShieldCheck className="w-4 h-4 inline mr-1" />
-            Bu kart, gelişmiş şifreleme ile korunmaktadır.
+            This card protected by advanced security code.
           </div>
         </CardContent>
       </Card>

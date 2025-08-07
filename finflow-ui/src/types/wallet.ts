@@ -1,4 +1,3 @@
-import { EnumLike, EnumValues } from "zod/v3";
 
 export interface Wallet {
   id: string;

@@ -64,7 +64,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
 export const useGlobalContext = () => {
     const context = useContext(GlobalContext);
     if (!context) {
-        throw new Error("useGlobalContext must be used within GlobalProvider");
+        throw new Error("Authentication error.");
     }
     return context;
 };

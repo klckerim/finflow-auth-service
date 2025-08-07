@@ -45,10 +45,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const quotes = [
-      "Bugünün planı, yarının başarısıdır.",
-      "Paranı yönet, geleceğini şekillendir.",
-      "Küçük adımlar, büyük farklar yaratır.",
-      "Finansal özgürlük bir alışkanlıktır.",
+      "Today's plan is tomorrow's success.",
+      "Manage your money, shape your future.",
+      "Small steps make big differences.",
+      "Financial freedom is a habit."
     ];
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }, []);
@@ -118,16 +118,16 @@ export default function DashboardPage() {
         {/* HEADER */}
         <header className="space-y-4 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            FinFlow'a Hoş Geldin{user ? `, ${user.fullName}` : ""}
+            Welcome to FinFlow{user ? `, ${user.fullName}` : ""}
           </h1>
           <p className="text-lg sm:text-xl font-medium text-primary">{greeting}</p>
           <p className="text-base text-muted-foreground">
-            Cüzdanlarını yönet, kartlarını takip et ve finansal hedeflerine ulaş.
+            Manages their wallets, tracks their cards, and stays financially accessible.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
             <label htmlFor="currency-select" className="text-sm font-medium">
-              Para Birimi:
+              Currency:
             </label>
             <select
               id="currency-select"
@@ -147,13 +147,13 @@ export default function DashboardPage() {
         {/* METRİKLER */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="hover:shadow-md transition">
-            <CardHeader><CardTitle>Cüzdan Sayısı</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Number of Wallets</CardTitle></CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{wallets.length}</p>
             </CardContent>
           </Card>
           <Card className="hover:shadow-md transition">
-            <CardHeader><CardTitle>Toplam Bakiye ({baseCurrency})</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Total Balance ({baseCurrency})</CardTitle></CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">
                 {totalBalance.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })}
@@ -161,7 +161,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
           <Card className="hover:shadow-md transition">
-            <CardHeader><CardTitle>Harcama Limiti</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Expenses Limit</CardTitle></CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-2">
                 {spendingUsed.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })} /{" "}
@@ -175,9 +175,9 @@ export default function DashboardPage() {
         {/* CÜZDANLAR */}
         {wallets.length === 0 ? (
           <div className="text-center p-6 border-2 border-dashed rounded-lg">
-            <h2 className="text-xl font-semibold mb-2">Henüz cüzdanın yok</h2>
-            <p className="text-sm text-muted-foreground mb-4">Yeni bir cüzdan oluşturarak başlayabilirsin.</p>
-            <Button onClick={() => router.push("/dashboard/wallets/add")}>Cüzdan Oluştur</Button>
+            <h2 className="text-xl font-semibold mb-2">You don't have a wallet yet.</h2>
+            <p className="text-sm text-muted-foreground mb-4">You can start by creating a new wallet.</p>
+            <Button onClick={() => router.push("/dashboard/wallets/add")}>Create A Wallet</Button>
           </div>
         ) : (
           <section className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -188,7 +188,7 @@ export default function DashboardPage() {
                   <CardHeader><CardTitle>{wallet.name}</CardTitle></CardHeader>
                   <CardContent>
                     <p className="text-lg font-bold">
-                      {wallet.balance.toLocaleString("tr-TR", {
+                      {wallet.balance.toLocaleString("en-EN", {
                         style: "currency",
                         currency: wallet.currency,
                       })}
@@ -209,11 +209,11 @@ export default function DashboardPage() {
         {/* GRAFİKLER */}
         <section className="grid md:grid-cols-2 gap-6">
           <Card>
-            <CardHeader><CardTitle>Harcamalar</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Expenses</CardTitle></CardHeader>
             <CardContent><ExpensesPieChart data={expensesData} /></CardContent>
           </Card>
           <Card>
-            <CardHeader><CardTitle>Aylık Trend</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Monthly Trend</CardTitle></CardHeader>
             <CardContent><MonthlyTrendLineChart data={mockMonthlyTrendData} /></CardContent>
           </Card>
         </section>
@@ -225,11 +225,11 @@ export default function DashboardPage() {
         {/* ALT BUTONLAR */}
         <div className="flex flex-wrap justify-center gap-4 mt-10">
           {user ? (
-            <Button variant="outline" onClick={logout}>🚪 Çıkış Yap</Button>
+            <Button variant="outline" onClick={logout}>🚪 Logout</Button>
           ) : (
             <>
-              <Button onClick={() => router.push("/register")}>🚀 Kayıt Ol</Button>
-              <Button variant="outline" onClick={() => router.push("/login")}>🔐 Giriş Yap</Button>
+              <Button onClick={() => router.push("/register")}>🚀 Sign Up</Button>
+              <Button variant="outline" onClick={() => router.push("/login")}>🔐 Sign In</Button>
             </>
           )}
         </div>

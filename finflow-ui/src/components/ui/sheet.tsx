@@ -73,7 +73,7 @@ function SheetContent({
         {...props}
       >
         <SheetHeader>
-          <SheetTitle>Menü</SheetTitle>
+          <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
 
         {children}

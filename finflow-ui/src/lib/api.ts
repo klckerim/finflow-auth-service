@@ -100,7 +100,7 @@ export const deleteWalletById = async (id: string) => {
       method: "DELETE",
     });
     if (!res.ok) {
-      throw new Error("Silme işlemi başarısız");
+      throw new Error("Deletion failed");
     }
 
     if (!res.ok) {

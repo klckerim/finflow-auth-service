@@ -1,4 +1,4 @@
-import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
+import { parseApiResponseError } from "./api-error-handler";
 
 
 export async function getMe() {

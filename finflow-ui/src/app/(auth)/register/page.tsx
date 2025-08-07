@@ -64,7 +64,7 @@ export default function RegisterPage() {
         <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
           <h1 className="text-4xl font-bold mb-4">Join to FinFlow!</h1>
           <p className="text-lg max-w-md text-gray-300 text-center">
-            Finansal özgürlüğe ulaşmak artık daha kolay. Kaydol ve ilk adımı at. 🚀
+            Sign up and start your roadway. 🚀
           </p>
           <img
             src="/finance-illustration.svg"

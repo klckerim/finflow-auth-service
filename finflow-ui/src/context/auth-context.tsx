@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(parsedUser);
         }
       } catch (err) {
-        console.error("Geçersiz kullanıcı verisi:", err);
+        console.error("Invalid user data:", err);
         localStorage.removeItem("finflow_user"); // bozuk veriyi temizle
       }
     }
@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    throw new Error("Authorization error")
   }
   return context
 }
