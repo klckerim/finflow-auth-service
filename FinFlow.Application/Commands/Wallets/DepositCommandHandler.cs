@@ -13,7 +13,7 @@ public class DepositCommandHandler : IRequestHandler<DepositCommand>
     {
         var wallet = await _walletRepository.GetByIdAsync(request.WalletId, cancellationToken);
         if (wallet == null)
-            throw new KeyNotFoundException($"Wallet with id {request.WalletId} not found.");
+            throw new KeyNotFoundException($"Wallet not found.");
 
         wallet.Balance += request.Amount;
 

@@ -21,16 +21,15 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./sheet";
 import ProtectedRoute from "../utils/ProtectedRoute";
-import { logout } from "@/lib/auth";
 
-const mainMenu = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Cüzdanlar", href: "/dashboard/wallets", icon: Wallet },
-  { name: "Kartlar", href: "/dashboard/cards", icon: CreditCard },
-  { name: "Transfer", href: "/dashboard/transfer", icon: Repeat },
-  { name: "İşlemler", href: "/dashboard/transactions", icon: History },
-  { name: "Analiz", href: "/dashboard/analytics", icon: BarChart2 },
-  { name: "Döviz Kurları", href: "/dashboard/exchange", icon: DollarSign },
+const mainMenu = [ 
+{ name: "Dashboard", href: "/dashboard", icon: Home }, 
+{ name: "Wallets", href: "/dashboard/wallets", icon: Wallet }, 
+{ name: "Cards", href: "/dashboard/cards", icon: CreditCard }, 
+{ name: "Transfer", href: "/dashboard/transfer", icon: Repeat }, 
+{ name: "Transactions", href: "/dashboard/transactions", icon: History }, 
+{ name: "Analysis", href: "/dashboard/analytics", icon: BarChart2 }, 
+{ name: "Exchange Rates", href: "/dashboard/exchange", icon: DollarSign },
 ];
 
 export default function Sidebar() {

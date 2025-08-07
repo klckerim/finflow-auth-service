@@ -25,7 +25,7 @@ const WalletDetailPage = () => {
     getWalletById(id as string)
       .then((data) => setWallet(data))
       .catch(() => {
-        toast.error("Cüzdan bilgisi alınamadı.");
+        toast.error("Wallet information could not be retrieved.");
         router.push("/dashboard/wallets");
       })
       .finally(() => setLoading(false));
@@ -161,7 +161,7 @@ const WalletDetailPage = () => {
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           {/* Transfer listesi eklenecek */}
-          
+
         </CardContent>
       </Card>
     </div>

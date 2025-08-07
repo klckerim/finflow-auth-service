@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { Home, Wallet, Repeat, Settings } from "lucide-react";
 import ProtectedRoute from "../utils/ProtectedRoute";
 
-const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Cüzdanlar", href: "/dashboard/wallets", icon: Wallet },
-  { name: "Transfer", href: "/dashboard/transfer", icon: Repeat },
-  { name: "Ayarlar", href: "/dashboard/settings/profile", icon: Settings },
+const navItems = [ 
+{ name: "Dashboard", href: "/dashboard", icon: Home }, 
+{ name: "Wallets", href: "/dashboard/wallets", icon: Wallet }, 
+{ name: "Transfer", href: "/dashboard/transfer", icon: Repeat }, 
+{ name: "Settings", href: "/dashboard/settings/profile", icon: Settings },
 ];
 
 export default function MobileNav() {

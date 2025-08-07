@@ -61,8 +61,8 @@ namespace FinFlow.API.Controllers
             var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
             if (string.IsNullOrEmpty(userId))
-                return Unauthorized(new { message = "Kullanıcı kimliği bulunamadı." });
-
+                return Unauthorized(new { message = "User ID not found." });
+                
             var response = new
             {
                 UserId = userId,
