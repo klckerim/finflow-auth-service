@@ -18,7 +18,7 @@ export function AuthForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: API bağlantısı yapılacak
-    alert(`${isLogin ? "Giriş" : "Kayıt"} başarılı!`);
+    alert(`${isLogin ? "Login" : "Register"} succesful!`);
     router.push("/dashboard");
   };
 

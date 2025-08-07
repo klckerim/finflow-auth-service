@@ -19,6 +19,7 @@ import currencyData from "@/data/currency/currency.json";
 
 import { Wallet } from "@/types/wallet";
 import { expensesData, mockMonthlyTrendData } from "@/data/mock/data";
+import { parseUnknownError } from "@/lib/api-error-handler";
 
 const ExpensesPieChart = dynamic(() => import("@/components/charts/expenses-pie-chart"));
 const MonthlyTrendLineChart = dynamic(() => import("@/components/charts/monthly-trend-line-chart"));
@@ -61,7 +62,7 @@ export default function DashboardPage() {
           const response = await getWalletsByUser(user.userId);
           setWallets(response);
         } catch (err) {
-          console.error("Wallets fetch failed", err);
+          parseUnknownError(err);
         } finally {
           setWalletsLoading(false);
         }

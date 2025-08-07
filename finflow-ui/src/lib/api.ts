@@ -1,4 +1,5 @@
 import { Wallet as WalletType } from "@/types/wallet";
+import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
 
 
 export async function getWalletsByUser(userId: string) {
@@ -22,8 +23,8 @@ export async function transferAmount(walletId: string, data: {
   });
 
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message || "Transfer failed");
+    const msg = await parseApiResponseError(res);
+    throw new Error(msg);
   }
 
   return res;
@@ -34,6 +35,11 @@ export async function getLastTransfers(walletId: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${walletId}/transactions?limit=5`, {
     cache: "no-store"
   });
+
+  if (!res.ok) {
+    const msg = await parseApiResponseError(res);
+    throw new Error(msg);
+  }
 
   return res.json();
 }
@@ -48,10 +54,14 @@ export async function getWalletById(id: string): Promise<WalletType | null> {
       },
     });
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const msg = await parseApiResponseError(res);
+      throw new Error(msg);
+    }
 
     return await res.json();
   } catch (error) {
+    parseUnknownError(error);
     return null;
   }
 }
@@ -71,11 +81,14 @@ export async function updateWalletById(id: string, data: { name: string; balance
       }),
     });
 
-
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const msg = await parseApiResponseError(res);
+      throw new Error(msg);
+    }
 
     return await res.json();
   } catch (error) {
+    parseUnknownError(error);
     return null;
   }
 }
@@ -89,10 +102,15 @@ export const deleteWalletById = async (id: string) => {
     if (!res.ok) {
       throw new Error("Silme işlemi başarısız");
     }
-    if (!res.ok) return null;
+
+    if (!res.ok) {
+      const msg = await parseApiResponseError(res);
+      throw new Error(msg);
+    }
 
     return res.status === 204 ? true : await res.json();
   } catch (error) {
+    parseUnknownError(error);
     return null;
   }
 };

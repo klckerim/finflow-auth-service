@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FadeInWrapper } from "@/components/ui/fadeinwrapper";
 import { useAuth } from "@/context/auth-context";
 import { getMe } from "@/lib/auth";
+import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
 
 export default function LoginPage() {
   const { user, login } = useAuth();
@@ -35,11 +36,13 @@ export default function LoginPage() {
         credentials: 'include'
       });
 
-      const data = await res.json();
 
-      if (!res.ok || !data.token) {
-        throw new Error(data.message || "Giriş başarısız");
+      if (!res.ok) {
+        const msg = await parseApiResponseError(res);
+        throw new Error(msg);
       }
+
+      const data = await res.json();
 
       localStorage.setItem("token", data.token);
       const me = await getMe();
@@ -47,7 +50,7 @@ export default function LoginPage() {
       router.push("/dashboard");
 
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Sunucu hatası");
+      parseUnknownError(err);
     }
   };
 
@@ -55,7 +58,7 @@ export default function LoginPage() {
     <FadeInWrapper>
       <div className="flex min-h-screen bg-[#0f0f0f] text-white">
         <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
-          <h1 className="text-4xl font-bold mb-4">FinFlow'a Hoş Geldin!</h1>
+          <h1 className="text-4xl font-bold mb-4">Welcome to FinFlow!</h1>
           <p className="text-lg max-w-md text-gray-300 text-center">
             Gelir giderlerini takip et, bütçeni kontrol altına al. Finansal özgürlüğe ilk adımını at. ✨
           </p>

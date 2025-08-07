@@ -26,11 +26,7 @@ namespace FinFlow.API.Controllers
             }
             catch (OperationCanceledException e)
             {
-                return BadRequest(e.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+                throw new Exception(e.Message, e);
             }
         }
 

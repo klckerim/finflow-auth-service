@@ -20,11 +20,11 @@ namespace FinFlow.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
         {
             var command = new LoginUserCommand(request.Email, request.Password);
 
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
 
             SetRefreshTokenCookie(result.RefreshToken);
 
@@ -62,7 +62,7 @@ namespace FinFlow.API.Controllers
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized(new { message = "Kullanıcı kimliği bulunamadı." });
-                
+
             var response = new
             {
                 UserId = userId,

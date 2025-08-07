@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
+import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler"
 
 export default function ResetPasswordClient() {
   const searchParams = useSearchParams()
@@ -45,7 +46,8 @@ export default function ResetPasswordClient() {
       toast.success("Şifreniz başarıyla sıfırlandı.")
       router.push("/login")
     } else {
-      toast.error(data?.message || "Şifre sıfırlama başarısız oldu.")
+      const msg = await parseApiResponseError(res);
+      parseUnknownError(new Error(msg));
     }
   }
 

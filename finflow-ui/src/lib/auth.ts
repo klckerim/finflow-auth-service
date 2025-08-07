@@ -1,8 +1,7 @@
+import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
 
 
 export async function getMe() {
-
-
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/me`, {
@@ -14,11 +13,13 @@ export async function getMe() {
 
 
   if (!res.ok) {
-    throw new Error("Failed to fetch user data");
+    const msg = await parseApiResponseError(res);
+    throw new Error(msg);
   }
 
   return res.json();
 }
+
 
 export async function login(email: string, password: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`, {
@@ -30,8 +31,10 @@ export async function login(email: string, password: string) {
     body: JSON.stringify({ email, password }),
   });
 
+
   if (!res.ok) {
-    throw new Error('Login failed');
+    const msg = await parseApiResponseError(res);
+    throw new Error(msg);
   }
 
   return await res.json();
@@ -59,7 +62,8 @@ export async function refreshAccessToken() {
   });
 
   if (!res.ok) {
-    throw new Error('Refresh failed');
+    const msg = await parseApiResponseError(res);
+    throw new Error(msg);
   }
 
   return await res.json();

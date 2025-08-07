@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { FadeInWrapper } from "@/components/ui/fadeinwrapper";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
+import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
 
 export default function RegisterPage() {
   const { user } = useAuth();
@@ -43,13 +44,13 @@ export default function RegisterPage() {
       });
 
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Kayıt başarısız");
+        const msg = await parseApiResponseError(res);
+        throw new Error(msg);
       }
 
       router.push("/login");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Sunucu hatası");
+      parseUnknownError(err);
     }
   };
 
@@ -61,7 +62,7 @@ export default function RegisterPage() {
       <div className="flex min-h-screen bg-[#0f0f0f] text-white">
         {/* Sol görsel alanı */}
         <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
-          <h1 className="text-4xl font-bold mb-4">FinFlow’a Katıl!</h1>
+          <h1 className="text-4xl font-bold mb-4">Join to FinFlow!</h1>
           <p className="text-lg max-w-md text-gray-300 text-center">
             Finansal özgürlüğe ulaşmak artık daha kolay. Kaydol ve ilk adımı at. 🚀
           </p>
@@ -147,9 +148,9 @@ export default function RegisterPage() {
               </div>
 
               <div className="text-center mt-4 text-sm text-gray-400">
-                Zaten hesabın var mı?{" "}
+                Already signed up?{" "}
                 <Link href="/login" className="text-blue-400 hover:underline">
-                  Giriş yap
+                  Sign In
                 </Link>
               </div>
             </div>

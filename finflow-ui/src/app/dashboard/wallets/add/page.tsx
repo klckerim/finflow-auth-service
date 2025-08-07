@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
+import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
 
 const AddWalletPage = () => {
   const router = useRouter();
@@ -37,13 +38,13 @@ const AddWalletPage = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Cüzdan oluşturulamadı");
+        const msg = await parseApiResponseError(response);
+        throw new Error(msg);
       }
 
       router.push("/dashboard/wallets");
     } catch (error: any) {
-      alert(`Hata: ${error.message}`);
+      parseUnknownError(error);
     }
   };
 

@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Edit3, Trash2, LucideTimer, Copy, Send } from "lucide-react";
 import { toast } from "sonner";
 import { getWalletById, deleteWalletById } from "@/lib/api";
+import { parseUnknownError } from "@/lib/api-error-handler";
 
 const WalletDetailPage = () => {
   const { id } = useParams();
@@ -47,7 +48,7 @@ const WalletDetailPage = () => {
       toast.success("Cüzdan başarıyla silindi");
       router.push("/dashboard/wallets");
     } catch (error) {
-      toast.error("Cüzdan silinirken hata oluştu");
+      parseUnknownError(error);
     } finally {
       setIsDeleting(false);
     }

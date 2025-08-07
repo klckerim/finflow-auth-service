@@ -70,9 +70,9 @@ public class TokenService : ITokenService
         {
             return tokenHandler.ValidateToken(token, validationParameters, out _);
         }
-        catch (SecurityTokenExpiredException)
+        catch (SecurityTokenExpiredException e)
         {
-            return null;
+            throw new Exception(e.Message, e);
         }
         catch (Exception)
         {

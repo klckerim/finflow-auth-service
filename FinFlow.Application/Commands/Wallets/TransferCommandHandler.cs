@@ -22,6 +22,9 @@ public class TransferCommandHandler : IRequestHandler<TransferCommand>
         if (fromWallet.Balance < request.Amount)
             throw new InvalidOperationException("Insufficient balance.");
 
+        if (fromWallet.Currency != toWallet.Currency)
+            throw new InvalidOperationException($"Destination wallet currency must be {toWallet.Currency} ");
+
         fromWallet.Balance -= request.Amount;
         toWallet.Balance += request.Amount;
 

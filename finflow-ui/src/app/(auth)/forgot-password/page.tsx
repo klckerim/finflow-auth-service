@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
@@ -24,7 +25,8 @@ export default function ForgotPasswordPage() {
       // gelen token ile frontend'te reset-password sayfasına yönlendir
       router.push(`/reset-password?token=${data.token}`)
     } else {
-      alert(data.message || "Error occurred.")
+      const msg = await parseApiResponseError(res);
+      parseUnknownError(new Error(msg));
     }
   }
 

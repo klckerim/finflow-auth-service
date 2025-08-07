@@ -24,6 +24,7 @@ import successAnimation from "@/assets/lottie/success.json";
 import loadingAnimation from "@/assets/lottie/loading.json";
 import { useWalletStore } from "@/app/store/walletStore";
 import { DialogTitle, Dialog, DialogContent } from "@/components/ui/dialog";
+import { parseUnknownError } from "@/lib/api-error-handler";
 
 export default function TransferPage() {
   const { id: walletId } = useParams();
@@ -76,8 +77,8 @@ export default function TransferPage() {
       setShowSuccess(true);
       setAmount("");
       setToWalletId("");
-    } catch {
-      toast.error("Transfer sırasında bir hata oluştu ❌");
+    } catch (ex) {
+      parseUnknownError(ex);
     } finally {
       setLoading(false);
     }
