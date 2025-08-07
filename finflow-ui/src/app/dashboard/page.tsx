@@ -122,7 +122,7 @@ export default function DashboardPage() {
           </h1>
           <p className="text-lg sm:text-xl font-medium text-primary">{greeting}</p>
           <p className="text-base text-muted-foreground">
-            Manages their wallets, tracks their cards, and stays financially accessible.
+            Manage your wallets, track your cards and achieve your financial goals.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
