@@ -113,7 +113,7 @@ const WalletDetailPage = () => {
               ID: <span className="font-mono text-xs break-all">{wallet.id}</span>
               <Copy className="w-4 h-4 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={handleCopyId} />
             </div>
-            <div>State: <Badge variant="default">{wallet.isActive ? "Aktif" : "Pasif"}</Badge></div>
+            <div>State: <Badge variant="default">{wallet.isActive ? "Active" : "Passive"}</Badge></div>
           </div>
         </CardContent>
       </Card>

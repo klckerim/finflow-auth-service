@@ -23,7 +23,7 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalletCommand command)
     {
         if (id != command.WalletId)
-            return BadRequest("URL ve body ID'leri eşleşmiyor.");
+            throw new Exception("Wallet not found.");
 
         var success = await _mediator.Send(command);
 
@@ -70,7 +70,7 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> Transfer(Guid walletId, [FromBody] TransferDto transferDto)
     {
         if (walletId != transferDto.FromWalletId)
-            return BadRequest("WalletId in route and payload do not match.");
+            throw new Exception("Wallet informations do not match.");
 
         await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount));
         return NoContent();

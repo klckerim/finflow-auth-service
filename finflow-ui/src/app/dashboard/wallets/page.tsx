@@ -7,7 +7,7 @@ import { getWalletsByUser } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, DollarSign, Euro, Plus, Wallet as WalletIcon } from "lucide-react";
+import { ArrowRight, DollarSign, Euro, Plus, SendHorizontal, Wallet as WalletIcon } from "lucide-react";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
 import { useWalletStore } from "@/app/store/walletStore";
@@ -81,40 +81,38 @@ const WalletsPage = () => {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {wallets.map((wallet) => (
-              <Card
-                key={wallet.id}
-                className="group hover:shadow-lg transition-all duration-300 border border-muted bg-muted/20 dark:bg-muted/30"
-              >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-lg font-medium flex items-center gap-2">
-                    {currencyIcon(wallet.currency)}
-                    {wallet.name}
-                  </CardTitle>
-                  <Badge variant="outline" className="text-xs">{wallet.currency}</Badge>
-                </CardHeader>
+            {wallets.map((wallet) => {
+              return (
+                <Card
+                  key={wallet.id}
+                  className="group hover:shadow-lg transition-all duration-300 border border-muted bg-muted/20 dark:bg-muted/30"
+                >
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-lg font-medium flex items-center gap-2">
+                      {currencyIcon(wallet.currency)}
+                      {wallet.name}
+                    </CardTitle>
+                    <Badge variant="outline" className="text-xs">{wallet.currency}</Badge>
+                  </CardHeader>
 
-                <CardContent>
-                  <div className="text-3xl font-bold">{wallet.balance.toLocaleString("tr-TR", { style: "currency", currency: wallet.currency })}</div>
-                  <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-6 gap-2">
-                    <Button
-                      variant="ghost"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                      onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
-                    >
-                      Transfer
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="text-sm text-muted-foreground hover:text-primary"
-                      onClick={() => router.push(`/dashboard/wallets/${wallet.id}/details`)}
-                    >
-                      See Details <ArrowRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent>
+                    <div className="text-3xl font-bold">{wallet.balance.toLocaleString("tr-TR", { style: "currency", currency: wallet.currency })}</div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-6 gap-2">
+                      <Button
+                        variant="ghost"
+                        className="text-sm text-muted-foreground hover:text-primary"
+                        onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
+                      >Transfer <SendHorizontal className="" /></Button>
+                      <Button
+                        variant="ghost"
+                        className="text-sm text-muted-foreground hover:text-primary"
+                        onClick={() => router.push(`/dashboard/wallets/${wallet.id}/details`)}
+                      >See Details <ArrowRight className="w-4 h-4 ml-1" /></Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </motion.div>
