@@ -5,9 +5,7 @@ import {
   CreditCard,
   History,
   Wallet,
-  Repeat,
   Settings,
-  LogOut,
   ChevronDown,
   ChevronUp,
   Menu,
@@ -26,10 +24,7 @@ const mainMenu = [
 { name: "Dashboard", href: "/dashboard", icon: Home }, 
 { name: "Wallets", href: "/dashboard/wallets", icon: Wallet }, 
 { name: "Cards", href: "/dashboard/cards", icon: CreditCard }, 
-{ name: "Transfer", href: "/dashboard/transfer", icon: Repeat }, 
 { name: "Transactions", href: "/dashboard/transactions", icon: History }, 
-{ name: "Analysis", href: "/dashboard/analytics", icon: BarChart2 }, 
-{ name: "Exchange Rates", href: "/dashboard/exchange", icon: DollarSign },
 ];
 
 export default function Sidebar() {
@@ -83,48 +78,6 @@ export default function Sidebar() {
               </div>
               <nav className="flex flex-col py-6 px-2 space-y-1">
                 {mainMenu.map(renderNavItem)}
-                <button
-                  onClick={() => setOpenSettings(!openSettings)}
-                  className="flex items-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-muted"
-                  aria-expanded={openSettings}
-                  aria-controls="settings-submenu"
-                >
-                  <Settings className="w-5 h-5 mr-3 flex-shrink-0" />
-                  <span className="flex-1 text-left font-medium">Settings</span>
-                  {openSettings ? (
-                    <ChevronUp className="w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4" />
-                  )}
-                </button>
-                {openSettings && (
-                  <div
-                    id="settings-submenu"
-                    className="ml-8 flex flex-col space-y-1"
-                  >
-                    <Link
-                      href="/dashboard/settings/profile"
-                      onClick={() => setIsOpen(false)}
-                      className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/profile"
-                        ? "bg-primary text-white"
-                        : ""
-                        }`}
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      href="/dashboard/settings/security"
-                      onClick={() => setIsOpen(false)}
-
-                      className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/security"
-                        ? "bg-primary text-white"
-                        : ""
-                        }`}
-                    >
-                      Security
-                    </Link>
-                  </div>
-                )}
               </nav>
             </SheetContent>
           </Sheet>
@@ -147,47 +100,6 @@ export default function Sidebar() {
           <nav className="flex-1 flex flex-col justify-between py-6 px-2">
             <div className="space-y-1">
               {mainMenu.map(renderNavItem)}
-              <button
-                onClick={() => setOpenSettings(!openSettings)}
-                className="flex items-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-muted"
-                aria-expanded={openSettings}
-                aria-controls="settings-submenu"
-              >
-                <Settings className="w-5 h-5 mr-3 flex-shrink-0" />
-                <span className="flex-1 text-left font-medium">Settings</span>
-                {openSettings ? (
-                  <ChevronUp className="w-4 h-4" />
-                ) : (
-                  <ChevronDown className="w-4 h-4" />
-                )}
-              </button>
-              {openSettings && (
-                <div
-                  id="settings-submenu"
-                  className="ml-8 flex flex-col space-y-1"
-                >
-                  <Link
-                    href="/dashboard/settings/profile"
-                    onClick={() => setIsOpen(false)}
-                    className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/profile"
-                      ? "bg-primary text-white"
-                      : ""
-                      }`}
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    href="/dashboard/settings/security"
-                    onClick={() => setIsOpen(false)}
-                    className={`px-4 py-2 rounded-md transition-colors hover:bg-muted ${pathname === "/dashboard/settings/security"
-                      ? "bg-primary text-white"
-                      : ""
-                      }`}
-                  >
-                    Security
-                  </Link>
-                </div>
-              )}
             </div>
           </nav>
         </aside>

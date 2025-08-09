@@ -8,6 +8,19 @@ export async function getWalletsByUser(userId: string) {
   return res.json();
 }
 
+export async function getTransactionsByWalletId(walletId: string, limit: number = 20) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/transactions/wallet/${walletId}?limit=${limit}`);
+  if (!res.ok) throw new Error("No Transactions Information");
+  return res.json();
+}
+
+export async function getTransactionsByUserId(userId: string, limit: number = 20) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/transactions/user/${userId}?limit=${limit}`);
+  if (!res.ok) throw new Error("No Transactions Information");
+  return res.json();
+}
+
+
 export async function transferAmount(walletId: string, data: {
   fromWalletId: string;
   toWalletId: string;
@@ -29,21 +42,6 @@ export async function transferAmount(walletId: string, data: {
 
   return res;
 }
-
-
-export async function getLastTransfers(walletId: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${walletId}/transactions?limit=5`, {
-    cache: "no-store"
-  });
-
-  if (!res.ok) {
-    const msg = await parseApiResponseError(res);
-    throw new Error(msg);
-  }
-
-  return res.json();
-}
-
 
 export async function getWalletById(id: string): Promise<WalletType | null> {
   try {

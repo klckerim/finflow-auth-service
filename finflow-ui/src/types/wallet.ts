@@ -6,5 +6,6 @@ export interface Wallet {
   balance: number;
   userId: string;
   createdAt: Date,
-  isActive: boolean
+  isActive: boolean,
+  type: string
 }

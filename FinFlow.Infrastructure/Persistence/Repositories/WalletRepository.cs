@@ -35,6 +35,7 @@ public class WalletRepository : IWalletRepository
     {
         return await _dbContext.Wallets
             .Where(w => w.UserId == userId)
+            .Include(w => w.Transactions)
             .ToListAsync(cancellationToken: cancellationToken);
     }
 

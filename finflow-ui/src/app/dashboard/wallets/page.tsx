@@ -7,7 +7,16 @@ import { getWalletsByUser } from "@/lib/api";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, DollarSign, Euro, Plus, SendHorizontal, Wallet as WalletIcon } from "lucide-react";
+import {
+  ArrowRight,
+  DollarSign,
+  Euro,
+  Plus,
+  SendHorizontal,
+  Wallet as WalletIcon,
+  Clock,
+  CreditCard
+} from "lucide-react";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
 import { useWalletStore } from "@/app/store/walletStore";
@@ -25,8 +34,8 @@ const WalletsPage = () => {
     const fetchWallets = async () => {
       try {
         const wallets = await getWalletsByUser(user.userId);
-        useWalletStore.getState().setWallets(wallets); // store'a yaz
-        setWallets(wallets); // local state'e yaz
+        useWalletStore.getState().setWallets(wallets);
+        setWallets(wallets);
       } catch (error) {
         console.error("Wallets fetch failed", error);
       } finally {
@@ -56,61 +65,103 @@ const WalletsPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <h1 className="text-3xl font-bold tracking-tight">💼 My Wallets</h1>
           {wallets.length > 0 && (
-            <Button variant="outline" onClick={() => router.push("/dashboard/wallets/add")}>
+            <Button
+              className="shadow-md hover:shadow-lg transition-all"
+              onClick={() => router.push("/dashboard/wallets/add")}
+            >
               <Plus size={18} className="mr-2" />
               Add New Wallet
             </Button>
           )}
         </div>
 
+        {/* Loading & Empty State */}
         {loading ? (
-          <p className="text-center text-muted-foreground">Loading...</p>
+          <p className="text-center text-muted-foreground">Loading wallets...</p>
         ) : wallets.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center gap-6 mt-12">
-            <img src="/wallet.svg" alt="Empty Wallet" className="w-48 h-48 sm:w-64 sm:h-64" />
-            <h2 className="text-2xl font-semibold">No wallet has been added yet</h2>
+            <img
+              src="/wallet.svg"
+              alt="Empty Wallet"
+              className="w-48 h-48 sm:w-64 sm:h-64 opacity-80"
+            />
+            <h2 className="text-2xl font-semibold">No wallet yet</h2>
             <p className="text-muted-foreground max-w-md">
-              Create your first wallet to manage your budget.
+              Create your first wallet to manage your budget and track spending in one place.
             </p>
-            <Button size="lg" onClick={() => router.push("/dashboard/wallets/add")}>
+            <Button
+              size="lg"
+              className="shadow-lg hover:shadow-xl transition"
+              onClick={() => router.push("/dashboard/wallets/add")}
+            >
               🚀 Create Your First Wallet
             </Button>
           </div>
         ) : (
+          // Wallet Grid
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {wallets.map((wallet) => {
               return (
-                <Card
+                <motion.div
                   key={wallet.id}
-                  className="group hover:shadow-lg transition-all duration-300 border border-muted bg-muted/20 dark:bg-muted/30"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-lg font-medium flex items-center gap-2">
-                      {currencyIcon(wallet.currency)}
-                      {wallet.name}
-                    </CardTitle>
-                    <Badge variant="outline" className="text-xs">{wallet.currency}</Badge>
-                  </CardHeader>
+                  <Card className="group overflow-hidden relative border border-muted bg-gradient-to-br from-muted/30 to-card/90 backdrop-blur rounded-2xl shadow-md hover:shadow-xl transition-all duration-300">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-lg font-medium flex items-center gap-2">
+                        {currencyIcon(wallet.currency)}
+                        {wallet.name}
+                      </CardTitle>
+                      <Badge variant="outline" className="text-xs">
+                        {wallet.currency}
+                      </Badge>
+                    </CardHeader>
 
-                  <CardContent>
-                    <div className="text-3xl font-bold">{wallet.balance.toLocaleString("tr-TR", { style: "currency", currency: wallet.currency })}</div>
-                    <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-6 gap-2">
-                      <Button
-                        variant="ghost"
-                        className="text-sm text-muted-foreground hover:text-primary"
-                        onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
-                      >Transfer <SendHorizontal className="" /></Button>
-                      <Button
-                        variant="ghost"
-                        className="text-sm text-muted-foreground hover:text-primary"
-                        onClick={() => router.push(`/dashboard/wallets/${wallet.id}/details`)}
-                      >See Details <ArrowRight className="w-4 h-4 ml-1" /></Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    <CardContent>
+                      <div className="text-3xl font-bold">
+                        {wallet.balance.toLocaleString("tr-TR", {
+                          style: "currency",
+                          currency: wallet.currency,
+                        })}
+                      </div>
+
+                      {/* Extra info */}
+                      <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                        <Clock className="w-4 h-4" />
+                        Last activity: {new Date().toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <CreditCard className="w-4 h-4" />
+                        {"Virtual Card"}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-6 gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-sm text-muted-foreground hover:text-primary"
+                          onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
+                        >
+                          Transfer <SendHorizontal className="ml-1 w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-sm text-muted-foreground hover:text-primary"
+                          onClick={() => router.push(`/dashboard/wallets/${wallet.id}/details`)}
+                        >
+                          See Details <ArrowRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>

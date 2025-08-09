@@ -6,5 +6,6 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Wallet, WalletDto>();
+        CreateMap<Transaction, TransactionDto>();
     }
 }
