@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/features/cards/card";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { toast } from "sonner";
 import Lottie from "react-lottie-player";
@@ -12,8 +12,8 @@ import successAnimation from "@/assets/lottie/success.json";
 import loadingAnimation from "@/assets/lottie/loading.json";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useWalletStore } from "@/app/store/walletStore";
-import { transferAmount } from "@/lib/api";
-import { parseUnknownError } from "@/lib/api-error-handler";
+import { transferAmount } from "@/shared/lib/api";
+import { parseUnknownError } from "@/shared/lib/api-error-handler";
 
 export default function TransferPage() {
   const { id: walletId } = useParams();

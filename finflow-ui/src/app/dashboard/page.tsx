@@ -4,22 +4,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/features/cards/card";
 import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/layout/skeleton";
 import { Button } from "@/components/ui/button";
 
-import QuickActions from "@/components/ui/quickactions";
-import AnalyticsWidget from "@/components/ui/AnalyticsWidget";
+import QuickActions from "@/features/dashboard/quickactions";
+import AnalyticsWidget from "@/features/dashboard/AnalyticsWidget";
 
 import { useAuth } from "@/context/auth-context";
-import { getWalletsByUser } from "@/lib/api";
+import { getWalletsByUser } from "@/shared/lib/api";
 import { getGreeting } from "@/components/ui/label";
-import currencyData from "@/data/currency/currency.json";
+import currencyData from "@/shared/data/currency/currency.json";
 
-import { Wallet } from "@/types/wallet";
-import { expensesData, mockMonthlyTrendData } from "@/data/mock/data";
-import { parseUnknownError } from "@/lib/api-error-handler";
+import { Wallet } from "@/shared/types/wallet";
+import { expensesData, mockMonthlyTrendData } from "@/shared/data/mock/data";
+import { parseUnknownError } from "@/shared/lib/api-error-handler";
 
 const ExpensesPieChart = dynamic(() => import("@/components/charts/expenses-pie-chart"));
 const MonthlyTrendLineChart = dynamic(() => import("@/components/charts/monthly-trend-line-chart"));

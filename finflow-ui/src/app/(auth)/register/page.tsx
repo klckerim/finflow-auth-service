@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FadeInWrapper } from "@/components/ui/fadeinwrapper";
+import { FadeInWrapper } from "@/features/dashboard/fadeinwrapper";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
-import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
+import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 
 export default function RegisterPage() {
   const { user } = useAuth();

@@ -5,9 +5,9 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/features/cards/card"
 import { toast } from "sonner"
-import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler"
+import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler"
 
 export default function ResetPasswordClient() {
   const searchParams = useSearchParams()

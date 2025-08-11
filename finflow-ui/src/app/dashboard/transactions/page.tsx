@@ -1,9 +1,9 @@
 "use client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/layout/skeleton";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
-import { getTransactionsByUserId } from "@/lib/api";
-import { parseUnknownError } from "@/lib/api-error-handler";
+import { getTransactionsByUserId } from "@/shared/lib/api";
+import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { useParams } from "next/navigation";
 import router from "next/router";
 import { useEffect, useState } from "react";

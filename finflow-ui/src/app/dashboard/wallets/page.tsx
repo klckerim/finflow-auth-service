@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Wallet as WalletType } from "@/types/wallet";
-import { getWalletsByUser } from "@/lib/api";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Wallet as WalletType } from "@/shared/types/wallet";
+import { getWalletsByUser } from "@/shared/lib/api";
+import { Card, CardHeader, CardTitle, CardContent } from "@/features/cards/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {

@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Wallet } from "@/types/wallet";
+import { Wallet } from "@/shared/types/wallet";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/features/cards/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/layout/skeleton";
 import {
   ArrowLeft,
   Edit3,
@@ -23,8 +23,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getWalletById, deleteWalletById } from "@/lib/api";
-import { parseUnknownError } from "@/lib/api-error-handler";
+import { getWalletById, deleteWalletById } from "@/shared/lib/api";
+import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { motion } from "framer-motion";
 
 const WalletDetailPage = () => {

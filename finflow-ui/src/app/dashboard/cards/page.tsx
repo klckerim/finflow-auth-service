@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
-import { Card as CardUI, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card as CardUI, CardHeader, CardTitle, CardContent } from "@/features/cards/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, CreditCard, ArrowRight, Eye } from "lucide-react";

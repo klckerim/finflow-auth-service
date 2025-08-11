@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FadeInWrapper } from "@/components/ui/fadeinwrapper";
+import { FadeInWrapper } from "@/features/dashboard/fadeinwrapper";
 import { useAuth } from "@/context/auth-context";
-import { getMe } from "@/lib/auth";
-import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
+import { getMe } from "@/shared/lib/auth";
+import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 
 export default function LoginPage() {
   const { user, login } = useAuth();

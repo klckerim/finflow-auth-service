@@ -1,4 +1,4 @@
-import { Wallet as WalletType } from "@/types/wallet";
+import { Wallet as WalletType } from "@/shared/types/wallet";
 import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
 
 

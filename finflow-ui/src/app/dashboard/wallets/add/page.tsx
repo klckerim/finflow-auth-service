@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/features/cards/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
-import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
+import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 import { motion } from "framer-motion";
 import { Wallet, Info, PiggyBank } from "lucide-react";
 

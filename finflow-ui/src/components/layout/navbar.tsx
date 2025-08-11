@@ -2,7 +2,7 @@
 
 import ProfileDropdown from "./profiledropdown";
 import ProtectedRoute from "../utils/ProtectedRoute";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeToggle } from "../ui/theme-toggle";
 
 
 export default function Navbar() {

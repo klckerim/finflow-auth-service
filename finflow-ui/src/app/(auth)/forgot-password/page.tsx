@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { parseApiResponseError, parseUnknownError } from "@/lib/api-error-handler";
+import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
