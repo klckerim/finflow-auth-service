@@ -8,8 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/features/cards/card"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { toast } from "sonner";
 import Lottie from "react-lottie-player";
-import successAnimation from "@/assets/lottie/success.json";
-import loadingAnimation from "@/assets/lottie/loading.json";
+import successAnimation from "@/shared/assets/lottie/success.json";
+import loadingAnimation from "@/shared/assets/lottie/loading.json";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useWalletStore } from "@/app/store/walletStore";
 import { transferAmount } from "@/shared/lib/api";
