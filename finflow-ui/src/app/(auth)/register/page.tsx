@@ -67,7 +67,7 @@ export default function RegisterPage() {
             Sign up and start your roadway. 🚀
           </p>
           <img
-            src="/finance-illustration.svg"
+            src="/images/finance-illustration.svg"
             alt="Finance illustration"
             className="w-80 mt-8"
           />
@@ -137,12 +137,12 @@ export default function RegisterPage() {
 
               <div className="flex gap-4">
                 <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
-                  <img src="/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" />
+                  <img src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" />
                   Google
                 </Button>
 
                 <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
-                  <img src="/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" />
+                  <img src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" />
                   Apple
                 </Button>
               </div>

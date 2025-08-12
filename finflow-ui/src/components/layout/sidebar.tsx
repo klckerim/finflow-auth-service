@@ -65,7 +65,7 @@ export default function Sidebar() {
               <div className="h-16 flex items-center px-6 border-b border-muted/30">
                 <Link href="/dashboard" onClick={() => setIsOpen(false)} className="flex items-center space-x-3">
                   <Image
-                    src="/finflow.jpg"
+                    src="/images/finflow.jpg"
                     alt="FinFlow Logo"
                     width={32}
                     height={32}
@@ -88,7 +88,7 @@ export default function Sidebar() {
           <div className="h-16 flex items-center px-6 border-b border-muted/30">
             <Link href="/dashboard" className="flex items-center space-x-3">
               <Image
-                src="/finflow.jpg"
+                src="/images/finflow.jpg"
                 alt="FinFlow Logo"
                 width={32}
                 height={32}

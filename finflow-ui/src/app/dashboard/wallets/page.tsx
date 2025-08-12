@@ -21,6 +21,7 @@ import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
 import { useWalletStore } from "@/app/store/walletStore";
 import { motion } from "framer-motion";
+import { EmptyWalletHero } from "@/components/ui/hero";
 
 const WalletsPage = () => {
   const router = useRouter();
@@ -84,15 +85,7 @@ const WalletsPage = () => {
           <p className="text-center text-muted-foreground">Loading wallets...</p>
         ) : wallets.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center gap-6 mt-12">
-            <img
-              src="/wallet.svg"
-              alt="Empty Wallet"
-              className="w-48 h-48 sm:w-64 sm:h-64 opacity-80"
-            />
-            <h2 className="text-2xl font-semibold">No wallet yet</h2>
-            <p className="text-muted-foreground max-w-md">
-              Create your first wallet to manage your budget and track spending in one place.
-            </p>
+            <EmptyWalletHero />
             <Button
               size="lg"
               className="shadow-lg hover:shadow-xl transition"
