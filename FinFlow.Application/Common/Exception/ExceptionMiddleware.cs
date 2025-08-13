@@ -19,7 +19,10 @@ public class ExceptionMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        try {
+        try
+        {
+            _logger.LogInformation("Handling request: {Method} {Path}", context.Request.Method, context.Request.Path);
+
             await _next(context);
         }
         catch (Exception ex)

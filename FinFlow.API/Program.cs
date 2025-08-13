@@ -13,6 +13,7 @@ using FinFlow.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using FinFlow.Domain.Entities;
 using FinFlow.Infrastructure.Authentication;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,16 @@ builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembl
 
 // Pipeline Behaviors
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+// Serilog
+Log.Logger = new LoggerConfiguration()
+  .MinimumLevel.Debug()
+  .WriteTo.Console()
+  .WriteTo.File("logs/finflow-.log", rollingInterval: RollingInterval.Day)
+  .WriteTo.Seq("http://localhost:5341")
+  .CreateLogger();
+
+builder.Host.UseSerilog();
 
 
 // JWT Authentication

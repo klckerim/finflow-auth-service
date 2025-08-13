@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 public class WalletsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<WalletsController> _logger;
 
-    public WalletsController(IMediator mediator)
+    public WalletsController(IMediator mediator, ILogger<WalletsController> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateWalletCommand command)
     {
         var walletId = await _mediator.Send(command);
+        _logger.LogInformation("Wallet created successfully with ID {WalletId}", walletId);
         return CreatedAtAction(nameof(GetById), new { id = walletId }, new { walletId });
     }
 
@@ -30,6 +33,8 @@ public class WalletsController : ControllerBase
         if (!success)
             return NotFound();
 
+        _logger.LogInformation("Wallet with ID {WalletId} updated successfully.", id);
+
         return NoContent();
     }
 
@@ -41,6 +46,7 @@ public class WalletsController : ControllerBase
         if (!result)
             return NotFound();
 
+        _logger.LogInformation("Wallet with ID {WalletId} deleted successfully.", id);
         return NoContent();
     }
 
@@ -49,6 +55,7 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> GetByUserId(Guid userId)
     {
         var wallets = await _mediator.Send(new GetWalletsByUserIdQuery(userId));
+        _logger.LogInformation("Retrieved {Count} wallets for user {UserId}", wallets.Count, userId);
         return Ok(wallets);
     }
 
@@ -56,6 +63,7 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetWalletByIdQuery(id), cancellationToken);
+        _logger.LogInformation("Retrieved wallet with ID {WalletId}", id);
         return result is null ? NotFound() : Ok(result);
     }
 
@@ -63,6 +71,7 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> Deposit(Guid walletId, [FromBody] decimal amount)
     {
         await _mediator.Send(new DepositCommand(walletId, amount));
+        _logger.LogInformation("Deposited {Amount} to wallet {WalletId}", amount, walletId);
         return NoContent();
     }
 
@@ -73,6 +82,8 @@ public class WalletsController : ControllerBase
             throw new Exception("Wallet informations do not match.");
 
         await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount));
+        _logger.LogInformation("Transferred {Amount} from wallet {FromWalletId} to wallet {ToWalletId}", 
+            transferDto.Amount, transferDto.FromWalletId, transferDto.ToWalletId);
         return NoContent();
     }
 }
