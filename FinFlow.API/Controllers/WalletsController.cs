@@ -1,8 +1,10 @@
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class WalletsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -82,7 +84,7 @@ public class WalletsController : ControllerBase
             throw new Exception("Wallet informations do not match.");
 
         await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount));
-        _logger.LogInformation("Transferred {Amount} from wallet {FromWalletId} to wallet {ToWalletId}", 
+        _logger.LogInformation("Transferred {Amount} from wallet {FromWalletId} to wallet {ToWalletId}",
             transferDto.Amount, transferDto.FromWalletId, transferDto.ToWalletId);
         return NoContent();
     }

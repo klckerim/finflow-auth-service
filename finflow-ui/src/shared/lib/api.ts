@@ -3,19 +3,19 @@ import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
 
 
 export async function getWalletsByUser(userId: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/user/${userId}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/user/${userId}`);
   if (!res.ok) throw new Error("No Wallets Information");
   return res.json();
 }
 
 export async function getTransactionsByWalletId(walletId: string, limit: number = 20) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/transactions/wallet/${walletId}?limit=${limit}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/wallet/${walletId}?limit=${limit}`);
   if (!res.ok) throw new Error("No Transactions Information");
   return res.json();
 }
 
 export async function getTransactionsByUserId(userId: string, limit: number = 20) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/transactions/user/${userId}?limit=${limit}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/user/${userId}?limit=${limit}`);
   if (!res.ok) throw new Error("No Transactions Information");
   return res.json();
 }
@@ -26,7 +26,7 @@ export async function transferAmount(walletId: string, data: {
   toWalletId: string;
   amount: number;
 }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${walletId}/transfer`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${walletId}/transfer`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export async function transferAmount(walletId: string, data: {
 
 export async function getWalletById(id: string): Promise<WalletType | null> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
       cache: "no-store",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -67,7 +67,7 @@ export async function getWalletById(id: string): Promise<WalletType | null> {
 
 export async function updateWalletById(id: string, data: { name: string; balance: number }) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export async function updateWalletById(id: string, data: { name: string; balance
 export const deleteWalletById = async (id: string) => {
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wallets/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
       method: "DELETE",
     });
     if (!res.ok) {

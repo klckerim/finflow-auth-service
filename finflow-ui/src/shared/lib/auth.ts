@@ -4,7 +4,7 @@ import { parseApiResponseError } from "./api-error-handler";
 export async function getMe() {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/me`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -22,7 +22,7 @@ export async function getMe() {
 
 
 export async function login(email: string, password: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/login`, {
     method: 'POST',
     credentials: 'include', // Refresh token cookie için gerekli 
     headers: {
@@ -52,7 +52,7 @@ export const logout = () => {
 
 
 export async function refreshAccessToken() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/refresh-token`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/refresh-token`, {
     method: 'POST',
     credentials: 'include',
     headers: {

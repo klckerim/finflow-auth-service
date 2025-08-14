@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Identity;
 using FinFlow.Domain.Entities;
 using FinFlow.Infrastructure.Authentication;
 using Serilog;
-
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +110,24 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
+// API Versioning
+builder.Services
+    .AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = ApiVersionReader.Combine(
+            new UrlSegmentApiVersionReader(),                  // /api/v{version}/...
+            new HeaderApiVersionReader("x-api-version")        // Header: x-api-version: 1.0
+        );
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";                    // v1, v1.1, v2
+        options.SubstituteApiVersionInUrl = true;
+    });
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -138,7 +157,22 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
-// ------------------------------
+
+
+if (app.Environment.IsDevelopment())
+{
+    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var desc in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json",
+                $"FinFlow API {desc.GroupName.ToUpperInvariant()}");
+        }
+    });
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

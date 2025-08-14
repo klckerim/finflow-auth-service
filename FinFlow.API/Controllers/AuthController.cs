@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Asp.Versioning;
 using FinFlow.API.Models;
 using FinFlow.Application.Commands.Users;
 using MediatR;
@@ -9,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace FinFlow.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
