@@ -15,7 +15,7 @@ public class GetTransactionsByWalletIdQueryHandler : IRequestHandler<GetTransact
 
     public async Task<List<TransactionDto>> Handle(GetTransactionsByWalletIdQuery request, CancellationToken cancellationToken)
     {
-        var transactions = await _transactionRepository.GetTransactionsByUserIdAsync(request.WalletId, request.Limit, cancellationToken);
+        var transactions = await _transactionRepository.GetTransactionsByWalletIdAsync(request.WalletId, request.Limit, cancellationToken);
 
         if (transactions is null || !transactions.Any())
         {

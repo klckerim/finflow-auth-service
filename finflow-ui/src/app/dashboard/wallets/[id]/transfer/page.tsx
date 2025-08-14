@@ -12,7 +12,7 @@ import successAnimation from "@/shared/assets/lottie/success.json";
 import loadingAnimation from "@/shared/assets/lottie/loading.json";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useWalletStore } from "@/app/store/walletStore";
-import { transferAmount } from "@/shared/lib/api";
+import { getTransactionsByWalletId, transferAmount } from "@/shared/lib/api";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 
 export default function TransferPage() {
@@ -68,6 +68,21 @@ export default function TransferPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await getTransactionsByWalletId(walletId as string, 5);
+        setLastTransfers(response);
+      } catch (err) {
+        parseUnknownError(err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [walletId, wallets]);
+
+
 
   const quickAmounts = [50, 100, 250, 500];
 
@@ -164,8 +179,8 @@ export default function TransferPage() {
           ) : (
             lastTransfers.map((tx, idx) => (
               <div key={idx} className="flex justify-between text-sm py-1 border-b last:border-0">
-                <span>{tx.toWalletName}</span>
-                <span>{tx.amount}</span>
+                <span>{tx.description}</span>
+                <span>{tx.amount} {currentWallet?.currency || ""}</span>
               </div>
             ))
           )}

@@ -23,7 +23,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getWalletById, deleteWalletById } from "@/shared/lib/api";
+import { getWalletById, deleteWalletById, getTransactionsByWalletId } from "@/shared/lib/api";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { motion } from "framer-motion";
 
@@ -34,6 +34,7 @@ const WalletDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [lastTransfers, setLastTransfers] = useState<any[]>([]);
 
   useEffect(() => {
     if (!id) return;
@@ -45,6 +46,21 @@ const WalletDetailPage = () => {
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!wallet) return;
+        const response = await getTransactionsByWalletId(wallet?.id, 5);
+        setLastTransfers(response);
+      } catch (err) {
+        parseUnknownError(err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [wallet]);
+
 
   const handleCopyId = () => {
     if (!wallet) return;
@@ -86,9 +102,6 @@ const WalletDetailPage = () => {
 
   if (!wallet) return null;
 
-  // Günlük hayattan örnekle:
-  // Kullanıcı "Tatil Bütçesi" diye adlandırmış cüzdanını, bakiye ve tarih bilgisi ile rahat takip ediyor.
-
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-8">
       {/* NAVIGATION BUTTONS */}
@@ -119,12 +132,7 @@ const WalletDetailPage = () => {
             className="gap-2"
             aria-label="Delete wallet"
           >
-{/* 
-             initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }} */}
 
-        
             {isDeleting ? (
               <motion.div
                 animate={{ rotate: 360 }}
@@ -172,9 +180,8 @@ const WalletDetailPage = () => {
                 ID: {wallet.id}
               </span>
               <Copy
-                className={`w-5 h-5 cursor-pointer transition-colors ${
-                  copied ? "text-green-500" : "text-blue-500 hover:text-blue-700"
-                }`}
+                className={`w-5 h-5 cursor-pointer transition-colors ${copied ? "text-green-500" : "text-blue-500 hover:text-blue-700"
+                  }`}
                 onClick={handleCopyId}
                 // title="Copy Wallet ID"
                 aria-label="Copy Wallet ID"
@@ -229,21 +236,6 @@ const WalletDetailPage = () => {
           <CardDescription>Summary of your wallet transactions</CardDescription>
         </CardHeader>
 
-        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          {/* TODO: Dinamik veri gelecek */}
-          <div>
-            <p className="text-muted-foreground text-sm">Last Transaction</p>
-            <p className="text-xl font-semibold">—</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm">Total Inflow</p>
-            <p className="text-xl font-semibold">—</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm">Total Outflow</p>
-            <p className="text-xl font-semibold">—</p>
-          </div>
-        </CardContent>
       </Card>
 
       {/* LAST TRANSFERS */}
@@ -256,8 +248,18 @@ const WalletDetailPage = () => {
         </CardHeader>
 
         <CardContent className="space-y-2 text-sm text-muted-foreground">
-          {/* Buraya dinamik transfer listesi eklenecek */}
-          <p className="italic">No transfers yet.</p>
+          
+          {lastTransfers.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No transfers yet.</p>
+          ) : (
+            lastTransfers.map((tx, idx) => (
+              <div key={idx} className="flex justify-between text-sm py-1 border-b last:border-0">
+                <span>{tx.description}</span>
+                <span>{tx.amount} {wallet.currency || ""}</span>
+              </div>
+            ))
+          )}
+
         </CardContent>
       </Card>
     </div>
