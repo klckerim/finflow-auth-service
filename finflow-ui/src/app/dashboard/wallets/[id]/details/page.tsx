@@ -26,6 +26,8 @@ import { toast } from "sonner";
 import { getWalletById, deleteWalletById, getTransactionsByWalletId } from "@/shared/lib/api";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { motion } from "framer-motion";
+import { CreatePaymentSession } from "@/shared/lib/create-session";
+import AddMoneyModal from "@/features/payments/topupmodal";
 
 const WalletDetailPage = () => {
   const { id } = useParams();
@@ -218,6 +220,13 @@ const WalletDetailPage = () => {
           >
             <Send className="w-5 h-5" /> Send Money
           </Button>
+
+          <AddMoneyModal
+            walletId={wallet.id}
+            currency={wallet.currency || "USD"}
+            onTopUp={(walletId: string, amount: number) => CreatePaymentSession(walletId, amount, wallet.currency || "USD")}
+          />
+
           <Button
             variant="outline"
             className="flex items-center gap-2 flex-grow sm:flex-grow-0"
@@ -248,7 +257,7 @@ const WalletDetailPage = () => {
         </CardHeader>
 
         <CardContent className="space-y-2 text-sm text-muted-foreground">
-          
+
           {lastTransfers.length === 0 ? (
             <p className="text-sm text-muted-foreground">No transfers yet.</p>
           ) : (

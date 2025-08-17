@@ -65,7 +65,7 @@ export async function getWalletById(id: string): Promise<WalletType | null> {
 }
 
 
-export async function updateWalletById(id: string, data: { name: string; balance: number }) {
+export async function updateWalletById(id: string, data: { name: string; }) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
       method: "PUT",
@@ -74,8 +74,7 @@ export async function updateWalletById(id: string, data: { name: string; balance
       },
       body: JSON.stringify({
         walletId: id,
-        name: data.name,
-        balance: data.balance
+        name: data.name
       }),
     });
 

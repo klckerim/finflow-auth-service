@@ -87,6 +87,7 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm mb-1 block text-gray-300">Full Name</label>
                 <Input
+                  id="fullName"
                   type="text"
                   name="fullName"
                   value={form.fullName}
@@ -99,6 +100,7 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm mb-1 block text-gray-300">Email</label>
                 <Input
+                  id="email"
                   type="email"
                   name="email"
                   value={form.email}
@@ -111,6 +113,7 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm mb-1 block text-gray-300">Password</label>
                 <Input
+                  id="password"
                   type="password"
                   name="password"
                   value={form.password}

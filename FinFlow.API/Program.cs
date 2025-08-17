@@ -158,6 +158,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+var stripeKey = builder.Configuration["Stripe:SecretKey"];
+Stripe.StripeConfiguration.ApiKey = stripeKey;
 
 if (app.Environment.IsDevelopment())
 {

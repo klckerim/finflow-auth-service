@@ -17,7 +17,6 @@ public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, b
             return false;
 
         wallet.Name = request.Name;
-        wallet.Balance = request.Balance;
 
         await _walletRepository.UpdateAsync(wallet);
         return true;

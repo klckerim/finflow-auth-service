@@ -80,6 +80,7 @@ export default function LoginPage() {
               <div>
                 <label className="text-sm mb-1 block text-gray-300">Your email address</label>
                 <Input
+                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -91,6 +92,7 @@ export default function LoginPage() {
               <div>
                 <label className="text-sm mb-1 block text-gray-300">Your password</label>
                 <Input
+                  id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

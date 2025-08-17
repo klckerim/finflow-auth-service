@@ -30,8 +30,20 @@ export default function TransferPage() {
   const currentWallet = wallets.find((w) => w.id === walletId);
 
   useEffect(() => {
-    setWalletOptions(wallets.filter((w) => w.id !== walletId));
-    // Buraya son transferleri getirecek API bağlanabilir
+    (async () => {
+      if (!walletId) return;
+
+      setWalletOptions(wallets.filter((w) => w.id !== walletId));
+
+      try {
+        const response = await getTransactionsByWalletId(walletId as string, 5);
+        setLastTransfers(response);
+      } catch (err) {
+        parseUnknownError(err);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [walletId, wallets]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,21 +80,6 @@ export default function TransferPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await getTransactionsByWalletId(walletId as string, 5);
-        setLastTransfers(response);
-      } catch (err) {
-        parseUnknownError(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [walletId, wallets]);
-
-
 
   const quickAmounts = [50, 100, 250, 500];
 
@@ -135,6 +132,8 @@ export default function TransferPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Amount</label>
               <Input
+                id="amount"
+                name="amount"
                 type="number"
                 placeholder="e.g. 150.00"
                 value={amount}
