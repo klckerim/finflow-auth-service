@@ -127,17 +127,17 @@ public class PaymentsController : ControllerBase
                     }
                     else
                     {
-                        _logger.LogWarning("Wallet not found: {WalletId}. TestMode={TestMode}", walletIdStr, !session.Livemode);
+                        _logger.LogError("Wallet not found: {WalletId}. TestMode={TestMode}", walletIdStr, !session.Livemode);
                     }
                 }
                 else
                 {
-                    _logger.LogWarning("Invalid walletId format: {WalletId}", walletIdStr);
+                    _logger.LogError("Invalid walletId format: {WalletId}", walletIdStr);
                 }
             }
             else
             {
-                _logger.LogWarning("No walletId found in session metadata. TestMode={TestMode}", !session.Livemode);
+                _logger.LogError("No walletId found in session metadata. TestMode={TestMode}", !session.Livemode);
             }
 
             _logger.LogInformation("Checkout session processed successfully. TestMode={TestMode}", !session.Livemode);
