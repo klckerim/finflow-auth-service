@@ -47,8 +47,8 @@ public class PaymentsController : ControllerBase
                 }
             },
             Mode = "payment",
-            SuccessUrl = "http://localhost:3000/dashboard/wallets",
-            CancelUrl = "http://localhost:3000/dashboard/wallets",
+            SuccessUrl =  _config["Stripe:SuccessUrl"],
+            CancelUrl =  _config["Stripe:CancelUrl"],
             Metadata = new Dictionary<string, string>
             {
                 { "walletId", request.WalletId ?? Guid.Empty.ToString() },
