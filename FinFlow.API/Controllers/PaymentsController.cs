@@ -78,61 +78,79 @@ public class PaymentsController : ControllerBase
         return Ok(new { sessionId = session.Id });
     }
 
-
     [HttpPost("webhook")]
     public async Task<IActionResult> Webhook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
         var secret = _config["Stripe:WebhookSecret"];
 
-
-        var stripeEvent = EventUtility.ConstructEvent(
-            json,
-            Request.Headers["Stripe-Signature"],
-            secret
-        );
+        Stripe.Event stripeEvent;
+        try
+        {
+            stripeEvent = Stripe.EventUtility.ConstructEvent(
+                json,
+                Request.Headers["Stripe-Signature"],
+                secret
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Invalid Stripe webhook signature.");
+            return BadRequest();
+        }
 
         _logger.LogInformation("Received Stripe webhook event: {EventType}", stripeEvent.Type);
 
+        // Checkout Session Completed
         if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
         {
-            // Güvenli cast
-            var session = stripeEvent.Data.Object as Session;
-
+            var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
             if (session == null)
             {
                 _logger.LogError("Session is null in webhook event.");
                 return BadRequest("Invalid session data.");
             }
 
-            if (session.Metadata != null && session.Metadata.TryGetValue("walletId", out var walletId))
+            // Metadata kontrolü
+            if (session.Metadata != null && session.Metadata.TryGetValue("walletId", out var walletIdStr))
             {
-                var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
-
-                var walletGuid = Guid.Parse(walletId);
-                var wallet = await _walletRepository.GetByIdAsync(walletGuid, new CancellationToken());
-
-                if (wallet != null)
+                if (Guid.TryParse(walletIdStr, out var walletGuid))
                 {
-                    wallet.Balance += amount;
-                    await _walletRepository.UpdateAsync(wallet);
-                    _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}", walletId, amount);
+                    var wallet = await _walletRepository.GetByIdAsync(walletGuid, CancellationToken.None);
+                    if (wallet != null)
+                    {
+                        var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
+                        wallet.Balance += amount;
+                        await _walletRepository.UpdateAsync(wallet);
+
+                        _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Wallet not found: {WalletId}. TestMode={TestMode}", walletIdStr, !session.Livemode);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Wallet not found: {WalletId}", walletId);
+                    _logger.LogWarning("Invalid walletId format: {WalletId}", walletIdStr);
                 }
             }
             else
             {
-                _logger.LogError("No walletId found in session metadata.");
-                return BadRequest("No walletId found in session metadata.");
+                _logger.LogWarning("No walletId found in session metadata. TestMode={TestMode}", !session.Livemode);
             }
 
-            _logger.LogInformation("Checkout session processed successfully.");
+            _logger.LogInformation("Checkout session processed successfully. TestMode={TestMode}", !session.Livemode);
+        }
+
+        if (stripeEvent.Type == EventTypes.ChargeSucceeded)
+        {
+            var charge = stripeEvent.Data.Object as Stripe.Charge;
+            _logger.LogInformation("Charge succeeded: {ChargeId}, Amount: {Amount}, TestMode={TestMode}",
+                charge?.Id, charge?.Amount, !charge?.Livemode);
         }
 
         return Ok();
     }
+
 }
