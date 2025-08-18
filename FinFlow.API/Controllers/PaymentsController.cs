@@ -118,28 +118,16 @@ public class PaymentsController : ControllerBase
             {
                 if (Guid.TryParse(walletIdStr, out var walletGuid))
                 {
-                    var wallet = await _walletRepository.GetByIdAsync(walletGuid, CancellationToken.None);
-                    if (wallet != null)
+                    var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
+
+                    var result = await _mediator.Send(new DepositCommand(walletGuid, amount));
+                    if (result)
                     {
-                        var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
-                        wallet.Balance += amount;
-                        await _walletRepository.UpdateAsync(wallet);
-
-                        var transaction = new Transaction
-                        {
-                            WalletId = walletGuid,
-                            Amount = amount,
-                            Type = TransactionType.Deposit,
-                            Description = "Money has been deposited into the wallet."
-                        };
-                        
-                        await _transactionRepository.AddAsync(transaction, CancellationToken.None);
-
                         _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);
                     }
                     else
                     {
-                        _logger.LogError("Wallet not found: {WalletId}. TestMode={TestMode}", walletIdStr, !session.Livemode);
+                        _logger.LogError("Wallet not found or failed to update: {WalletId}. TestMode={TestMode}", walletIdStr, !session.Livemode);
                     }
                 }
                 else
