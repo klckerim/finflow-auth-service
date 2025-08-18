@@ -47,13 +47,22 @@ public class PaymentsController : ControllerBase
                 }
             },
             Mode = "payment",
-            SuccessUrl =  _config["Stripe:SuccessUrl"],
-            CancelUrl =  _config["Stripe:CancelUrl"],
+            SuccessUrl = _config["Stripe:SuccessUrl"],
+            CancelUrl = _config["Stripe:CancelUrl"],
             Metadata = new Dictionary<string, string>
             {
                 { "walletId", request.WalletId ?? Guid.Empty.ToString() },
                 { "amount", request.Amount.ToString() },
                 { "currency", request.Currency ?? "usd" }
+            },
+            PaymentIntentData = new SessionPaymentIntentDataOptions
+            {
+                Metadata = new Dictionary<string, string>
+            {
+                { "walletId", request.WalletId ?? Guid.Empty.ToString() },
+                { "amount", request.Amount.ToString() },
+                { "currency", request.Currency ?? "usd" }
+            }
             }
         };
 
