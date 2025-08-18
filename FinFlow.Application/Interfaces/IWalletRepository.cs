@@ -7,5 +7,5 @@ public interface IWalletRepository
     Task AddAsync(Wallet wallet);
     Task UpdateAsync(Wallet wallet);
     Task DeleteAsync(Wallet wallet);
-
+    Task<bool> IncreaseBalanceWithTransactionAsync(Guid walletId, decimal amount, CancellationToken ct);
 }
