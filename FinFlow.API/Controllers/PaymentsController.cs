@@ -2,9 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using MediatR;
 using Stripe;
-using Newtonsoft.Json;
-using FinFlow.Domain.Entities;
-
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,15 +11,11 @@ public class PaymentsController : ControllerBase
     private readonly ILogger<PaymentsController> _logger;
     private readonly IConfiguration _config;
 
-    private readonly IWalletRepository _walletRepository;
-    private readonly ITransactionRepository _transactionRepository;
-    public PaymentsController(ILogger<PaymentsController> logger, IMediator mediator, IWalletRepository walletRepository, ITransactionRepository transactionRepository, IConfiguration config)
+    public PaymentsController(ILogger<PaymentsController> logger, IMediator mediator, IConfiguration config)
     {
         _logger = logger;
         _config = config;
         _mediator = mediator;
-        _walletRepository = walletRepository;
-        _transactionRepository = transactionRepository;
     }
 
 
@@ -83,74 +76,82 @@ public class PaymentsController : ControllerBase
     [HttpPost("webhook")]
     public async Task<IActionResult> Webhook()
     {
-        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-        var secret = _config["Stripe:WebhookSecret"];
 
-        Stripe.Event stripeEvent;
-        try
+        // Yeni scope 
+        using (var scope = HttpContext.RequestServices.CreateScope())
         {
-            stripeEvent = Stripe.EventUtility.ConstructEvent(
-                json,
-                Request.Headers["Stripe-Signature"],
-                secret
-            );
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Invalid Stripe webhook signature.");
-            return BadRequest();
-        }
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<PaymentsController>>();
 
-        _logger.LogInformation("Received Stripe webhook event: {EventType}", stripeEvent.Type);
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            var secret = _config["Stripe:WebhookSecret"];
 
-        // Checkout Session Completed
-        if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
-        {
-            var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
-            if (session == null)
+            Stripe.Event stripeEvent;
+            try
             {
-                _logger.LogError("Session is null in webhook event.");
-                return BadRequest("Invalid session data.");
+                stripeEvent = Stripe.EventUtility.ConstructEvent(
+                    json,
+                    Request.Headers["Stripe-Signature"],
+                    secret
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Invalid Stripe webhook signature.");
+                return BadRequest();
             }
 
-            // Metadata kontrolü
-            if (session.Metadata != null && session.Metadata.TryGetValue("walletId", out var walletIdStr))
-            {
-                if (Guid.TryParse(walletIdStr, out var walletGuid))
-                {
-                    var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
+            _logger.LogInformation("Received Stripe webhook event: {EventType}", stripeEvent.Type);
 
-                    var result = await _mediator.Send(new DepositCommand(walletGuid, amount));
-                    if (result)
+            // Checkout Session Completed
+            if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted)
+            {
+                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
+                if (session == null)
+                {
+                    _logger.LogError("Session is null in webhook event.");
+                    return BadRequest("Invalid session data.");
+                }
+
+                // Metadata kontrolü
+                if (session.Metadata != null && session.Metadata.TryGetValue("walletId", out var walletIdStr))
+                {
+                    if (Guid.TryParse(walletIdStr, out var walletGuid))
                     {
-                        _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);
+                        var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
+
+                        var result = await _mediator.Send(new DepositCommand(walletGuid, amount));
+                        if (result)
+                        {
+                            _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);
+                        }
+                        else
+                        {
+                            _logger.LogError("Wallet not found or failed to update: {WalletId}. TestMode={TestMode}", walletIdStr, !session.Livemode);
+                        }
                     }
                     else
                     {
-                        _logger.LogError("Wallet not found or failed to update: {WalletId}. TestMode={TestMode}", walletIdStr, !session.Livemode);
+                        _logger.LogError("Invalid walletId format: {WalletId}", walletIdStr);
                     }
                 }
                 else
                 {
-                    _logger.LogError("Invalid walletId format: {WalletId}", walletIdStr);
+                    _logger.LogError("No walletId found in session metadata. TestMode={TestMode}", !session.Livemode);
                 }
+
+                _logger.LogInformation("Checkout session processed successfully. TestMode={TestMode}", !session.Livemode);
             }
-            else
+
+            if (stripeEvent.Type == EventTypes.ChargeSucceeded)
             {
-                _logger.LogError("No walletId found in session metadata. TestMode={TestMode}", !session.Livemode);
+                var charge = stripeEvent.Data.Object as Stripe.Charge;
+                _logger.LogInformation("Charge succeeded: {ChargeId}, Amount: {Amount}, TestMode={TestMode}",
+                    charge?.Id, charge?.Amount, !charge?.Livemode);
             }
 
-            _logger.LogInformation("Checkout session processed successfully. TestMode={TestMode}", !session.Livemode);
+            return Ok();
         }
 
-        if (stripeEvent.Type == EventTypes.ChargeSucceeded)
-        {
-            var charge = stripeEvent.Data.Object as Stripe.Charge;
-            _logger.LogInformation("Charge succeeded: {ChargeId}, Amount: {Amount}, TestMode={TestMode}",
-                charge?.Id, charge?.Amount, !charge?.Livemode);
-        }
-
-        return Ok();
     }
-
 }

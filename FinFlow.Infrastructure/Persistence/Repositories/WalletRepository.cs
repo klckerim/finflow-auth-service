@@ -55,27 +55,38 @@ public class WalletRepository : IWalletRepository
     public async Task<bool> IncreaseBalanceWithTransactionAsync(Guid walletId, decimal amount, CancellationToken ct)
     {
         await using var db = await _contextFactory.CreateDbContextAsync(ct);
+        await using var transaction = await db.Database.BeginTransactionAsync(ct);
 
-        var wallet = await db.Wallets
-            .IgnoreQueryFilters()
-            .FirstOrDefaultAsync(w => w.Id == walletId, ct);
-
-        if (wallet == null) return false;
-
-        wallet.Balance += amount;
-
-        db.Transactions.Add(new Transaction
+        try
         {
-            WalletId = walletId,
-            Amount = amount,
-            Type = TransactionType.Deposit,
-            Description = "Money has been deposited."
-        });
+            var wallet = await db.Wallets
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(w => w.Id == walletId, ct);
 
-        await db.SaveChangesAsync(ct);
-        return true;
+            if (wallet == null)
+            {
+                return false;
+            }
+
+            wallet.Balance += amount;
+
+            db.Transactions.Add(new Transaction
+            {
+                WalletId = walletId,
+                Amount = amount,
+                Type = TransactionType.Deposit,
+                Description = "Money has been deposited."
+            });
+
+            await db.SaveChangesAsync(ct);
+            await transaction.CommitAsync();
+
+            return true;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
-
-
-
 }
