@@ -4,22 +4,26 @@ using Microsoft.EntityFrameworkCore;
 
 public class TransactionRepository : ITransactionRepository
 {
-    private readonly FinFlowDbContext _context;
+    private readonly IDbContextFactory<FinFlowDbContext> _contextFactory;
 
-    public TransactionRepository(FinFlowDbContext context)
+    public TransactionRepository(IDbContextFactory<FinFlowDbContext> contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
     }
 
     public async Task AddAsync(Transaction transaction, CancellationToken cancellationToken = default)
     {
-        await _context.Transactions.AddAsync(transaction, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        var context = _contextFactory.CreateDbContext();
+
+        await context.Transactions.AddAsync(transaction, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<List<Transaction>> GetTransactionsByUserIdAsync(Guid userId, int limit = 20, CancellationToken cancellationToken = default)
     {
-        return await _context.Transactions
+        var context = _contextFactory.CreateDbContext();
+
+        return await context.Transactions
             .Include(t => t.Wallet)
             .Where(t => t.Wallet != null && t.Wallet.UserId == userId)
             .OrderByDescending(t => t.CreatedAt)
@@ -29,7 +33,9 @@ public class TransactionRepository : ITransactionRepository
 
     public async Task<List<Transaction>> GetTransactionsByWalletIdAsync(Guid walletId, int limit = 20, CancellationToken cancellationToken = default)
     {
-        return await _context.Transactions
+        var context = _contextFactory.CreateDbContext();
+
+        return await context.Transactions
             .Where(t => t.WalletId == walletId)
             .OrderByDescending(t => t.CreatedAt)
             .Take(limit)
@@ -38,7 +44,9 @@ public class TransactionRepository : ITransactionRepository
 
     public async Task<List<Transaction>> GetByWalletIdAsync(Guid walletId, CancellationToken cancellationToken = default)
     {
-        return await _context.Transactions
+        var context = _contextFactory.CreateDbContext();
+
+        return await context.Transactions
             .Where(t => t.WalletId == walletId)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync(cancellationToken);

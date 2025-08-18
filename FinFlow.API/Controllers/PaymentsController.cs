@@ -3,6 +3,7 @@ using Stripe.Checkout;
 using MediatR;
 using Stripe;
 using Newtonsoft.Json;
+using FinFlow.Domain.Entities;
 
 
 [ApiController]
@@ -14,13 +15,14 @@ public class PaymentsController : ControllerBase
     private readonly IConfiguration _config;
 
     private readonly IWalletRepository _walletRepository;
-
-    public PaymentsController(ILogger<PaymentsController> logger, IMediator mediator, IWalletRepository walletRepository, IConfiguration config)
+    private readonly ITransactionRepository _transactionRepository;
+    public PaymentsController(ILogger<PaymentsController> logger, IMediator mediator, IWalletRepository walletRepository, ITransactionRepository transactionRepository, IConfiguration config)
     {
         _logger = logger;
         _config = config;
         _mediator = mediator;
         _walletRepository = walletRepository;
+        _transactionRepository = transactionRepository;
     }
 
 
@@ -122,6 +124,16 @@ public class PaymentsController : ControllerBase
                         var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
                         wallet.Balance += amount;
                         await _walletRepository.UpdateAsync(wallet);
+
+                        var transaction = new Transaction
+                        {
+                            WalletId = walletGuid,
+                            Amount = amount,
+                            Type = TransactionType.Deposit,
+                            Description = "Money has been deposited into the wallet."
+                        };
+                        
+                        await _transactionRepository.AddAsync(transaction, CancellationToken.None);
 
                         _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);
                     }

@@ -27,7 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
 // builder.WebHost.UseUrls("http://+:80");
 
 // DbContext
-builder.Services.AddDbContext<FinFlowDbContext>(options =>
+builder.Services.AddDbContextFactory<FinFlowDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Repositories

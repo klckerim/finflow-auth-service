@@ -4,28 +4,31 @@ using Microsoft.EntityFrameworkCore;
 
 public class WalletRepository : IWalletRepository
 {
-    private readonly FinFlowDbContext _dbContext;
+    private readonly IDbContextFactory<FinFlowDbContext> _contextFactory;
 
-    public WalletRepository(FinFlowDbContext dbContext)
+    public WalletRepository(IDbContextFactory<FinFlowDbContext> contextFactory)
     {
-        _dbContext = dbContext;
+        _contextFactory = contextFactory;
     }
 
     public async Task AddAsync(Wallet wallet)
     {
-        await _dbContext.Wallets.AddAsync(wallet);
-        await _dbContext.SaveChangesAsync();
+        var context = _contextFactory.CreateDbContext();
+        await context.Wallets.AddAsync(wallet);
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Wallet wallet)
     {
-        _dbContext.Wallets.Remove(wallet);
-        await _dbContext.SaveChangesAsync();
+        var context = _contextFactory.CreateDbContext();
+        context.Wallets.Remove(wallet);
+        await context.SaveChangesAsync();
     }
 
     public async Task<Wallet?> GetByIdAsync(Guid walletId, CancellationToken cancellationToken)
     {
-        return await _dbContext.Wallets
+        var context = _contextFactory.CreateDbContext();
+        return await context.Wallets
             .Include(w => w.Transactions)
             .FirstOrDefaultAsync(w => w.Id == walletId, cancellationToken);
     }
@@ -33,7 +36,8 @@ public class WalletRepository : IWalletRepository
 
     public async Task<List<Wallet>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _dbContext.Wallets
+        var context = _contextFactory.CreateDbContext();
+        return await context.Wallets
             .Where(w => w.UserId == userId)
             .Include(w => w.Transactions)
             .ToListAsync(cancellationToken: cancellationToken);
@@ -42,7 +46,8 @@ public class WalletRepository : IWalletRepository
 
     public async Task UpdateAsync(Wallet wallet)
     {
-        _dbContext.Wallets.Update(wallet);
-        await _dbContext.SaveChangesAsync();
+        var context = _contextFactory.CreateDbContext();
+        context.Wallets.Update(wallet);
+        await context.SaveChangesAsync();
     }
 }

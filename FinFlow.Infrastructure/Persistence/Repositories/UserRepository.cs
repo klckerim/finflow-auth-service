@@ -9,48 +9,59 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly FinFlowDbContext _context;
+        private readonly IDbContextFactory<FinFlowDbContext> _contextFactory;
 
-        public UserRepository(FinFlowDbContext context)
+        public UserRepository(IDbContextFactory<FinFlowDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email, cancellationToken);
+            var context = _contextFactory.CreateDbContext();
+            return await context.Users.AnyAsync(u => u.Email == email, cancellationToken);
         }
 
         public async Task AddAsync(User user, CancellationToken cancellationToken)
         {
-            await _context.Users.AddAsync(user, cancellationToken);
-            await _context.SaveChangesAsync();
+            var context = _contextFactory.CreateDbContext();
+
+            await context.Users.AddAsync(user, cancellationToken);
+            await context.SaveChangesAsync();
         }
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            return await _context.Users
+            var context = _contextFactory.CreateDbContext();
+
+            return await context.Users
             .Include(u => u.RefreshTokens)
             .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
         public async Task<User?> GetByPasswordResetTokenAsync(string token, CancellationToken cancellationToken)
         {
-            return await _context.Users
+            var context = _contextFactory.CreateDbContext();
+
+            return await context.Users
             .Include(u => u.RefreshTokens)
                 .FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.PasswordResetTokenExpiry > DateTime.UtcNow, cancellationToken);
         }
 
         public async Task<User?> GetUserByRefreshTokenAsync(string token)
         {
-            return await _context.Users
+            var context = _contextFactory.CreateDbContext();
+
+            return await context.Users
                 .Include(u => u.RefreshTokens)
                 .FirstOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == token));
         }
 
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
         {
-            return await _context.Users
+            var context = _contextFactory.CreateDbContext();
+
+            return await context.Users
                 .Include(u => u.RefreshTokens)
                 .FirstOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == refreshToken && rt.IsActive));
         }
@@ -59,10 +70,12 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
         {
             try
             {
-                // RefreshToken'ı doğrudan context'e ekle
-                _context.RefreshTokens.Add(refreshToken);
+                var context = _contextFactory.CreateDbContext();
 
-                await _context.SaveChangesAsync();
+                // RefreshToken'ı doğrudan context'e ekle
+                context.RefreshTokens.Add(refreshToken);
+
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)
             {
