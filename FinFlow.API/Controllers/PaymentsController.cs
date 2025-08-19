@@ -7,15 +7,13 @@ using Stripe;
 [Route("api/[controller]")]
 public class PaymentsController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly ILogger<PaymentsController> _logger;
     private readonly IConfiguration _config;
 
-    public PaymentsController(ILogger<PaymentsController> logger, IMediator mediator, IConfiguration config)
+    public PaymentsController(ILogger<PaymentsController> logger, IConfiguration config)
     {
         _logger = logger;
         _config = config;
-        _mediator = mediator;
     }
 
 
@@ -81,7 +79,6 @@ public class PaymentsController : ControllerBase
         using (var scope = HttpContext.RequestServices.CreateScope())
         {
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<PaymentsController>>();
 
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var secret = _config["Stripe:WebhookSecret"];
@@ -120,7 +117,7 @@ public class PaymentsController : ControllerBase
                     {
                         var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
 
-                        var result = await _mediator.Send(new DepositCommand(walletGuid, amount));
+                        var result = await mediator.Send(new DepositCommand(walletGuid, amount));
                         if (result)
                         {
                             _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);
