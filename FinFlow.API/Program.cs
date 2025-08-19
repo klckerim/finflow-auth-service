@@ -176,6 +176,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+builder.Logging.AddConsole();
+Console.WriteLine($"[BOOT] Current Connection: {builder.Configuration.GetConnectionString("DefaultConnection")}");
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
