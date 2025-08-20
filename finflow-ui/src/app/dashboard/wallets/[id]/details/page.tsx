@@ -28,6 +28,7 @@ import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { motion } from "framer-motion";
 import { CreatePaymentSession } from "@/shared/lib/create-session";
 import AddMoneyModal from "@/features/payments/topupmodal";
+import Statistics from "@/components/ui/statistic";
 
 const WalletDetailPage = () => {
   const { id } = useParams();
@@ -53,7 +54,7 @@ const WalletDetailPage = () => {
     (async () => {
       try {
         if (!wallet) return;
-        const response = await getTransactionsByWalletId(wallet?.id, 5);
+        const response = await getTransactionsByWalletId(wallet?.id, 10);
         setLastTransfers(response);
       } catch (err) {
         parseUnknownError(err);
@@ -62,6 +63,13 @@ const WalletDetailPage = () => {
       }
     })();
   }, [wallet]);
+
+
+  const formatDate = (date: string) =>
+    new Intl.DateTimeFormat("en-US", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    }).format(new Date(date));
 
 
   const handleCopyId = () => {
@@ -240,14 +248,10 @@ const WalletDetailPage = () => {
 
       {/* STATISTICS */}
       <Card>
-        <CardHeader>
-          <CardTitle>📊 Statistics</CardTitle>
-          <CardDescription>Summary of your wallet transactions</CardDescription>
-        </CardHeader>
-
+        <CardContent>
+          <Statistics transactions={lastTransfers} currency={wallet.currency == "" ? "USD": wallet.currency} statisticType= {"Wallet"}  />
+        </CardContent>
       </Card>
-
-      {/* LAST TRANSFERS */}
       <Card>
         <CardHeader>
           <CardTitle>🕒 Last Transfers</CardTitle>
@@ -256,19 +260,37 @@ const WalletDetailPage = () => {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-2 text-sm text-muted-foreground">
-
+        <CardContent>
           {lastTransfers.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No transfers yet.</p>
+            <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
+              No transfers yet.
+            </div>
           ) : (
-            lastTransfers.map((tx, idx) => (
-              <div key={idx} className="flex justify-between text-sm py-1 border-b last:border-0">
-                <span>{tx.description}</span>
-                <span>{tx.amount} {wallet.currency || ""}</span>
-              </div>
-            ))
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="border-b text-muted-foreground">
+                    <th className="py-2 text-left font-medium">Description</th>
+                    <th className="py-2 text-left font-medium">Type</th>
+                    <th className="py-2 text-left font-medium">Date</th>
+                    <th className="py-2 text-right font-medium">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lastTransfers.map((tx, idx) => (
+                    <tr key={idx} className="border-b last:border-0">
+                      <td className="py-2">{tx.description}</td>
+                      <td className="py-2">{tx.type}</td>
+                      <td className="py-2">{formatDate(tx.createdAt)}</td>
+                      <td className="py-2 text-right">
+                        {tx.amount} {wallet?.currency || ""}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
-
         </CardContent>
       </Card>
     </div>

@@ -11,7 +11,7 @@ import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 import { motion } from "framer-motion";
-import { Wallet, Info, PiggyBank } from "lucide-react";
+import { Wallet, Info } from "lucide-react";
 
 const AddWalletPage = () => {
   const router = useRouter();
@@ -19,7 +19,6 @@ const AddWalletPage = () => {
 
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");
-  const [balance, setBalance] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -34,7 +33,7 @@ const AddWalletPage = () => {
           userId: user.userId,
           name,
           currency,
-          balance: balance ? parseFloat(balance) : 0
+          balance: 0
         }),
       });
 
@@ -101,21 +100,6 @@ const AddWalletPage = () => {
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">Select the main currency for this wallet.</p>
-            </div>
-
-            {/* Initial Balance */}
-            <div className="space-y-1">
-              <Label htmlFor="balance">Initial Balance (optional)</Label>
-              <Input
-                id="balance"
-                type="number"
-                placeholder="0.00"
-                value={balance}
-                onChange={(e) => setBalance(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <PiggyBank size={12} /> You can start with zero and add money later.
-              </p>
             </div>
           </CardContent>
 

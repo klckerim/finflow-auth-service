@@ -22,6 +22,15 @@ public class GetTransactionsByUserIdQueryHandler : IRequestHandler<GetTransactio
             return new List<TransactionDto>();
         }
 
-        return _mapper.Map<List<TransactionDto>>(transactions);
+        return transactions.Select(t => new TransactionDto
+        {
+            WalletId = t.WalletId,
+            Id = t.Id,
+            Amount = t.Amount,
+            Type = t.Type.ToString(),
+            CreatedAt = t.CreatedAt,
+            Currency = t.Wallet!.Currency,
+            Description = t.Description
+        }).ToList();
     }
 }

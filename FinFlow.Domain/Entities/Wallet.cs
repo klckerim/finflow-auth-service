@@ -13,7 +13,7 @@ public class Wallet
 
     public string Name { get; set; } = string.Empty;
 
-    public string Currency { get; set; } = "TRY";
+    public string Currency { get; set; } = "EUR";
 
     public decimal Balance { get; set; } = 0;
 

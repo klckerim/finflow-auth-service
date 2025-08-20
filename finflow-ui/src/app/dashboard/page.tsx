@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { Card, CardHeader, CardTitle, CardContent } from "@/features/cards/card";
 import { Progress } from "@/components/ui/progress";
@@ -13,16 +12,13 @@ import QuickActions from "@/features/dashboard/quickactions";
 import AnalyticsWidget from "@/features/dashboard/AnalyticsWidget";
 
 import { useAuth } from "@/context/auth-context";
-import { getWalletsByUser } from "@/shared/lib/api";
+import { getTransactionsByUserId, getWalletsByUser } from "@/shared/lib/api";
 import { getGreeting } from "@/components/ui/label";
 import currencyData from "@/shared/data/currency/currency.json";
 
 import { Wallet } from "@/shared/types/wallet";
-import { expensesData, mockMonthlyTrendData } from "@/shared/data/mock/data";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
-
-const ExpensesPieChart = dynamic(() => import("@/components/charts/expenses-pie-chart"));
-const MonthlyTrendLineChart = dynamic(() => import("@/components/charts/monthly-trend-line-chart"));
+import Statistics from "@/components/ui/statistic";
 
 export default function DashboardPage() {
   const { user, isLoading, logout } = useAuth();
@@ -30,6 +26,9 @@ export default function DashboardPage() {
 
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [walletsLoading, setWalletsLoading] = useState(true);
+
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(true);
 
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
   const [ratesLoading, setRatesLoading] = useState(true);
@@ -69,6 +68,22 @@ export default function DashboardPage() {
       })();
     }
   }, [user]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!user) return;
+        const response = await getTransactionsByUserId(user.userId, 1000);
+        setTransactions(response);
+      } catch (err) {
+        parseUnknownError(err);
+      } finally {
+        setTransactionsLoading(false);
+      }
+    })();
+  }, [user]);
+
+
 
   // Kur verisini al
   useEffect(() => {
@@ -209,12 +224,13 @@ export default function DashboardPage() {
         {/* GRAFİKLER */}
         <section className="grid md:grid-cols-2 gap-6">
           <Card>
-            <CardHeader><CardTitle>Expenses</CardTitle></CardHeader>
-            <CardContent><ExpensesPieChart data={expensesData} /></CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle>Monthly Trend</CardTitle></CardHeader>
-            <CardContent><MonthlyTrendLineChart data={mockMonthlyTrendData} /></CardContent>
+            <CardContent>
+              <Statistics
+                transactions={transactions ?? []}
+                currency={baseCurrency ?? "EUR"}
+                statisticType={"User"}
+              />
+            </CardContent>
           </Card>
         </section>
 
