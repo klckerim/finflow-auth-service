@@ -73,7 +73,7 @@ const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }:
 
     const data = [
         { name: "Incoming", value: totalIn },
-        { name: "Outgoing", value: totalOut },
+        { name: "Outgoing", value: totalOut * -1 },
     ];
 
     const COLORS = ["#22c55e", "#ef4444"]; // green & red
