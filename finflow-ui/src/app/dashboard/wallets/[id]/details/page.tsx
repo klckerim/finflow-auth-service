@@ -102,10 +102,10 @@ const WalletDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="p-6 space-y-6 max-w-3xl mx-auto">
-        <Skeleton className="h-10 w-2/5 rounded-md" />
-        <Skeleton className="h-8 w-1/3 rounded-md" />
-        <Skeleton className="h-40 w-full rounded-lg" />
+      <div className="p-4 space-y-4 max-w-3xl mx-auto">
+        <Skeleton className="h-8 w-2/5 rounded-md" />
+        <Skeleton className="h-6 w-1/3 rounded-md" />
+        <Skeleton className="h-32 w-full rounded-lg" />
       </div>
     );
   }
@@ -113,96 +113,103 @@ const WalletDetailPage = () => {
   if (!wallet) return null;
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-8">
+    <motion.div 
+      className="px-3 sm:px-4 md:px-6 pt-4 pb-24 max-w-7xl mx-auto"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       {/* NAVIGATION BUTTONS */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-4">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="gap-2"
+          className="gap-1 px-2 py-1 text-xs sm:text-sm"
           aria-label="Go back"
         >
-          <ArrowLeft className="w-5 h-5" /> Back
+          <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" /> 
+          <span className="hidden xs:inline">Back</span>
         </Button>
 
-        <div className="flex gap-3">
+        <div className="flex gap-1 sm:gap-2">
           <Button
             variant="secondary"
             onClick={() => router.push(`/dashboard/wallets/${wallet.id}/edit`)}
-            className="gap-2"
+            className="gap-1 px-2 py-1 text-xs sm:text-sm"
             aria-label="Edit wallet"
           >
-            <Edit3 className="w-5 h-5" /> Edit
+            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" /> 
+            <span className="hidden xs:inline">Edit</span>
           </Button>
 
           <Button
             variant="destructive"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="gap-2"
+            className="gap-1 px-2 py-1 text-xs sm:text-sm"
             aria-label="Delete wallet"
           >
-
             {isDeleting ? (
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, ease: "linear" }}
               >
-                <Trash2 className="w-5 h-5" />
+                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
               </motion.div>
             ) : (
-              <Trash2 className="w-5 h-5" />
+              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
             )}
-            Delete
+            <span className="hidden xs:inline">Delete</span>
           </Button>
         </div>
       </div>
 
       {/* WALLET OVERVIEW */}
-      <Card className="bg-muted/40 border border-border shadow-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-3xl font-extrabold">
-            💼 {wallet.name}
-            <Badge variant="outline" className="text-sm">
+      <Card className="bg-muted/40 border border-border shadow-sm mb-4">
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 text-xl sm:text-2xl md:text-3xl font-bold">
+            <span className="flex items-center gap-2">
+              💼 {wallet.name}
+            </span>
+            <Badge variant="outline" className="text-xs w-fit mt-2 sm:mt-0">
               {wallet.currency}
             </Badge>
           </CardTitle>
-          <CardDescription className="text-lg text-muted-foreground">
-            Detailed wallet info and quick actions for your financial management.
+          <CardDescription className="text-sm sm:text-base text-muted-foreground mt-1">
+            Detailed wallet info and quick actions
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-6 text-foreground">
-          <div className="text-5xl font-extrabold">
+        <CardContent className="p-4 sm:p-6 pt-0 space-y-4 text-foreground">
+          <div className="text-2xl sm:text-3xl md:text-4xl font-bold">
             {wallet.balance.toLocaleString(undefined, {
               style: "currency",
               currency: wallet.currency,
             })}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm text-muted-foreground">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <LucideTimer className="w-5 h-5" />
+              <LucideTimer className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Created: {new Date(wallet.createdAt).toLocaleDateString()}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-mono truncate max-w-[12rem]">
-                ID: {wallet.id}
+              <span className="font-mono truncate max-w-[8rem] xs:max-w-[10rem] sm:max-w-[12rem]">
+                ID: {wallet.id.slice(0, 8)}...
               </span>
               <Copy
-                className={`w-5 h-5 cursor-pointer transition-colors ${copied ? "text-green-500" : "text-blue-500 hover:text-blue-700"
+                className={`w-3 h-3 sm:w-4 sm:h-4 cursor-pointer transition-colors ${copied ? "text-green-500" : "text-blue-500 hover:text-blue-700"
                   }`}
                 onClick={handleCopyId}
-                // title="Copy Wallet ID"
                 aria-label="Copy Wallet ID"
               />
               {copied && (
-                <CheckCircle2 className="w-5 h-5 text-green-500 animate-pulse" />
+                <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 animate-pulse" />
               )}
             </div>
-            <div>
+            <div className="sm:col-span-2">
               State:{" "}
-              <Badge variant={wallet.isActive ? "default" : "destructive"}>
+              <Badge variant={wallet.isActive ? "default" : "destructive"} className="text-xs">
                 {wallet.isActive ? "Active" : "Inactive"}
               </Badge>
             </div>
@@ -211,22 +218,22 @@ const WalletDetailPage = () => {
       </Card>
 
       {/* QUICK ACTIONS */}
-      <Card>
-        <CardHeader>
-          <CardTitle>⚡ Quick Actions</CardTitle>
-          <CardDescription>
-            Need to move money fast? Use these shortcuts to manage your wallet.
+      <Card className="mb-4">
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="text-lg sm:text-xl">⚡ Quick Actions</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
+            Need to move money fast? Use these shortcuts.
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="flex flex-wrap gap-4">
+        <CardContent className="p-4 sm:p-6 pt-0 flex flex-col xs:flex-row gap-2">
           <Button
             variant="default"
-            className="flex items-center gap-2 flex-grow sm:flex-grow-0"
+            className="flex items-center gap-1 flex-1 text-xs sm:text-sm py-2"
             onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
             aria-label="Send money"
           >
-            <Send className="w-5 h-5" /> Send Money
+            <Send className="w-3 h-3 sm:w-4 sm:h-4" /> Send
           </Button>
 
           <AddMoneyModal
@@ -237,63 +244,84 @@ const WalletDetailPage = () => {
 
           <Button
             variant="outline"
-            className="flex items-center gap-2 flex-grow sm:flex-grow-0"
+            className="flex items-center gap-1 flex-1 text-xs sm:text-sm py-2"
             onClick={() => router.push(`/dashboard/wallets/${wallet.id}/edit`)}
             aria-label="Edit wallet"
           >
-            <Edit3 className="w-5 h-5" /> Edit Wallet
+            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" /> Edit
           </Button>
         </CardContent>
       </Card>
 
       {/* STATISTICS */}
-      <Card>
-        <CardContent>
+      <Card className="mb-4">
+        <CardContent className="p-3 sm:p-4">
           <Statistics transactions={lastTransfers} currency={wallet.currency == "" ? "USD": wallet.currency} statisticType= {"Wallet"}  />
         </CardContent>
       </Card>
+      
+      {/* LAST TRANSFERS */}
       <Card>
-        <CardHeader>
-          <CardTitle>🕒 Last Transfers</CardTitle>
-          <CardDescription>
-            Review your recent wallet transfers for quick reference.
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="text-lg sm:text-xl">🕒 Last Transfers</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
+            Review your recent wallet transfers
           </CardDescription>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="p-4 sm:p-6 pt-0">
           {lastTransfers.length === 0 ? (
-            <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center py-4 text-xs sm:text-sm text-muted-foreground">
               No transfers yet.
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="border-b text-muted-foreground">
-                    <th className="py-2 text-left font-medium">Description</th>
-                    <th className="py-2 text-left font-medium">Type</th>
-                    <th className="py-2 text-left font-medium">Date</th>
-                    <th className="py-2 text-right font-medium">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lastTransfers.map((tx, idx) => (
-                    <tr key={idx} className="border-b last:border-0">
-                      <td className="py-2">{tx.description}</td>
-                      <td className="py-2">{tx.type}</td>
-                      <td className="py-2">{formatDate(tx.createdAt)}</td>
-                      <td className="py-2 text-right">
-                        {tx.amount} {wallet?.currency || ""}
-                      </td>
+            <>
+              {/* Desktop table (hidden on mobile) */}
+              <div className="hidden md:block overflow-x-auto w-full rounded-lg border shadow-sm">
+                <table className="w-full bg-white text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {lastTransfers.map((tx, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-3 py-2 text-gray-900 max-w-[120px] truncate">{tx.description}</td>
+                        <td className="px-3 py-2 text-gray-900">{tx.type}</td>
+                        <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
+                        <td className="px-3 py-2 font-medium text-right whitespace-nowrap">
+                          {tx.amount} {wallet?.currency || ""}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile cards (shown on mobile) */}
+              <div className="md:hidden space-y-2">
+                {lastTransfers.map((tx, idx) => (
+                  <div key={idx} className="bg-white p-3 rounded-lg border shadow-sm">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded-md">{tx.type}</span>
+                      <span className="text-xs font-semibold">
+                        {tx.amount} {wallet?.currency || ""}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-600 mb-2 line-clamp-2">{tx.description}</div>
+                    <div className="text-[11px] text-gray-400">{formatDate(tx.createdAt)}</div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 

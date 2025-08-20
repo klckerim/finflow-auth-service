@@ -83,8 +83,6 @@ export default function DashboardPage() {
     })();
   }, [user]);
 
-
-
   // Kur verisini al
   useEffect(() => {
     (async () => {
