@@ -83,7 +83,7 @@ export async function updateWalletById(id: string, data: { name: string; }) {
       throw new Error(msg);
     }
 
-    return await res.json();
+    return res.status === 204 ? true : await res.json();
   } catch (error) {
     parseUnknownError(error);
     return null;
