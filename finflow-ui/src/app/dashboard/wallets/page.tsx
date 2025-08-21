@@ -50,11 +50,11 @@ const WalletsPage = () => {
   const currencyIcon = (currency: string) => {
     switch (currency) {
       case "USD":
-        return <DollarSign className="text-green-600" />;
+        return <DollarSign className="text-green-600 dark:text-green-400" />;
       case "EUR":
-        return <Euro className="text-blue-600" />;
+        return <Euro className="text-blue-600 dark:text-blue-400" />;
       default:
-        return <WalletIcon className="text-primary" />;
+        return <WalletIcon className="text-primary dark:text-primary" />;
     }
   };
 
@@ -68,7 +68,7 @@ const WalletsPage = () => {
       >
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">💼 My Wallets</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">💼 My Wallets</h1>
           {wallets.length > 0 && (
             <Button
               className="shadow-md hover:shadow-lg transition-all"
@@ -104,9 +104,9 @@ const WalletsPage = () => {
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="group overflow-hidden relative border border-muted bg-gradient-to-br from-muted/30 to-card/90 backdrop-blur rounded-2xl shadow-md hover:shadow-xl transition-all duration-300">
+                  <Card className="group overflow-hidden relative border border-muted bg-gradient-to-br from-muted/20 to-card/80 dark:from-zinc-800/50 dark:to-zinc-900/80 backdrop-blur rounded-2xl shadow-md hover:shadow-xl transition-all duration-300">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-lg font-medium flex items-center gap-2">
+                      <CardTitle className="text-lg font-medium flex items-center gap-2 text-foreground">
                         {currencyIcon(wallet.currency)}
                         {wallet.name}
                       </CardTitle>
@@ -116,7 +116,7 @@ const WalletsPage = () => {
                     </CardHeader>
 
                     <CardContent>
-                      <div className="text-3xl font-bold">
+                      <div className="text-3xl font-bold text-foreground">
                         {wallet.balance.toLocaleString("tr-TR", {
                           style: "currency",
                           currency: wallet.currency,

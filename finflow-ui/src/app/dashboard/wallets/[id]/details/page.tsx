@@ -64,13 +64,11 @@ const WalletDetailPage = () => {
     })();
   }, [wallet]);
 
-
   const formatDate = (date: string) =>
     new Intl.DateTimeFormat("en-US", {
       dateStyle: "medium",
       timeStyle: "short",
     }).format(new Date(date));
-
 
   const handleCopyId = () => {
     if (!wallet) return;
@@ -82,12 +80,10 @@ const WalletDetailPage = () => {
 
   const handleDelete = async () => {
     if (!wallet?.id) return;
-
     const confirm = window.confirm(
       `Are you sure you want to delete the wallet "${wallet.name}"? This action is irreversible!`
     );
     if (!confirm) return;
-
     try {
       setIsDeleting(true);
       await deleteWalletById(wallet.id);
@@ -113,7 +109,7 @@ const WalletDetailPage = () => {
   if (!wallet) return null;
 
   return (
-    <motion.div 
+    <motion.div
       className="px-3 sm:px-4 md:px-6 pt-4 pb-24 max-w-7xl mx-auto"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -127,7 +123,7 @@ const WalletDetailPage = () => {
           className="gap-1 px-2 py-1 text-xs sm:text-sm"
           aria-label="Go back"
         >
-          <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" /> 
+          <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
           <span className="hidden xs:inline">Back</span>
         </Button>
 
@@ -138,7 +134,7 @@ const WalletDetailPage = () => {
             className="gap-1 px-2 py-1 text-xs sm:text-sm"
             aria-label="Edit wallet"
           >
-            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" /> 
+            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="hidden xs:inline">Edit</span>
           </Button>
 
@@ -256,43 +252,42 @@ const WalletDetailPage = () => {
       {/* STATISTICS */}
       <Card className="mb-4">
         <CardContent className="p-3 sm:p-4">
-          <Statistics transactions={lastTransfers} currency={wallet.currency == "" ? "USD": wallet.currency} statisticType= {"Wallet"}  />
+          <Statistics transactions={lastTransfers} currency={wallet.currency == "" ? "USD" : wallet.currency} statisticType={"Wallet"} />
         </CardContent>
       </Card>
-      
+
       {/* LAST TRANSFERS */}
-      <Card>
+      <Card className="bg-muted/10 dark:bg-muted/20 border dark:border-border shadow-sm">
         <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-lg sm:text-xl">🕒 Last Transfers</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">
+          <CardTitle className="text-lg sm:text-xl text-foreground dark:text-foreground">🕒 Last Transfers</CardTitle>
+          <CardDescription className="text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground">
             Review your recent wallet transfers
           </CardDescription>
         </CardHeader>
 
         <CardContent className="p-4 sm:p-6 pt-0">
           {lastTransfers.length === 0 ? (
-            <div className="flex items-center justify-center py-4 text-xs sm:text-sm text-muted-foreground">
+            <div className="flex items-center justify-center py-4 text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground">
               No transfers yet.
             </div>
           ) : (
             <>
-              {/* Desktop table (hidden on mobile) */}
-              <div className="hidden md:block overflow-x-auto w-full rounded-lg border shadow-sm">
-                <table className="w-full bg-white text-sm">
-                  <thead className="bg-gray-50">
+              <div className="hidden md:block overflow-x-auto w-full rounded-lg border shadow-sm dark:border-border">
+                <table className="w-full text-sm text-foreground dark:text-foreground">
+                  <thead className="bg-gray-50 dark:bg-zinc-700">
                     <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 dark:divide-zinc-700">
                     {lastTransfers.map((tx, idx) => (
-                      <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-3 py-2 text-gray-900 max-w-[120px] truncate">{tx.description}</td>
-                        <td className="px-3 py-2 text-gray-900">{tx.type}</td>
-                        <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
+                      <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
+                        <td className="px-3 py-2 truncate max-w-[200px]">{tx.description}</td>
+                        <td className="px-3 py-2">{tx.type}</td>
+                        <td className="px-3 py-2 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
                         <td className="px-3 py-2 font-medium text-right whitespace-nowrap">
                           {tx.amount} {wallet?.currency || ""}
                         </td>
@@ -302,18 +297,17 @@ const WalletDetailPage = () => {
                 </table>
               </div>
 
-              {/* Mobile cards (shown on mobile) */}
               <div className="md:hidden space-y-2">
                 {lastTransfers.map((tx, idx) => (
-                  <div key={idx} className="bg-white p-3 rounded-lg border shadow-sm">
+                  <div key={idx} className="p-3 rounded-lg border shadow-sm bg-white dark:bg-zinc-800 dark:border-border">
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded-md">{tx.type}</span>
+                      <span className="text-xs font-medium bg-gray-100 dark:bg-zinc-700 px-2 py-1 rounded-md">{tx.type}</span>
                       <span className="text-xs font-semibold">
                         {tx.amount} {wallet?.currency || ""}
                       </span>
                     </div>
-                    <div className="text-xs text-gray-600 mb-2 line-clamp-2">{tx.description}</div>
-                    <div className="text-[11px] text-gray-400">{formatDate(tx.createdAt)}</div>
+                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">{tx.description}</div>
+                    <div className="text-[11px] text-gray-400 dark:text-gray-400">{formatDate(tx.createdAt)}</div>
                   </div>
                 ))}
               </div>

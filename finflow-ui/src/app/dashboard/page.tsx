@@ -127,14 +127,14 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <main className="flex flex-col gap-12 px-4 sm:px-8 md:px-16 py-10 max-w-screen-2xl mx-auto">
+      <main className="flex flex-col gap-12 px-4 sm:px-8 md:px-16 py-10 max-w-screen-2xl mx-auto text-gray-900 dark:text-gray-100">
         {/* HEADER */}
         <header className="space-y-4 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
             Welcome to FinFlow{user ? `, ${user.fullName}` : ""}
           </h1>
           <p className="text-lg sm:text-xl font-medium text-primary">{greeting}</p>
-          <p className="text-base text-muted-foreground">
+          <p className="text-base text-muted-foreground dark:text-gray-400">
             Manage your wallets, track your cards and achieve your financial goals.
           </p>
 
@@ -146,7 +146,7 @@ export default function DashboardPage() {
               id="currency-select"
               value={baseCurrency}
               onChange={(e) => setBaseCurrency(e.target.value)}
-              className="border px-3 py-1 rounded-md dark:bg-zinc-800"
+              className="border px-3 py-1 rounded-md bg-white dark:bg-zinc-800 dark:text-gray-100 dark:border-gray-700"
             >
               {availableCurrencies.map((cur) => (
                 <option key={cur} value={cur}>
@@ -159,13 +159,13 @@ export default function DashboardPage() {
 
         {/* METRİKLER */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="hover:shadow-md transition">
+          <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
             <CardHeader><CardTitle>Number of Wallets</CardTitle></CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{wallets.length}</p>
             </CardContent>
           </Card>
-          <Card className="hover:shadow-md transition">
+          <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
             <CardHeader><CardTitle>Total Balance ({baseCurrency})</CardTitle></CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">
@@ -173,10 +173,10 @@ export default function DashboardPage() {
               </p>
             </CardContent>
           </Card>
-          <Card className="hover:shadow-md transition">
+          <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
             <CardHeader><CardTitle>Expenses Limit</CardTitle></CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-2">
+              <p className="text-sm text-muted-foreground dark:text-gray-400 mb-2">
                 {spendingUsed.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })} /{" "}
                 {spendingLimit.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })}
               </p>
@@ -187,9 +187,9 @@ export default function DashboardPage() {
 
         {/* CÜZDANLAR */}
         {wallets.length === 0 ? (
-          <div className="text-center p-6 border-2 border-dashed rounded-lg">
+          <div className="text-center p-6 border-2 border-dashed rounded-lg dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-2">You don't have a wallet yet.</h2>
-            <p className="text-sm text-muted-foreground mb-4">You can start by creating a new wallet.</p>
+            <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">You can start by creating a new wallet.</p>
             <Button onClick={() => router.push("/dashboard/wallets/add")}>Create A Wallet</Button>
           </div>
         ) : (
@@ -197,7 +197,7 @@ export default function DashboardPage() {
             {wallets.map((wallet) => {
               const converted = convertCurrency(wallet.balance, wallet.currency, baseCurrency);
               return (
-                <Card key={wallet.id} className="hover:shadow-md transition">
+                <Card key={wallet.id} className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
                   <CardHeader><CardTitle>{wallet.name}</CardTitle></CardHeader>
                   <CardContent>
                     <p className="text-lg font-bold">
@@ -206,7 +206,7 @@ export default function DashboardPage() {
                         currency: wallet.currency,
                       })}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground dark:text-gray-400">
                       ({converted.toLocaleString("tr-TR", {
                         style: "currency",
                         currency: baseCurrency,
@@ -221,7 +221,7 @@ export default function DashboardPage() {
 
         {/* GRAFİKLER */}
         <section className="grid md:grid-cols-2 gap-6">
-          <Card>
+          <Card className="dark:bg-zinc-900 dark:border-gray-700">
             <CardContent>
               <Statistics
                 transactions={transactions ?? []}
@@ -247,7 +247,7 @@ export default function DashboardPage() {
             </>
           )}
         </div>
-        <footer className="text-center text-sm italic text-muted-foreground mt-10">"{quote}"</footer>
+        <footer className="text-center text-sm italic text-muted-foreground dark:text-gray-400 mt-10">"{quote}"</footer>
       </main>
     </ProtectedRoute>
   );

@@ -26,7 +26,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       className="px-3 py-1 border rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition"
     >
-      {theme === "light" ? "🌞 Light" : "🌙 Dark"}
+      {theme === "light" ? "🌞" : "🌙"}
     </button>
   );
 }
