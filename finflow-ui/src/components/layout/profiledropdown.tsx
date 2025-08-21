@@ -53,10 +53,10 @@ const ProfileDropdown = () => {
 
             <DropdownMenuContent className="w-56" >
                 {/* Kullanıcı Bilgisi */}
-                <DropdownMenuLabel className="flex items-center" onClick={() => router.push("/dashboard/profile")}>
+                <DropdownMenuItem className="flex items-center" onClick={() => router.push("/dashboard/profile")}>
                     <User className="mr-2 h-4 w-4" />
                     <span>{user?.fullName || "My Account"}</span>
-                </DropdownMenuLabel>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
 
                 {/* Notifications */}
