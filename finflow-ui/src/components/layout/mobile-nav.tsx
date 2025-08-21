@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Wallet, Repeat, Settings } from "lucide-react";
+import { Home, Wallet, Repeat, User, } from "lucide-react";
 import ProtectedRoute from "../utils/ProtectedRoute";
 
-const navItems = [ 
-{ name: "Dashboard", href: "/dashboard", icon: Home }, 
-{ name: "Wallets", href: "/dashboard/wallets", icon: Wallet }, 
-{ name: "Transfer", href: "/dashboard/transfer", icon: Repeat }, 
-{ name: "Settings", href: "/dashboard/settings/profile", icon: Settings },
+const navItems = [
+  { name: "Dashboard", href: "/dashboard", icon: Home },
+  { name: "Wallets", href: "/dashboard/wallets", icon: Wallet },
+  { name: "Transactions", href: "/dashboard/transactions", icon: Repeat },
+  { name: "Profile", href: "/dashboard/profile", icon: User },
 ];
 
 export default function MobileNav() {

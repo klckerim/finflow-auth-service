@@ -1,13 +1,9 @@
 "use client"
 
-/**
- * User profile dropdown menu in navbar.
- * Contains settings, language, theme, and logout options.
- */
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     User,
-    Settings,
     Globe,
     SunMoon,
     History,
@@ -16,23 +12,35 @@ import {
     Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import { useAuth } from "@/context/auth-context";
-
 import { 
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger } from "./dropdown-menu";
+    DropdownMenuTrigger 
+} from "./dropdown-menu";
+import { useLocale } from "@/context/locale-context";
 
 const ProfileDropdown = () => {
-    const [language, setLanguage] = useState("TR");
-    const { user , logout} = useAuth();
+    const router = useRouter();
+    const { user, logout } = useAuth();
+    const [notifications, setNotifications] = useState(1);
+    const { locale, setLocale } = useLocale();
+    const [theme, setTheme] = useState("light");
 
+    // Dil değiştir
     const toggleLanguage = () => {
-        setLanguage(language === "TR" ? "EN" : "TR");
+        const newLocale = locale === "tr" ? "en" : "tr";
+        setLocale(newLocale);
+    };
+
+    // Tema değiştir
+    const toggleTheme = () => {
+        const newTheme = theme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+        document.documentElement.classList.toggle("dark", newTheme === "dark");
     };
 
     return (
@@ -42,46 +50,53 @@ const ProfileDropdown = () => {
                     <User className="h-5 w-5" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel className="flex items-center">
+
+            <DropdownMenuContent className="w-56" >
+                {/* Kullanıcı Bilgisi */}
+                <DropdownMenuLabel className="flex items-center" onClick={() => router.push("/dashboard/profile")}>
                     <User className="mr-2 h-4 w-4" />
                     <span>{user?.fullName || "My Account"}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                
-                <DropdownMenuItem>
-                    <History className="mr-2 h-4 w-4" />
-                    <span>My Transactions</span>
-                </DropdownMenuItem>
 
-                <DropdownMenuItem>
+                {/* Notifications */}
+                <DropdownMenuItem onClick={() => router.push("/dashboard/notifications")}>
                     <div className="flex items-center justify-between w-full">
                         <div className="flex items-center">
                             <Bell className="mr-2 h-4 w-4" />
                             <span>Notifications</span>
                         </div>
-                        <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-pulse">
-                            1
-                        </span>
+                        {notifications > 0 && (
+                            <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-pulse">
+                                {notifications}
+                            </span>
+                        )}
                     </div>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                </DropdownMenuItem>
+                
 
+                {/* Language */}
                 <DropdownMenuItem onClick={toggleLanguage}>
                     <Globe className="mr-2 h-4 w-4" />
-                    <span>Language: {language}</span>
+                    <span>Language: {locale.toUpperCase()}</span>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem>
+                {/* Theme */}
+                <DropdownMenuItem onClick={toggleTheme}>
+                    <SunMoon className="mr-2 h-4 w-4" />
+                    <span>Theme: {theme === "light" ? "Light" : "Dark"}</span>
+                </DropdownMenuItem>
+
+                {/* About */}
+                <DropdownMenuItem onClick={() => router.push("/about")}>
                     <Info className="mr-2 h-4 w-4" />
                     <span>About</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
+
+                {/* Logout */}
                 <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Logout</span>
