@@ -145,7 +145,7 @@ export default function AboutPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/5 border border-white/6 rounded-xl">
+            <Card id="tech-stack" className="bg-white/5 border border-white/6 rounded-xl">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <span className="text-sky-300"><Server className="w-5 h-5" /></span>
@@ -164,35 +164,40 @@ export default function AboutPage() {
 
           </div>
 
-          {/* Tech & Quick start */}
-          <div id="tech-stack" className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-
+          {/* Quick start */}
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             <Card id="getting-started" className="bg-white/5 border border-white/6 rounded-xl">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <Terminal className="w-5 h-5 text-emerald-300" />
+                  <Terminal className="w-5 h-5 text-emerald-500" />
                   Quick Start (dev)
                 </h3>
 
                 <pre className="mt-3 bg-black/80 rounded p-3 text-sm text-emerald-500 overflow-auto">
                   {`# Backend
-                  dotnet restore
-                  dotnet build
-                  dotnet run --project FinFlow.API
+dotnet restore
+dotnet build
+dotnet run --project FinFlow.API
 
-                  # Frontend
-                  pnpm install
-                  pnpm dev
+# Frontend
+npm install
+npm run dev
 
-                  # Docker (local)
-                  docker-compose up --build
-                `}
+# Docker (local)
+docker-compose up --build
+`}
                 </pre>
 
-                <div className="mt-3 text-slate-600 text-sm">
-                  Environment variables: `ConnectionStrings__DefaultConnection`, `Jwt__Key`, `Stripe__SecretKey`, `Stripe__WebhookSecret`.
-                </div>
+                <pre className="mt-3 bg-black/80 rounded p-3 text-sm text-emerald-500 overflow-auto">
+                  {`# Environment variables
+
+ConnectionStrings__DefaultConnection
+Jwt__Key
+Stripe__SecretKey
+Stripe__WebhookSecret
+`}
+                </pre>
               </CardContent>
             </Card>
           </div>
