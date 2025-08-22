@@ -21,7 +21,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import ProtectedRoute from "../utils/ProtectedRoute";
 
 const mainMenu = [ 
-{ name: "Dashboard", href: "/dashboard", icon: Home }, 
+{ name: "Home", href: "/dashboard", icon: Home }, 
 { name: "Wallets", href: "/dashboard/wallets", icon: Wallet }, 
 { name: "Cards", href: "/dashboard/cards", icon: CreditCard }, 
 { name: "Transactions", href: "/dashboard/transactions", icon: History }, 

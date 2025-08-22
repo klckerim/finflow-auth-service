@@ -89,7 +89,7 @@ const ProfileDropdown = () => {
                 </DropdownMenuItem>
 
                 {/* About */}
-                <DropdownMenuItem onClick={() => router.push("/about")}>
+                <DropdownMenuItem onClick={() => router.push("/dashboard/about")}>
                     <Info className="mr-2 h-4 w-4" />
                     <span>About</span>
                 </DropdownMenuItem>

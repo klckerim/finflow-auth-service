@@ -6,7 +6,7 @@ import { Home, Wallet, Repeat, User, } from "lucide-react";
 import ProtectedRoute from "../utils/ProtectedRoute";
 
 const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
+  { name: "Home", href: "/dashboard", icon: Home },
   { name: "Wallets", href: "/dashboard/wallets", icon: Wallet },
   { name: "Transactions", href: "/dashboard/transactions", icon: Repeat },
   { name: "Profile", href: "/dashboard/profile", icon: User },
