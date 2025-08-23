@@ -220,5 +220,27 @@
     "USD": "US Dollar (USD)",
     "EUR": "Euro (EUR)",
     "GBP": "British Pound (GBP)"
+  },
+  "notifications": {
+    "welcome": {
+      "title": "Welcome to FinFlow!",
+      "desc": "Thanks for joining FinFlow. Start by adding a new wallet."
+    },
+    "transaction": {
+      "title": "Transaction Completed",
+      "desc": "Your last transfer of $100 was successful."
+    }
+  },
+  "lang": {
+    "select": "Select Language",
+    "tr": "Turkish",
+    "en": "English",
+    "de": "German"
+  },
+    "nav": {
+    "home": "Home",
+    "wallets": "Wallets",
+    "transactions": "Transactions",
+    "profile": "Profile"
   }
 }

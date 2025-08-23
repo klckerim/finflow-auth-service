@@ -220,5 +220,27 @@
     "USD": "Amerikan Doları (USD)",
     "EUR": "Euro (EUR)",
     "GBP": "İngiliz Sterlini (GBP)"
+  },
+  "notifications": {
+    "welcome": {
+      "title": "FinFlow'a Hoşgeldin!",
+      "desc": "Aramıza katıldığın için teşekkürler. Hemen yeni bir cüzdan ekleyerek başla."
+    },
+    "transaction": {
+      "title": "İşlem Tamamlandı",
+      "desc": "Son 100$ transferin başarıyla gerçekleşti."
+    }
+  },
+    "lang": {
+    "select": "Dil Seçiniz",
+    "tr": "Türkçe",
+    "en": "İngilizce",
+    "de": "Almanca"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "wallets": "Cüzdanlar",
+    "transactions": "İşlemler",
+    "profile": "Profil"
   }
 }

@@ -1,24 +1,25 @@
 
 export interface Notification {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   isRead: boolean;
   createdAt: string;
 }
 
+
 const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: "1",
-    title: "Welcome to FinFlow!",
-    description: "Thanks for joining FinFlow. Start by adding a new wallet.",
+    titleKey: "notifications.welcome.title",
+    descriptionKey: "notifications.welcome.desc",
     isRead: false,
     createdAt: new Date().toISOString(),
   },
   {
     id: "2",
-    title: "Transaction Completed",
-    description: "Your last transfer of $100 was successful.",
+    titleKey: "notifications.transaction.title",
+    descriptionKey: "notifications.transaction.desc",
     isRead: false,
     createdAt: new Date().toISOString(),
   },

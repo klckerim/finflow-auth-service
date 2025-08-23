@@ -38,10 +38,10 @@ const NotificationsPage = () => {
                 <Card key={notif.id} className="p-4 flex justify-between items-start">
                     <div>
                         <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
-                            <Bell className="w-4 h-4" /> {notif.title}
+                            <Bell className="w-4 h-4" /> {t(notif.titleKey)}
                         </CardTitle>
                         <CardContent className="text-xs sm:text-sm text-muted-foreground">
-                            {notif.description}
+                            {t(notif.descriptionKey)}
                         </CardContent>
                     </div>
                     {!notif.isRead && (

@@ -5,16 +5,17 @@ import { useLocale } from "@/context/locale-context";
 
 export function LocaleDropdown() {
     const { locale, setLocale } = useLocale();
+    const { t } = useLocale();
 
     return (
         <Select value={locale} onValueChange={(val) => setLocale(val as "en" | "tr")}>
             <SelectTrigger className="w-32">
-                <SelectValue placeholder="Select language" />
+                <SelectValue placeholder={t("lang.select")}/>
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="en">🇺🇸 English</SelectItem>
-                <SelectItem value="tr">🇹🇷 Turkish</SelectItem>
-                <SelectItem value="de">🇩🇪 German</SelectItem>
+                <SelectItem value="en">🇺🇸 {t("lang.en")}</SelectItem>
+                <SelectItem value="tr">🇹🇷 {t("lang.tr")}</SelectItem>
+                <SelectItem value="de">🇩🇪 {t("lang.de")}</SelectItem>
             </SelectContent>
         </Select>
     );
