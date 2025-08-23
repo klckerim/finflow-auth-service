@@ -8,10 +8,12 @@ import { FadeInWrapper } from "@/features/dashboard/fadeinwrapper";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
+import { useLocale } from "@/context/locale-context";
 
 export default function RegisterPage() {
   const { user } = useAuth();
   const router = useRouter();
+  const { t } = useLocale();
 
   const [form, setForm] = useState({
     userName: "",
@@ -62,9 +64,9 @@ export default function RegisterPage() {
       <div className="flex min-h-screen bg-[#0f0f0f] text-white">
         {/* Sol görsel alanı */}
         <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
-          <h1 className="text-4xl font-bold mb-4">Join to FinFlow!</h1>
+          <h1 className="text-4xl font-bold mb-4">{t("common.str_JoinTo")}</h1>
           <p className="text-lg max-w-md text-gray-300 text-center">
-            Sign up and start your roadway. 🚀
+            {t("common.str_Roadway")}  🚀
           </p>
           <img
             src="/images/finance-illustration.svg"
@@ -77,48 +79,48 @@ export default function RegisterPage() {
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 px-6">
           <div className="w-full max-w-md p-8 bg-[#1f2937] border border-gray-700 rounded-2xl shadow-xl">
             <h2 className="text-3xl font-bold mb-2 text-center">
-              Create your FinFlow account
+              {t("common.str_CreateAccount")}
             </h2>
             <p className="text-center text-gray-400 mb-6 text-sm">
-              Fill out the details below to register.
+              {t("common.str_FillDetail")}
             </p>
 
             <div className="space-y-4">
               <div>
-                <label className="text-sm mb-1 block text-gray-300">Full Name</label>
+                <label className="text-sm mb-1 block text-gray-300">{t("dashboard.fullname")}</label>
                 <Input
                   id="fullName"
                   type="text"
                   name="fullName"
                   value={form.fullName}
                   onChange={handleChange}
-                  placeholder="Your full name"
+                  placeholder={t("common.str_Fullname")}
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-300">Email</label>
+                <label className="text-sm mb-1 block text-gray-300">{t("dashboard.email")}</label>
                 <Input
                   id="email"
                   type="email"
                   name="email"
                   value={form.email}
                   onChange={handleChange}
-                  placeholder="Enter your email"
+                  placeholder={t("common.str_EnterFullname")}
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-300">Password</label>
+                <label className="text-sm mb-1 block text-gray-300">{t("dashboard.password")}</label>
                 <Input
                   id="password"
                   type="password"
                   name="password"
                   value={form.password}
                   onChange={handleChange}
-                  placeholder="Choose a secure password"
+                  placeholder={t("common.str_SecurePassword")}
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"
                 />
               </div>
@@ -129,12 +131,12 @@ export default function RegisterPage() {
                 onClick={handleRegister}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 py-2 text-white font-semibold"
               >
-                SIGN UP
+                {t("dashboard.signup")}
               </Button>
 
               <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gray-600" />
-                <span className="px-2 text-gray-400 text-sm">OR</span>
+                <span className="px-2 text-gray-400 text-sm">{t("common.or")}</span>
                 <div className="flex-grow h-px bg-gray-600" />
               </div>
 
@@ -151,9 +153,9 @@ export default function RegisterPage() {
               </div>
 
               <div className="text-center mt-4 text-sm text-gray-400">
-                Already signed up?{" "}
+                {t("common.str_AlreadySignUp")}{" "}
                 <Link href="/login" className="text-blue-400 hover:underline">
-                  Sign In
+                  {t("dashboard.signin")}
                 </Link>
               </div>
             </div>

@@ -10,10 +10,12 @@ import { toast } from "sonner";
 import { Wallet } from "@/shared/types/wallet";
 import { getWalletById, updateWalletById } from "@/shared/lib/api";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import { useLocale } from "@/context/locale-context";
 
 const EditWalletPage = () => {
   const { id } = useParams();
   const router = useRouter();
+  const { t } = useLocale();
 
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ const EditWalletPage = () => {
     getWalletById(id as string)
       .then((data) => {
         if (!data) {
-          toast.error("Wallet not found");
+          toast.error(t("warningsMessages.walletNotFound"));
           router.push("/dashboard/wallets");
           return;
         }
@@ -41,7 +43,7 @@ const EditWalletPage = () => {
         });
       })
       .catch(() => {
-        toast.error("Wallet information not found");
+        toast.error(t("warningsMessages.walletNotFound"));
         router.push("/dashboard/wallets");
       })
       .finally(() => setLoading(false));
@@ -59,10 +61,10 @@ const EditWalletPage = () => {
         ...formData
       };
       await updateWalletById(wallet.id, payload);
-      toast.success("Wallet updated successfully 🎉");
+      toast.success(t("warningsMessages.walletUpdated"));
       router.push(`/dashboard/wallets/${wallet.id}/details`);
     } catch (error) {
-      toast.error("Wallet could not be updated");
+      toast.error(t("warningsMessages.walletNotUpdated"));
     } finally {
       setUpdating(false);
     }
@@ -91,35 +93,35 @@ const EditWalletPage = () => {
         className="gap-2"
         aria-label="Go back"
       >
-        <ArrowLeft className="w-5 h-5" /> Back
+        <ArrowLeft className="w-5 h-5" /> {t("common.back")}
       </Button>
 
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
-            ✏️ Edit Wallet – {wallet?.name}
+            ✏️  {t("common.str_EditWallet")} – {wallet?.name}
           </CardTitle>
           <CardDescription>
-            Update your wallet details. This is like updating your bank account nickname, description, or status.
+            {t("common.str_WalletUpdateDetails")}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Wallet Name</Label>
+            <Label htmlFor="name">{t("common.str_WalletName")}</Label>
             <Input
               id="name"
               name="name"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              placeholder="E.g. Holiday Budget, Daily Expenses..."
+              placeholder={t("common.str_WalletNamePlaceholder")}
             />
           </div>
 
 
           <Button onClick={handleSubmit} disabled={updating} className="w-full">
             {updating && <Loader2 className="animate-spin w-4 h-4 mr-2" />}
-            Update Wallet
+            {t("common.str_UpdateWallet")}
           </Button>
         </CardContent>
       </Card>
@@ -127,12 +129,12 @@ const EditWalletPage = () => {
       {/* Kullanıcıya Rehber Panel */}
       <Card className="bg-muted/30 border-muted">
         <CardHeader>
-          <CardTitle>💡 Tips</CardTitle>
+          <CardTitle>💡 {t("common.tips")}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
-          <p>• Give your wallet a name that makes sense in daily life (e.g. "Travel Fund", "Rent Savings").</p>
-          <p>• Keep balances realistic to track your actual spending.</p>
-          <p>• You can disable the wallet anytime by toggling "Active".</p>
+          <p>• {t("tips.str1")}</p>
+          <p>• {t("tips.str2")}</p>
+          <p>• {t("tips.str3")}</p>
         </CardContent>
       </Card>
     </div>

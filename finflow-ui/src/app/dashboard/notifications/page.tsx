@@ -6,10 +6,12 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/features/cards/card"
 import { Button } from "@/components/ui/button";
 import { Bell, Check } from "lucide-react";
 import { getNotificationsByUser, markNotificationAsRead, Notification } from "./lib/mockApi";
+import { useLocale } from "@/context/locale-context";
 
 const NotificationsPage = () => {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useLocale();
 
     useEffect(() => {
         getNotificationsByUser()
@@ -22,9 +24,9 @@ const NotificationsPage = () => {
         setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, isRead: true } : n));
     };
 
-    if (loading) return <p className="text-center mt-8">Loading notifications...</p>;
+    if (loading) return <p className="text-center mt-8">{t("common.loading")}</p>;
 
-    if (notifications.length === 0) return <p className="text-center mt-8">No notifications yet.</p>;
+    if (notifications.length === 0) return <p className="text-center mt-8">{t("common.str_NoNotifications")}</p>;
 
     return (
         <motion.div
@@ -44,7 +46,7 @@ const NotificationsPage = () => {
                     </div>
                     {!notif.isRead && (
                         <Button size="sm" variant="outline" onClick={() => handleMarkAsRead(notif.id)}>
-                            <Check className="w-3 h-3" /> Mark as read
+                            <Check className="w-3 h-3" /> {t("common.str_MarkAsRead")}
                         </Button>
                     )}
                 </Card>

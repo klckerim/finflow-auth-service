@@ -1,46 +1,50 @@
+// src/context/locale-context.tsx
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import en from "@/locales/en.json";
+import tr from "@/locales/tr.json";
 
-// Desteklenen diller
-export type Locale = "en" | "tr";
+type Locale = "en" | "tr";
+type Messages = typeof en; // JSON tipini otomatik alır
 
-interface LocaleContextProps {
+const translations: Record<Locale, Messages> = {
+  en,
+  tr,
+};
+
+const LocaleContext = createContext<{
   locale: Locale;
-  setLocale: (locale: Locale) => void;
-}
-
-const LocaleContext = createContext<LocaleContextProps>({
+  setLocale: (l: Locale) => void;
+  t: (key: string, vars?: Record<string, string | number>) => string;
+}>({
   locale: "en",
   setLocale: () => {},
+  t: () => "",
 });
 
 export const LocaleProvider = ({ children }: { children: ReactNode }) => {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocale] = useState<Locale>("en");
 
-  // Tarayıcı diline göre başlangıç değeri ayarla
-  useEffect(() => {
-    const savedLocale = localStorage.getItem("locale") as Locale | null;
-    if (savedLocale) {
-      setLocaleState(savedLocale);
-    } else {
-      const browserLang = navigator.language.startsWith("tr") ? "tr" : "en";
-      setLocaleState(browserLang);
-      localStorage.setItem("locale", browserLang);
+  const t = (key: string, vars?: Record<string, string | number>) => {
+    const keys = key.split(".");
+    let result: any = translations[locale];
+    for (const k of keys) {
+      result = result?.[k];
     }
-  }, []);
-
-  const setLocale = (newLocale: Locale) => {
-    setLocaleState(newLocale);
-    localStorage.setItem("locale", newLocale);
+    if (typeof result === "string" && vars) {
+      Object.entries(vars).forEach(([v, val]) => {
+        result = result.replace(`{${v}}`, String(val));
+      });
+    }
+    return result || key;
   };
 
   return (
-    <LocaleContext.Provider value={{ locale, setLocale }}>
+    <LocaleContext.Provider value={{ locale, setLocale, t }}>
       {children}
     </LocaleContext.Provider>
   );
 };
 
-// Hook ile kolay kullanım
 export const useLocale = () => useContext(LocaleContext);

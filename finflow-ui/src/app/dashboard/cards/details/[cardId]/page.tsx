@@ -15,14 +15,16 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { useLocale } from "@/context/locale-context";
 
 export default function CardDetailsPage() {
   const router = useRouter();
+  const { t } = useLocale();
 
   // Demo data
   const cardData = {
     type: "Visa",
-    holder: "Kerim K.",
+    holder: "Can K.",
     last4: "5678",
     expiry: "12/27",
     limit: 5000,
@@ -49,7 +51,7 @@ export default function CardDetailsPage() {
         onClick={() => router.back()}
         className="flex items-center gap-2 text-muted-foreground"
       >
-        <ArrowLeft className="w-4 h-4" /> Back
+        <ArrowLeft className="w-4 h-4" /> {t("card.back")}
       </Button>
 
 
@@ -69,11 +71,11 @@ export default function CardDetailsPage() {
         </div>
         <div className="mt-4 flex justify-between text-sm">
           <div>
-            <span className="block text-xs opacity-80">Card Holder</span>
+            <span className="block text-xs opacity-80">{t("card.holder")}Card Holder</span>
             {cardData.holder}
           </div>
           <div>
-            <span className="block text-xs opacity-80">Expires</span>
+            <span className="block text-xs opacity-80">{t("card.expires")}Expires</span>
             {cardData.expiry}
           </div>
         </div>
@@ -84,24 +86,24 @@ export default function CardDetailsPage() {
         <Card className="lg:col-span-2 border border-muted bg-muted/20 dark:bg-muted/30">
           <CardHeader>
             <CardTitle className="text-xl flex items-center gap-2">
-              Card Information
+              {t("card.info")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Status:</span>
+              <span className="text-muted-foreground">{t("card.status")}:</span>
               <span className="flex items-center gap-1 text-green-600 font-medium">
                 <BadgeCheck className="w-4 h-4" /> {cardData.status}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Limit:</span>
+              <span className="text-muted-foreground">{t("card.limit")}:</span>
               <span className="font-medium text-blue-600">
                 ₺{cardData.limit.toLocaleString("tr-TR")}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Current Balance:</span>
+              <span className="text-muted-foreground">{t("card.currentBalance")}:</span>
               <span className="font-medium">
                 ₺{cardData.balance.toLocaleString("tr-TR")}
               </span>
@@ -109,7 +111,7 @@ export default function CardDetailsPage() {
             <Separator />
             <div className="text-xs text-muted-foreground">
               <ShieldCheck className="w-4 h-4 inline mr-1" />
-              Protected by advanced encryption & fraud monitoring.
+              {t("card.protected")}
             </div>
           </CardContent>
         </Card>
@@ -117,17 +119,17 @@ export default function CardDetailsPage() {
         {/* Quick Actions */}
         <Card className="border border-muted bg-muted/20 dark:bg-muted/30">
           <CardHeader>
-            <CardTitle className="text-lg">Quick Actions</CardTitle>
+            <CardTitle className="text-lg">{t("card.quickActions")}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <Button variant="outline" className="justify-start gap-2">
-              <Snowflake className="w-4 h-4" /> Freeze Card
+              <Snowflake className="w-4 h-4" /> {t("card.freezeCard")}
             </Button>
             <Button variant="outline" className="justify-start gap-2">
-              <Lock className="w-4 h-4" /> Disable Online Payments
+              <Lock className="w-4 h-4" /> {t("card.disablePayments")}
             </Button>
             <Button variant="outline" className="justify-start gap-2">
-              <TrendingUp className="w-4 h-4" /> Request Limit Increase
+              <TrendingUp className="w-4 h-4" /> {t("card.requestLimit")}
             </Button>
           </CardContent>
         </Card>
@@ -136,7 +138,7 @@ export default function CardDetailsPage() {
       {/* Recent Transactions */}
       <Card className="border border-muted bg-muted/20 dark:bg-muted/30">
         <CardHeader>
-          <CardTitle className="text-lg">Recent Transactions</CardTitle>
+          <CardTitle className="text-lg">{t("card.recentTransactions")}</CardTitle>
         </CardHeader>
         <CardContent>
           {cardData.transactions.length > 0 ? (
@@ -151,9 +153,8 @@ export default function CardDetailsPage() {
                     <p className="text-xs text-muted-foreground">{tx.date}</p>
                   </div>
                   <span
-                    className={`font-medium ${
-                      tx.amount < 0 ? "text-red-500" : "text-green-600"
-                    }`}
+                    className={`font-medium ${tx.amount < 0 ? "text-red-500" : "text-green-600"
+                      }`}
                   >
                     {tx.amount < 0 ? "-" : "+"}
                     ₺{Math.abs(tx.amount).toLocaleString("tr-TR")}
@@ -163,7 +164,7 @@ export default function CardDetailsPage() {
             </div>
           ) : (
             <p className="text-muted-foreground text-sm">
-              No recent transactions.
+              {t("card.noRecentTransactions")}
             </p>
           )}
         </CardContent>

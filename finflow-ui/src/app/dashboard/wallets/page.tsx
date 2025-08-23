@@ -22,13 +22,15 @@ import { useAuth } from "@/context/auth-context";
 import { useWalletStore } from "@/app/store/walletStore";
 import { motion } from "framer-motion";
 import { EmptyWalletHero } from "@/components/ui/hero";
+import { useLocale } from "@/context/locale-context";
 
 const WalletsPage = () => {
   const router = useRouter();
   const { user } = useAuth();
   const [wallets, setWallets] = useState<WalletType[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { t } = useLocale();
+  
   useEffect(() => {
     if (!user) return;
 
@@ -38,7 +40,7 @@ const WalletsPage = () => {
         useWalletStore.getState().setWallets(wallets);
         setWallets(wallets);
       } catch (error) {
-        console.error("Wallets fetch failed", error);
+        console.error( t("warningsMessages.walletsFetchFailed"), error);
       } finally {
         setLoading(false);
       }
@@ -68,21 +70,21 @@ const WalletsPage = () => {
       >
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">💼 My Wallets</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">💼 {t("common.str_MyWallets")}</h1>
           {wallets.length > 0 && (
             <Button
               className="shadow-md hover:shadow-lg transition-all"
               onClick={() => router.push("/dashboard/wallets/add")}
             >
               <Plus size={18} className="mr-2" />
-              Add New Wallet
+              {t("dashboard.addWallet")}
             </Button>
           )}
         </div>
 
         {/* Loading & Empty State */}
         {loading ? (
-          <p className="text-center text-muted-foreground">Loading wallets...</p>
+          <p className="text-center text-muted-foreground">{t("common.loading")}</p>
         ) : wallets.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center gap-6 mt-12">
             <EmptyWalletHero />
@@ -91,7 +93,7 @@ const WalletsPage = () => {
               className="shadow-lg hover:shadow-xl transition"
               onClick={() => router.push("/dashboard/wallets/add")}
             >
-              🚀 Create Your First Wallet
+              🚀 {t("dashboard.createFirstWallet")}
             </Button>
           </div>
         ) : (
@@ -126,11 +128,11 @@ const WalletsPage = () => {
                       {/* Extra info */}
                       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                         <Clock className="w-4 h-4" />
-                        Last activity: {new Date().toLocaleDateString()}
+                        {t("common.str_LastActivity")}: {new Date().toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <CreditCard className="w-4 h-4" />
-                        {"Virtual Card"}
+                        {t("common.str_VirtualWallet")}
                       </div>
 
                       {/* Actions */}
@@ -141,7 +143,7 @@ const WalletsPage = () => {
                           className="text-sm text-muted-foreground hover:text-primary"
                           onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
                         >
-                          Transfer <SendHorizontal className="ml-1 w-4 h-4" />
+                          {t("common.transfer")} <SendHorizontal className="ml-1 w-4 h-4" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -149,7 +151,7 @@ const WalletsPage = () => {
                           className="text-sm text-muted-foreground hover:text-primary"
                           onClick={() => router.push(`/dashboard/wallets/${wallet.id}/details`)}
                         >
-                          See Details <ArrowRight className="w-4 h-4 ml-1" />
+                          {t("common.str_ViewDetails")} <ArrowRight className="w-4 h-4 ml-1" />
                         </Button>
                       </div>
                     </CardContent>

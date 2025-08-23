@@ -9,6 +9,7 @@ import { FadeInWrapper } from "@/features/dashboard/fadeinwrapper";
 import { useAuth } from "@/context/auth-context";
 import { getMe } from "@/shared/lib/auth";
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
+import { useLocale } from "@/context/locale-context";
 
 export default function LoginPage() {
   const { user, login } = useAuth();
@@ -17,6 +18,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { t } = useLocale();
 
   useEffect(() => {
     if (user) {
@@ -58,9 +60,9 @@ export default function LoginPage() {
     <FadeInWrapper>
       <div className="flex min-h-screen bg-[#0f0f0f] text-white">
         <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
-          <h1 className="text-4xl font-bold mb-4">Welcome to FinFlow!</h1>
+          <h1 className="text-4xl font-bold mb-4">{t("dashboard.welcomeTo")}</h1>
           <p className="text-lg max-w-md text-gray-300 text-center">
-            Manage your digital wallets. ✨
+            {t("common.str_ManageWallets")} ✨
           </p>
           <img
             src="/images/finance-illustration.svg"
@@ -72,31 +74,31 @@ export default function LoginPage() {
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 px-6">
           <div className="w-full max-w-md p-8 bg-[#1f2937] border border-gray-700 rounded-2xl shadow-xl">
             <h2 className="text-3xl font-bold mb-2 text-center">
-              Welcome to your FinFlow User Portal
+              {t("common.str_WelcomeToPortal")}
             </h2>
-            <p className="text-center text-gray-400 mb-6 text-sm">Please log in!</p>
+            <p className="text-center text-gray-400 mb-6 text-sm"> {t("common.str_Login")}</p>
 
             <div className="space-y-4">
               <div>
-                <label className="text-sm mb-1 block text-gray-300">Your email address</label>
+                <label className="text-sm mb-1 block text-gray-300">{t("common.str_Email")}</label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={t("common.str_EnterEmail")}
                   className="w-full bg-inputBg text-white rounded-soft px-4 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-300">Your password</label>
+                <label className="text-sm mb-1 block text-gray-300">{t("common.str_Password")}</label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder={t("common.str_EnterPassword")}
                   className="w-full bg-inputBg text-white rounded-soft px-4 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -106,16 +108,16 @@ export default function LoginPage() {
                 onClick={handleLogin}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 rounded-soft py-2 text-white font-semibold transition-all duration-150"
               >
-                Login
+                {t("dashboard.login")}
               </Button>
 
               <div className="flex items-center justify-between text-sm text-blue-400 mt-2">
                 <Link href="/forgot-password" className="hover:underline">
-                  Forgot your password?
+                  {t("common.str_ForgotPassword")}
                 </Link>
               </div>
 
-              <div className="text-center text-sm text-gray-500 mt-4">Or log in with</div>
+              <div className="text-center text-sm text-gray-500 mt-4">{t("common.str_LogWith")}</div>
 
               <div className="flex gap-4 mt-2">
                 <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
@@ -140,7 +142,7 @@ export default function LoginPage() {
                   href="/register"
                   className="text-blue-500 hover:underline text-sm"
                 >
-                  SIGN UP
+                  {t("dashboard.signup")}
                 </Link>
               </div>
             </div>

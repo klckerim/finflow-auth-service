@@ -12,10 +12,12 @@ import { useAuth } from "@/context/auth-context";
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 import { motion } from "framer-motion";
 import { Wallet, Info } from "lucide-react";
+import { useLocale } from "@/context/locale-context";
 
 const AddWalletPage = () => {
   const router = useRouter();
   const { user } = useAuth();
+  const { t } = useLocale();
 
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");
@@ -61,58 +63,56 @@ const AddWalletPage = () => {
         <Card className="w-full max-w-lg shadow-lg border border-muted bg-muted/10 dark:bg-muted/20 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-2xl font-bold flex items-center gap-2">
-              <Wallet className="w-6 h-6 text-primary" /> Create a New Wallet
+              <Wallet className="w-6 h-6 text-primary" /> {t("dashboard.createNewWallet")}
             </CardTitle>
             <CardDescription>
-              Organize your finances by creating a wallet for different needs — 
-              like <span className="italic">Daily Expenses</span>, 
-              <span className="italic"> Vacation Savings</span> or <span className="italic">Crypto Investments</span>.
+              <span className="italic">{t("common.str_OrganizeWallet")}</span>
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-6">
             {/* Wallet Name */}
             <div className="space-y-1">
-              <Label htmlFor="name">Wallet Name</Label>
+              <Label htmlFor="name">{t("common.str_WalletName")}</Label>
               <Input
                 id="name"
-                placeholder="Ex: Summer Trip to Italy"
+                placeholder={t("common.str_WalletNamePlaceholder2")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <Info size={12} /> Choose a name that helps you recognize the purpose instantly.
+                <Info size={12} /> {t("common.str_ChooseName")}
               </p>
             </div>
 
             {/* Currency */}
             <div className="space-y-1">
-              <Label htmlFor="currency">Currency</Label>
+              <Label htmlFor="currency">{t("common.currency")}</Label>
               <Select value={currency} onValueChange={setCurrency}>
                 <SelectTrigger id="currency">
-                  <SelectValue placeholder="Select a currency" />
+                  <SelectValue placeholder={t("common.str_CurrencyPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="TRY">₺ Turkish Lira (TRY)</SelectItem>
-                  <SelectItem value="USD">$ US Dollar (USD)</SelectItem>
-                  <SelectItem value="EUR">€ Euro (EUR)</SelectItem>
-                  <SelectItem value="GBP">£ British Pound (GBP)</SelectItem>
+                  <SelectItem value="TRY">₺ {t("currencyTypes.TRY")}</SelectItem>
+                  <SelectItem value="USD">$ {t("currencyTypes.USD")}</SelectItem>
+                  <SelectItem value="EUR">€ {t("currencyTypes.EUR")}</SelectItem>
+                  <SelectItem value="GBP">£ {t("currencyTypes.GBP")}</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground">Select the main currency for this wallet.</p>
+              <p className="text-xs text-muted-foreground">{t("common.str_SelectCurrency")}</p>
             </div>
           </CardContent>
 
           <CardFooter className="flex justify-between gap-2">
             <Button variant="outline" onClick={() => router.back()} className="w-1/2">
-              Cancel
+              {t("common.cancel")}
             </Button>
-            <Button 
-              onClick={handleSubmit} 
-              disabled={!name || !currency || loading} 
+            <Button
+              onClick={handleSubmit}
+              disabled={!name || !currency || loading}
               className="w-1/2"
             >
-              {loading ? "Creating..." : "Create Wallet"}
+              {loading ? t("common.creating") : t("dashboard.createWallet")}
             </Button>
           </CardFooter>
         </Card>

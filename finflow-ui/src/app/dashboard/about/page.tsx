@@ -14,8 +14,11 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/features/cards/card";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
+import { useLocale } from "@/context/locale-context";
 
 export default function AboutPage() {
+  const { t } = useLocale();
+
   return (
     <ProtectedRoute>
       {/* <div className="min-h-screen flex items-center justify-center bg-background p-6"> */}
@@ -36,15 +39,13 @@ export default function AboutPage() {
               </span>
             </h1>
             <p className="mt-3 max-w-2xl mx-auto text-slate-600 text-lg">
-              A small, modern fintech playground — designed to demonstrate pragmatic
-              architecture, reliable payments, and clear developer experience.
-              Think of this page as the project's living README.
+              {t("common.str_ReadMeExplanation")}
             </p>
 
             <div className="mt-4 flex items-center justify-center gap-3">
-              <Badge className="bg-emerald-500/10 text-emerald-400 border-0">Fintech • Demo</Badge>
-              <Badge className="bg-blue-500/10 text-blue-400 border-0">Production-ready</Badge>
-              <Badge className="bg-violet-500/10 text-violet-400 border-0">Stripe integrated</Badge>
+              <Badge className="bg-emerald-500/10 text-emerald-400 border-0">{t("common.str_Demo")}</Badge>
+              <Badge className="bg-blue-500/10 text-blue-400 border-0">{t("common.str_ProductionReady")}</Badge>
+              <Badge className="bg-violet-500/10 text-violet-400 border-0">{t("common.str_Stripe")}</Badge>
             </div>
           </motion.header>
 
@@ -59,12 +60,9 @@ export default function AboutPage() {
               <CardContent className="p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-semibold">What is FinFlow?</h2>
+                    <h2 className="text-xl font-semibold">{t("common.str_What")}</h2>
                     <p className="mt-2 text-slate-600 max-w-2xl">
-                      FinFlow is a focused wallet & payments demo combining a .NET backend,
-                      Postgres storage, and a Next.js frontend. It showcases real-world
-                      patterns: payment webhooks, transactional integrity, testing with Stripe,
-                      and a developer-friendly codebase suitable for portfolio/demo use.
+                      {t("common.str_DemoExplanation")}
                     </p>
                   </div>
 
@@ -76,7 +74,7 @@ export default function AboutPage() {
                         asChild
                         className="rounded-lg"
                       >
-                        <a href="#getting-started">Get Started</a>
+                        <a href="#getting-started">{t("common.str_Started")}</a>
                       </Button>
                       <Button
                         variant="outline"
@@ -84,7 +82,7 @@ export default function AboutPage() {
                         asChild
                         className="rounded-lg"
                       >
-                        <a href="#tech-stack">Tech</a>
+                        <a href="#tech-stack">{t("common.str_Tech")}</a>
                       </Button>
                     </div>
                   </div>
@@ -99,19 +97,16 @@ export default function AboutPage() {
               <CardContent className="p-5">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Layers className="w-5 h-5 text-emerald-300" />
-                  Mission
+                  {t("common.str_Mission")}
                 </h3>
                 <p className="mt-3 text-slate-600">
-                  Simplify everyday money flows. Provide a lightweight, secure wallet
-                  experience where users can top up via Stripe, track transactions,
-                  and run simple financial workflows. Prioritize clarity, correctness,
-                  and developer ergonomics.
+                  {t("common.str_MissionExplanation")}
                 </p>
 
                 <ul className="mt-4 space-y-2 text-slate-600">
-                  <li>✔ Deterministic transaction processing</li>
-                  <li>✔ Minimal, testable domain model</li>
-                  <li>✔ Clear separation of concerns (API / Application / Infra)</li>
+                  <li>✔ {t("common.str_ListMission1")}</li>
+                  <li>✔ {t("common.str_ListMission2")}</li>
+                  <li>✔ {t("common.str_ListMission3")}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -120,13 +115,13 @@ export default function AboutPage() {
               <CardContent className="p-5">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Server className="w-5 h-5 text-sky-300" />
-                  Key Features
+                  {t("common.str_KeyFeatures")}
                 </h3>
                 <div className="mt-3 text-slate-600 space-y-2">
-                  <div>• Wallet creation & multi-wallet per user</div>
-                  <div>• Stripe Checkout & webhook-driven balance updates</div>
-                  <div>• Transaction history and basic analytics</div>
-                  <div>• Dockerized deployment & environment-aware configuration</div>
+                  <div>• {t("common.str_KeyFeature1")}</div>
+                  <div>• {t("common.str_KeyFeature2")}</div>
+                  <div>• {t("common.str_KeyFeature3")}</div>
+                  <div>• {t("common.str_KeyFeature4")}</div>
                 </div>
               </CardContent>
             </Card>
@@ -135,12 +130,10 @@ export default function AboutPage() {
               <CardContent className="p-5">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Terminal className="w-5 h-5 text-indigo-300" />
-                  Architecture (high level)
+                  {t("common.str_Architecture")}
                 </h3>
                 <p className="mt-3 text-slate-600">
-                  Clean Architecture inspired layout: API layer (ASP.NET), Application
-                  services (commands/handlers), Domain entities, Infrastructure (EF Core,
-                  repositories). Frontend built with Next.js + Tailwind + shadcn/ui.
+                  {t("common.str_ArchitectureExplanation")}
                 </p>
               </CardContent>
             </Card>
@@ -149,15 +142,15 @@ export default function AboutPage() {
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <span className="text-sky-300"><Server className="w-5 h-5" /></span>
-                  Tech Stack
+                  {t("common.str_TechStack")}
                 </h3>
 
                 <div className="mt-4 text-slate-600 space-y-2">
-                  <div>Backend: <span className="font-medium text-neutral-500">.NET 9 Web API</span></div>
-                  <div>Database: <span className="font-medium text-neutral-500">PostgreSQL + EF Core</span></div>
-                  <div>Frontend: <span className="font-medium text-neutral-500">Next.js 14 + Tailwind</span></div>
-                  <div>Payments: <span className="font-medium text-neutral-500">Stripe (Checkout + webhooks)</span></div>
-                  <div>Deployment: <span className="font-medium text-neutral-500">Docker / Railway / Vercel</span></div>
+                  <div> {t("common.str_Backend")}: <span className="font-medium text-neutral-500">{t("common.str_BackendTech")}</span></div>
+                  <div> {t("common.str_Database")}: <span className="font-medium text-neutral-500">{t("common.str_DatabaseTech")}</span></div>
+                  <div> {t("common.str_Frontend")}: <span className="font-medium text-neutral-500">{t("common.str_FrontendTech")}</span></div>
+                  <div> {t("common.str_Payments")}: <span className="font-medium text-neutral-500">{t("common.str_PaymentsTech")}</span></div>
+                  <div> {t("common.str_Deployment")}: <span className="font-medium text-neutral-500">{t("common.str_DeploymentTech")}</span></div>
                 </div>
               </CardContent>
             </Card>
@@ -171,7 +164,7 @@ export default function AboutPage() {
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Terminal className="w-5 h-5 text-emerald-500" />
-                  Quick Start (dev)
+                  {t("dashboard.str_QuickStart")}
                 </h3>
 
                 <pre className="mt-3 bg-black/80 rounded p-3 text-sm text-emerald-500 overflow-auto">
@@ -209,7 +202,7 @@ Stripe__WebhookSecret
             transition={{ delay: 0.15 }}
             className="mt-10 text-center text-sm text-slate-400"
           >
-            Built with care • FinFlow © 2025 — Designed for demos & learning
+            {t("common.footer")}
           </motion.footer>
         </div>
       </div>

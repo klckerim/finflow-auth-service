@@ -2,6 +2,7 @@
 import { Skeleton } from "@/components/layout/skeleton";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
+import { useLocale } from "@/context/locale-context";
 import { getTransactionsByUserId } from "@/shared/lib/api";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import router from "next/router";
@@ -11,6 +12,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const { user, isLoading } = useAuth();
   const [transactionsLoading, setTransactionsLoading] = useState(true);
+  const { t } = useLocale();
 
   // Auth kontrolü
   useEffect(() => {
@@ -44,7 +46,7 @@ export default function TransactionsPage() {
 
   return (
     <ProtectedRoute>
-      <h1 className="text-2xl font-bold mb-6 text-foreground">💸 Transactions</h1>
+      <h1 className="text-2xl font-bold mb-6 text-foreground">💸 {t("common.str_Transactions")}</h1>
 
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto w-full rounded-lg border border-border shadow-sm">
@@ -52,16 +54,16 @@ export default function TransactionsPage() {
           <thead className="bg-muted">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Type
+                {t("common.type")}
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Amount
+                {t("common.amount")}
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Description
+                {t("common.description")}
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Date
+                {t("common.date")}
               </th>
             </tr>
           </thead>
@@ -75,9 +77,8 @@ export default function TransactionsPage() {
                   {t.type}
                 </td>
                 <td
-                  className={`px-4 py-4 whitespace-nowrap text-sm font-medium ${
-                    t.amount < 0 ? "text-red-500" : "text-green-500"
-                  }`}
+                  className={`px-4 py-4 whitespace-nowrap text-sm font-medium ${t.amount < 0 ? "text-red-500" : "text-green-500"
+                    }`}
                 >
                   {t.amount.toLocaleString(undefined, {
                     style: "currency",
@@ -108,9 +109,8 @@ export default function TransactionsPage() {
                 {t.type}
               </span>
               <span
-                className={`text-sm font-semibold ${
-                  t.amount < 0 ? "text-red-500" : "text-green-500"
-                }`}
+                className={`text-sm font-semibold ${t.amount < 0 ? "text-red-500" : "text-green-500"
+                  }`}
               >
                 {t.amount.toLocaleString(undefined, {
                   style: "currency",
@@ -132,11 +132,10 @@ export default function TransactionsPage() {
         <div className="text-center py-12">
           <div className="text-4xl mb-4">📝</div>
           <h3 className="text-lg font-medium text-foreground mb-1">
-            No transactions yet
+            {t("common.str_NoTransaction")}
           </h3>
           <p className="text-muted-foreground">
-            Your transactions will appear here once you make your first
-            transaction.
+            {t("common.str_NoTransactionExplanation")}
           </p>
         </div>
       )}

@@ -1,3 +1,9 @@
+"use client";
+
+import { useLocale } from "@/context/locale-context";
+
+const { t } = useLocale();
+
 export interface Notification {
   id: string;
   title: string;
@@ -9,15 +15,15 @@ export interface Notification {
 const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: "1",
-    title: "Welcome to FinFlow!",
-    description: "Thanks for joining FinFlow. Start by adding a new wallet.",
+    title: t("dashboard.welcomeTo"),
+    description: t("common.str_WelcomeDescription"),
     isRead: false,
     createdAt: new Date().toISOString(),
   },
   {
     id: "2",
-    title: "Transaction Completed",
-    description: "Your last transfer of $100 was successful.",
+    title: t("common.str_TransactionCompleted"),
+    description: t("common.str_TransactionDescrption"),
     isRead: false,
     createdAt: new Date().toISOString(),
   },

@@ -20,10 +20,12 @@ import {
   Camera,
   CheckCircle,
 } from "lucide-react";
+import { useLocale } from "@/context/locale-context";
 
 export default function ProfilePage() {
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
+  const { t } = useLocale();
 
   const [profile, setProfile] = useState({
     fullName: "",
@@ -47,7 +49,7 @@ export default function ProfilePage() {
         fullName: user.fullName,
         email: user.email,
         username: user.userName || "",
-        role: user.role || "User",
+        role: user.role || t("dashboard.user"),
       });
       setLoading(false);
     }
@@ -62,11 +64,11 @@ export default function ProfilePage() {
       setError("");
       console.log("Profile saved (mock)", profile);
       setEditing(false);
-      setSuccess("Profile updated successfully!");
+      setSuccess(t("warningsMessages.profileSaved"));
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       parseUnknownError(err);
-      setError("Failed to save profile.");
+      setError(t("warningsMessages.profileSavedFailed"));
     }
   };
 
@@ -76,7 +78,7 @@ export default function ProfilePage() {
         fullName: user.fullName,
         email: user.email,
         username: user.userName || "",
-        role: user.role || "User",
+        role: user.role || t("dashboard.user"),
       });
     }
     setEditing(false);
@@ -111,10 +113,10 @@ export default function ProfilePage() {
         {/* HEADER */}
         <header className="text-center">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            Profile Settings
+            {t("common.str_ProfileSettings")}
           </h1>
           <p className="text-muted-foreground mt-2 max-w-lg mx-auto">
-            Manage your personal information and security preferences.
+            {t("common.str_ManageInfo")}
           </p>
         </header>
 
@@ -144,7 +146,7 @@ export default function ProfilePage() {
               className="w-full mt-8 flex items-center justify-center gap-2 border border-red-500/40 text-red-400 hover:bg-red-500/10 rounded-xl"
             >
               <LogOut size={16} />
-              Logout
+               {t("dashboard.logout")}
             </Button>
           </Card>
 
@@ -155,7 +157,7 @@ export default function ProfilePage() {
               <CardHeader className="flex justify-between items-center">
                 <CardTitle className="text-xl font-semibold flex items-center gap-2">
                   <User size={20} />
-                  Account Information
+                   {t("common.str_AccountInformation")}
                 </CardTitle>
                 {!editing && (
                   <Button
@@ -164,7 +166,7 @@ export default function ProfilePage() {
                     className="flex items-center gap-2 rounded-xl border-blue-500/40 text-blue-300 hover:bg-blue-500/10"
                   >
                     <Edit2 size={16} />
-                    Edit Profile
+                     {t("common.str_EditProfile")}
                   </Button>
                 )}
               </CardHeader>
@@ -185,7 +187,7 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 mb-1">
-                      <User size={16} /> Full Name
+                      <User size={16} /> {t("dashboard.fullname")}
                     </label>
                     <Input
                       name="fullName"
@@ -198,7 +200,7 @@ export default function ProfilePage() {
 
                   <div className="md:col-span-2">
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 mb-1">
-                      <Mail size={16} /> Email
+                      <Mail size={16} /> {t("dashboard.email")}
                     </label>
                     <Input
                       name="email"
@@ -212,7 +214,7 @@ export default function ProfilePage() {
 
                   <div>
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 mb-1">
-                      <Shield size={16} /> Role
+                      <Shield size={16} /> {t("dashboard.role")}
                     </label>
                     <Input
                       name="role"
@@ -230,7 +232,7 @@ export default function ProfilePage() {
                       className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 rounded-xl px-6 h-11 text-white"
                     >
                       <Save size={16} />
-                      Save
+                      {t("dashboard.save")}
                     </Button>
                     <Button
                       onClick={handleCancel}
@@ -238,7 +240,7 @@ export default function ProfilePage() {
                       className="flex items-center gap-2 rounded-xl px-6 h-11 border-gray-700 text-muted-foreground hover:bg-zinc-800"
                     >
                       <X size={16} />
-                      Cancel
+                      {t("dashboard.cancel")}
                     </Button>
                   </div>
                 )}
@@ -249,15 +251,15 @@ export default function ProfilePage() {
             <Card className="p-6 dark:bg-zinc-900 dark:border-gray-700 rounded-3xl shadow-md">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold">
-                  Security Settings
+                   {t("common.str_SecuritySettings")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h3 className="font-medium">Two-Factor Authentication</h3>
+                    <h3 className="font-medium">{t("common.str_TwoFactor")}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Protect your account with an extra layer
+                      {t("common.str_ProtectAccount")}
                     </p>
                   </div>
                   <Button
@@ -265,15 +267,15 @@ export default function ProfilePage() {
                     size="sm"
                     className="rounded-xl border-gray-700 text-blue-300 hover:bg-blue-500/10"
                   >
-                    Enable
+                    {t("common.str_Enable")}
                   </Button>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <div>
-                    <h3 className="font-medium">Login Activity</h3>
+                    <h3 className="font-medium">{t("common.str_LoginActivity")}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Review recent login history
+                      {t("common.str_ReviewHistory")}
                     </p>
                   </div>
                   <Button
@@ -281,7 +283,7 @@ export default function ProfilePage() {
                     size="sm"
                     className="rounded-xl border-gray-700 text-blue-300 hover:bg-blue-500/10"
                   >
-                    View Logs
+                    {t("common.str_ViewLogs")}
                   </Button>
                 </div>
               </CardContent>

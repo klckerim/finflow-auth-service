@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, CreditCard, ArrowRight, Eye } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLocale } from "@/context/locale-context";
 
 // Örnek veri tipi
 type CardType = {
@@ -24,15 +25,16 @@ export default function CardsPage() {
   const router = useRouter();
   const [cards, setCards] = useState<CardType[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLocale();
 
   useEffect(() => {
     // Burada API'den kart verisi çekilebilir.
     // Demo amaçlı statik veri
     setTimeout(() => {
       setCards([
-        { id: 1, type: "Visa", last4: "1234", holder: "Kerim K.", expiry: "12/27", balance: 1250.75, currency: "USD" },
-        { id: 2, type: "Mastercard", last4: "9876", holder: "Kerim K.", expiry: "05/26", balance: 8420.5, currency: "EUR" },
-        { id: 3, type: "Amex", last4: "4567", holder: "Kerim K.", expiry: "11/28", balance: 65400, currency: "TRY" }
+        { id: 1, type: "Visa", last4: "1234", holder: "Can K.", expiry: "12/27", balance: 1250.75, currency: "USD" },
+        { id: 2, type: "Mastercard", last4: "9876", holder: "Can K.", expiry: "05/26", balance: 8420.5, currency: "EUR" },
+        { id: 3, type: "Amex", last4: "4567", holder: "Can K.", expiry: "11/28", balance: 65400, currency: "TRY" }
       ]);
       setLoading(false);
     }, 600);
@@ -69,28 +71,28 @@ export default function CardsPage() {
       >
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">💳 My Cards</h1>
+          <h1 className="text-3xl font-bold tracking-tight">💳 {t("card.myCards")}</h1>
           {cards.length > 0 && (
             <Button variant="outline" onClick={handleAddCard}>
               <Plus size={18} className="mr-2" />
-              Add New Card
+              {t("card.addNewCard")}
             </Button>
           )}
         </div>
 
         {/* Loading */}
         {loading ? (
-          <p className="text-center text-muted-foreground">Loading cards...</p>
+          <p className="text-center text-muted-foreground">{t("common.loading")}</p>
         ) : cards.length === 0 ? (
           // Empty State
           <div className="flex flex-col items-center justify-center text-center gap-6 mt-12">
             <img src="/credit-card.svg" alt="No Cards" className="w-48 h-48 sm:w-64 sm:h-64" />
-            <h2 className="text-2xl font-semibold">No cards yet</h2>
+            <h2 className="text-2xl font-semibold">{t("card.noCards")}</h2>
             <p className="text-muted-foreground max-w-md">
-              Add your first card to start managing your expenses easily.
+              {t("card.addCard")}
             </p>
             <Button size="lg" onClick={handleAddCard}>
-              🚀 Add Your First Card
+              🚀 {t("card.addFirstCard")}
             </Button>
           </div>
         ) : (
@@ -113,8 +115,8 @@ export default function CardsPage() {
                   <div className="text-sm text-muted-foreground tracking-widest">
                     **** **** **** {card.last4}
                   </div>
-                  <div className="text-sm mt-1">Owner: {card.holder}</div>
-                  <div className="text-sm">Expiry: {card.expiry}</div>
+                  <div className="text-sm mt-1">{t("card.owner")}: {card.holder}</div>
+                  <div className="text-sm">{t("card.expiry")}: {card.expiry}</div>
 
                   <div className="text-2xl font-bold mt-4">
                     {card.balance.toLocaleString("en-US", { style: "currency", currency: card.currency })}
@@ -127,7 +129,7 @@ export default function CardsPage() {
                       className="text-sm text-muted-foreground hover:text-primary"
                       onClick={() => handleDetails(card.id)}
                     >
-                      View Details <ArrowRight className="w-4 h-4 ml-1" />
+                      {t("card.details")} <ArrowRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
                 </CardContent>

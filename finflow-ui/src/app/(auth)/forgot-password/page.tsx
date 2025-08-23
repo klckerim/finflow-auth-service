@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
+import { useLocale } from "@/context/locale-context";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const router = useRouter()
+  const { t } = useLocale();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,11 +35,11 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex flex-col items-center min-h-screen pt-8 sm:pt-12">
       <div className="max-w-md w-full p-4 border rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Forgot Password</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">{t("dashboard.forgotPassword")}</h2>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("dashboard.email")}</Label>
             <Input
               id="email"
               type="email"
@@ -49,7 +51,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           <Button type="submit" className="w-full">
-            Send Reset Link
+            {t("dashboard.sendResetLink")}
           </Button>
         </form>
       </div>

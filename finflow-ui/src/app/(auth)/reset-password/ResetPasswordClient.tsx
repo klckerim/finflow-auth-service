@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/features/cards/card"
 import { toast } from "sonner"
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler"
+import { useLocale } from "@/context/locale-context"
 
 export default function ResetPasswordClient() {
   const searchParams = useSearchParams()
@@ -17,15 +18,16 @@ export default function ResetPasswordClient() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const { t } = useLocale();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!token) {
-      toast.error("Token not found.")
+      toast.error(t("warningsMessages.tokenNotFound"))
       return
     }
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match.")
+      toast.error(t("warningsMessages.passwordNotMatch"))
       return
     }
 
@@ -43,7 +45,7 @@ export default function ResetPasswordClient() {
     setLoading(false)
 
     if (res.ok) {
-      toast.success("Your password has been successfully reset.")
+      toast.success(t("warningsMessages.passwordReset"))
       router.push("/login")
     } else {
       const msg = await parseApiResponseError(res);
@@ -55,11 +57,11 @@ export default function ResetPasswordClient() {
     <div className="flex flex-col items-center min-h-screen pt-8 sm:pt-12">
       <div className="max-w-md w-full p-4 border rounded-xl shadow-md">
         <Card className="w-full max-w-md p-6">
-          <h2 className="text-2xl font-bold mb-4">Set a New Password</h2>
+          <h2 className="text-2xl font-bold mb-4">{t("common.str_SetPassword")}</h2>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="password">New Password</Label>
+                <Label htmlFor="password">{t("common.str_NewPassword")}</Label>
                 <Input
                   type="password"
                   id="password"
@@ -69,7 +71,7 @@ export default function ResetPasswordClient() {
                 />
               </div>
               <div>
-                <Label htmlFor="confirmPassword">New Password (Again)</Label>
+                <Label htmlFor="confirmPassword">{t("common.str_NewPasswordAgain")}</Label>
                 <Input
                   type="password"
                   id="confirmPassword"
@@ -79,7 +81,7 @@ export default function ResetPasswordClient() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Sending..." : "Reset Password"}
+                {loading ? t("common.sending") : t("common.str_ResetPassword")}
               </Button>
             </form>
           </CardContent>

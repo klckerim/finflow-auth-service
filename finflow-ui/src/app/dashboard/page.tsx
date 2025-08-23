@@ -19,10 +19,12 @@ import currencyData from "@/shared/data/currency/currency.json";
 import { Wallet } from "@/shared/types/wallet";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import Statistics from "@/components/ui/statistic";
+import { useLocale } from "@/context/locale-context";
 
 export default function DashboardPage() {
   const { user, isLoading, logout } = useAuth();
   const router = useRouter();
+  const { t } = useLocale();
 
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [walletsLoading, setWalletsLoading] = useState(true);
@@ -44,10 +46,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const quotes = [
-      "Today's plan is tomorrow's success.",
-      "Manage your money, shape your future.",
-      "Small steps make big differences.",
-      "Financial freedom is a habit."
+      t("quotes.str1"),
+      t("quotes.str2"),
+      t("quotes.str3"),
+      t("quotes.str4"),
     ];
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }, []);
@@ -92,7 +94,7 @@ export default function DashboardPage() {
           setExchangeRates(currencyData.rates);
         }
       } catch (err) {
-        console.error("Exchange rates fetch failed", err);
+        console.error(t("warningsMessages.ratesFetchFailed"), err);
       } finally {
         setRatesLoading(false);
       }
@@ -131,16 +133,16 @@ export default function DashboardPage() {
         {/* HEADER */}
         <header className="space-y-4 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            Welcome to FinFlow{user ? `, ${user.fullName}` : ""}
+            {t("dashboard.welcome", { name: user.fullName })}
           </h1>
           <p className="text-lg sm:text-xl font-medium text-primary">{greeting}</p>
           <p className="text-base text-muted-foreground dark:text-gray-400">
-            Manage your wallets, track your cards and achieve your financial goals.
+            {t("common.str_ManageYourWallets")}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
             <label htmlFor="currency-select" className="text-sm font-medium">
-              Currency:
+              {t("common.currency")}:
             </label>
             <select
               id="currency-select"
@@ -160,13 +162,13 @@ export default function DashboardPage() {
         {/* METRİKLER */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
-            <CardHeader><CardTitle>Number of Wallets</CardTitle></CardHeader>
+            <CardHeader><CardTitle>{t("dashboard.numberOfWallets")}</CardTitle></CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{wallets.length}</p>
             </CardContent>
           </Card>
           <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
-            <CardHeader><CardTitle>Total Balance ({baseCurrency})</CardTitle></CardHeader>
+            <CardHeader><CardTitle>{t("dashboard.totalBalance")} ({baseCurrency})</CardTitle></CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">
                 {totalBalance.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })}
@@ -174,7 +176,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
           <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
-            <CardHeader><CardTitle>Expenses Limit</CardTitle></CardHeader>
+            <CardHeader><CardTitle>{t("dashboard.expenseLimit")}</CardTitle></CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground dark:text-gray-400 mb-2">
                 {spendingUsed.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })} /{" "}
@@ -188,9 +190,9 @@ export default function DashboardPage() {
         {/* CÜZDANLAR */}
         {wallets.length === 0 ? (
           <div className="text-center p-6 border-2 border-dashed rounded-lg dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-2">You don't have a wallet yet.</h2>
-            <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">You can start by creating a new wallet.</p>
-            <Button onClick={() => router.push("/dashboard/wallets/add")}>Create A Wallet</Button>
+            <h2 className="text-xl font-semibold mb-2">{t("common.str_NoWallets")}</h2>
+            <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">{t("warning.str_CreateNewWallet")}</p>
+            <Button onClick={() => router.push("/dashboard/wallets/add")}>{t("dashboard.createWallet")}</Button>
           </div>
         ) : (
           <section className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -239,11 +241,11 @@ export default function DashboardPage() {
         {/* ALT BUTONLAR */}
         <div className="flex flex-wrap justify-center gap-4 mt-10">
           {user ? (
-            <Button variant="outline" onClick={logout}>🚪 Logout</Button>
+            <Button variant="outline" onClick={logout}>🚪 {t("dashboard.logout")}</Button>
           ) : (
             <>
-              <Button onClick={() => router.push("/register")}>🚀 Sign Up</Button>
-              <Button variant="outline" onClick={() => router.push("/login")}>🔐 Sign In</Button>
+              <Button onClick={() => router.push("/register")}>🚀 {t("dashboard.signup")}</Button>
+              <Button variant="outline" onClick={() => router.push("/login")}>🔐 {t("dashboard.signin")}</Button>
             </>
           )}
         </div>

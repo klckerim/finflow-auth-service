@@ -29,6 +29,7 @@ import { motion } from "framer-motion";
 import { CreatePaymentSession } from "@/shared/lib/create-session";
 import AddMoneyModal from "@/features/payments/topupmodal";
 import Statistics from "@/components/ui/statistic";
+import { useLocale } from "@/context/locale-context";
 
 const WalletDetailPage = () => {
   const { id } = useParams();
@@ -38,13 +39,15 @@ const WalletDetailPage = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [lastTransfers, setLastTransfers] = useState<any[]>([]);
+  const { t } = useLocale();
 
   useEffect(() => {
     if (!id) return;
     getWalletById(id as string)
       .then((data) => setWallet(data))
       .catch(() => {
-        toast.error("Wallet information could not be retrieved.");
+
+        toast.error(t("common.str_WalletNotRetrieved"));
         router.push("/dashboard/wallets");
       })
       .finally(() => setLoading(false));
@@ -74,20 +77,20 @@ const WalletDetailPage = () => {
     if (!wallet) return;
     navigator.clipboard.writeText(wallet.id);
     setCopied(true);
-    toast.success("Wallet ID copied to clipboard!");
+    toast.success(t("common.str_WalletCoppied"));
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleDelete = async () => {
     if (!wallet?.id) return;
     const confirm = window.confirm(
-      `Are you sure you want to delete the wallet "${wallet.name}"? This action is irreversible!`
+      t("common.str_DeleteWallet", { walletName: wallet.name })
     );
     if (!confirm) return;
     try {
       setIsDeleting(true);
       await deleteWalletById(wallet.id);
-      toast.success("Wallet deleted successfully 🗑️");
+      toast.success(t("common.str_WalletDeleted") + "🗑️");
       router.push("/dashboard/wallets");
     } catch (error) {
       parseUnknownError(error);
@@ -124,7 +127,7 @@ const WalletDetailPage = () => {
           aria-label="Go back"
         >
           <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
-          <span className="hidden xs:inline">Back</span>
+          <span className="hidden xs:inline">{t("common.back")}</span>
         </Button>
 
         <div className="flex gap-1 sm:gap-2">
@@ -135,7 +138,7 @@ const WalletDetailPage = () => {
             aria-label="Edit wallet"
           >
             <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden xs:inline">Edit</span>
+            <span className="hidden xs:inline">{t("common.edit")}</span>
           </Button>
 
           <Button
@@ -155,7 +158,7 @@ const WalletDetailPage = () => {
             ) : (
               <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
             )}
-            <span className="hidden xs:inline">Delete</span>
+            <span className="hidden xs:inline">{t("common.delete")}</span>
           </Button>
         </div>
       </div>
@@ -172,7 +175,7 @@ const WalletDetailPage = () => {
             </Badge>
           </CardTitle>
           <CardDescription className="text-sm sm:text-base text-muted-foreground mt-1">
-            Detailed wallet info and quick actions
+            {t("common.str_WalletInfo")}
           </CardDescription>
         </CardHeader>
 
@@ -187,11 +190,11 @@ const WalletDetailPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <LucideTimer className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span>Created: {new Date(wallet.createdAt).toLocaleDateString()}</span>
+              <span>{t("common.str_Created")}: {new Date(wallet.createdAt).toLocaleDateString()}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="font-mono truncate max-w-[8rem] xs:max-w-[10rem] sm:max-w-[12rem]">
-                ID: {wallet.id.slice(0, 8)}...
+                {t("common.str_ID")}: {wallet.id.slice(0, 8)}...
               </span>
               <Copy
                 className={`w-3 h-3 sm:w-4 sm:h-4 cursor-pointer transition-colors ${copied ? "text-green-500" : "text-blue-500 hover:text-blue-700"
@@ -204,9 +207,9 @@ const WalletDetailPage = () => {
               )}
             </div>
             <div className="sm:col-span-2">
-              State:{" "}
+              {t("common.str_State")}:{" "}
               <Badge variant={wallet.isActive ? "default" : "destructive"} className="text-xs">
-                {wallet.isActive ? "Active" : "Inactive"}
+                {wallet.isActive ? t("common.active") : t("common.inactive") }
               </Badge>
             </div>
           </div>
@@ -216,9 +219,9 @@ const WalletDetailPage = () => {
       {/* QUICK ACTIONS */}
       <Card className="mb-4">
         <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-lg sm:text-xl">⚡ Quick Actions</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">⚡ {t("common.str_QuickActions")}</CardTitle>
           <CardDescription className="text-xs sm:text-sm">
-            Need to move money fast? Use these shortcuts.
+            {t("common.str_UseShortcuts")}
           </CardDescription>
         </CardHeader>
 
@@ -229,7 +232,7 @@ const WalletDetailPage = () => {
             onClick={() => router.push(`/dashboard/wallets/${wallet.id}/transfer`)}
             aria-label="Send money"
           >
-            <Send className="w-3 h-3 sm:w-4 sm:h-4" /> Send
+            <Send className="w-3 h-3 sm:w-4 sm:h-4" /> {t("common.send")}
           </Button>
 
           <AddMoneyModal
@@ -244,7 +247,7 @@ const WalletDetailPage = () => {
             onClick={() => router.push(`/dashboard/wallets/${wallet.id}/edit`)}
             aria-label="Edit wallet"
           >
-            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" /> Edit
+            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" /> {t("common.edit")}
           </Button>
         </CardContent>
       </Card>
@@ -259,16 +262,16 @@ const WalletDetailPage = () => {
       {/* LAST TRANSFERS */}
       <Card className="bg-muted/10 dark:bg-muted/20 border dark:border-border shadow-sm">
         <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-lg sm:text-xl text-foreground dark:text-foreground">🕒 Last Transfers</CardTitle>
+          <CardTitle className="text-lg sm:text-xl text-foreground dark:text-foreground">🕒 {t("common.str_LastTransfers")}</CardTitle>
           <CardDescription className="text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground">
-            Review your recent wallet transfers
+            {t("common.str_ReviewTransfers")}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="p-4 sm:p-6 pt-0">
           {lastTransfers.length === 0 ? (
             <div className="flex items-center justify-center py-4 text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground">
-              No transfers yet.
+              {t("common.str_NoTransfers")}
             </div>
           ) : (
             <>
@@ -276,10 +279,10 @@ const WalletDetailPage = () => {
                 <table className="w-full text-sm text-foreground dark:text-foreground">
                   <thead className="bg-gray-50 dark:bg-zinc-700">
                     <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.description")}</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.type")}</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.date")}</th>
+                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.amount")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-zinc-700">
