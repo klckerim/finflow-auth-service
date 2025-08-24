@@ -310,5 +310,10 @@
   "recipient_wallet_not_found": "Alıcı cüzdan bulunamadı.",
   "recipient_wallet_currency": "Alıcı cüzdanın para birimi {Currency} olmalıdır",
   "insufficient_balance": "Yetersiz bakiye.",
-  "email_not_valid": "E-posta adresi geçerli değil."
+  "email_not_valid": "E-posta adresi geçerli değil.",
+  "Deposit": "Para Yatırma",
+  "Withdraw": "Para Çekme",
+  "Payment": "Ödeme",
+  "TransferOut": "Para Transferi (Gönderim)",
+  "TransferIn": "Para Transferi (Alım)"
 }

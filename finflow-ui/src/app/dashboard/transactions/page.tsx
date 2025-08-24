@@ -12,7 +12,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const { user, isLoading } = useAuth();
   const [transactionsLoading, setTransactionsLoading] = useState(true);
-  const { t } = useLocale();
+  const { t : tr } = useLocale();
 
   // Auth kontrolü
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function TransactionsPage() {
 
   return (
     <ProtectedRoute>
-      <h1 className="text-2xl font-bold mb-6 text-foreground">💸 {t("common.str_Transactions")}</h1>
+      <h1 className="text-2xl font-bold mb-6 text-foreground">💸 {tr("common.str_Transactions")}</h1>
 
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto w-full rounded-lg border border-border shadow-sm">
@@ -54,16 +54,16 @@ export default function TransactionsPage() {
           <thead className="bg-muted">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                {t("common.type")}
+                {tr("common.type")}
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                {t("common.amount")}
+                {tr("common.amount")}
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                {t("common.description")}
+                {tr("common.description")}
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                {t("common.date")}
+                {tr("common.date")}
               </th>
             </tr>
           </thead>
@@ -74,7 +74,7 @@ export default function TransactionsPage() {
                 className="hover:bg-muted/50 transition-colors"
               >
                 <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-foreground">
-                  {t.type}
+                  {tr(t.type)}
                 </td>
                 <td
                   className={`px-4 py-4 whitespace-nowrap text-sm font-medium ${t.amount < 0 ? "text-red-500" : "text-green-500"
@@ -106,7 +106,7 @@ export default function TransactionsPage() {
           >
             <div className="flex justify-between items-start mb-2">
               <span className="text-sm font-medium bg-muted px-2 py-1 rounded-md">
-                {t.type}
+                {tr(t.type)}
               </span>
               <span
                 className={`text-sm font-semibold ${t.amount < 0 ? "text-red-500" : "text-green-500"
@@ -132,10 +132,10 @@ export default function TransactionsPage() {
         <div className="text-center py-12">
           <div className="text-4xl mb-4">📝</div>
           <h3 className="text-lg font-medium text-foreground mb-1">
-            {t("common.str_NoTransaction")}
+            {tr("common.str_NoTransaction")}
           </h3>
           <p className="text-muted-foreground">
-            {t("common.str_NoTransactionExplanation")}
+            {tr("common.str_NoTransactionExplanation")}
           </p>
         </div>
       )}

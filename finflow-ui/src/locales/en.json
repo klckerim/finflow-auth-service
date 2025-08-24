@@ -81,6 +81,7 @@
     "outgoing": "Outgoing",
     "light": "Light",
     "dark": "Dark",
+    "date": "Date",
     "footer": "Built with care • FinFlow © 2025 — Designed for demos & learning",
     "str_ReadMeExplanation": "A small, modern fintech playground — designed to demonstrate pragmatic architecture, reliable payments, and clear developer experience. Think of this page as the project's living README.",
     "str_DemoExplanation": "FinFlow is a focused wallet & payments demo combining a .NET backend, Postgres storage, and a Next.js frontend. It showcases real-world patterns: payment webhooks, transactional integrity, testing with Stripe, and a developer-friendly codebase suitable for portfolio/demo use.",
@@ -309,5 +310,10 @@
   "sender_wallet_required": "Sender wallet cannot be empty",
   "recipient_wallet_required": "Recipient wallet cannot be empty",
   "transfer_amount_positive": "Transfer amount must be greater than {minAmount}",
-  "same_wallet_transfer": "Sender and recipient wallet cannot be the same"
+  "same_wallet_transfer": "Sender and recipient wallet cannot be the same",
+  "Deposit": "Deposit",
+  "Withdraw": "Withdraw",
+  "Payment": "Payment",
+  "TransferOut": "Transfer Out",
+  "TransferIn": "Transfer In"
 }

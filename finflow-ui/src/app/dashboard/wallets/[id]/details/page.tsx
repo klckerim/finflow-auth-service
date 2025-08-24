@@ -289,7 +289,7 @@ const WalletDetailPage = () => {
                     {lastTransfers.map((tx, idx) => (
                       <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
                         <td className="px-3 py-2 truncate max-w-[200px]">{tx.description}</td>
-                        <td className="px-3 py-2">{tx.type}</td>
+                        <td className="px-3 py-2">{t(tx.type)}</td>
                         <td className="px-3 py-2 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
                         <td className="px-3 py-2 font-medium text-right whitespace-nowrap">
                           {tx.amount} {wallet?.currency || ""}
@@ -304,7 +304,7 @@ const WalletDetailPage = () => {
                 {lastTransfers.map((tx, idx) => (
                   <div key={idx} className="p-3 rounded-lg border shadow-sm bg-white dark:bg-zinc-800 dark:border-border">
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-medium bg-gray-100 dark:bg-zinc-700 px-2 py-1 rounded-md">{tx.type}</span>
+                      <span className="text-xs font-medium bg-gray-100 dark:bg-zinc-700 px-2 py-1 rounded-md">{t(tx.type)}</span>
                       <span className="text-xs font-semibold">
                         {tx.amount} {wallet?.currency || ""}
                       </span>

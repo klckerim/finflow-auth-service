@@ -81,6 +81,7 @@
     "outgoing": "Ausgehend",
     "light": "Hell",
     "dark": "Dunkel",
+    "date": "Datum",
     "footer": "Mit Sorgfalt erstellt • FinFlow © 2025 — Entwickelt für Demos & Lernen",
     "str_ReadMeExplanation": "Ein kleines, modernes Fintech-Spielplatz — entwickelt, um pragmatische Architektur, zuverlässige Zahlungen und eine klare Developer Experience zu demonstrieren.",
     "str_DemoExplanation": "FinFlow ist eine fokussierte Wallet- & Zahlungs-Demo mit .NET Backend, Postgres-Speicher und Next.js-Frontend. Es zeigt reale Muster: Zahlungs-Webhooks, Transaktionsintegrität, Stripe-Tests und eine entwicklerfreundliche Codebasis.",
@@ -309,5 +310,10 @@
   "recipient_wallet_not_found": "Empfänger-Wallet nicht gefunden.",
   "recipient_wallet_currency": "Die Währung der Empfänger-Wallet muss {Currency} sein",
   "insufficient_balance": "Unzureichendes Guthaben.",
-  "email_not_valid": "E-Mail ist ungültig."
+  "email_not_valid": "E-Mail ist ungültig.",
+  "Deposit": "Einzahlung",
+  "Withdraw": "Abhebung",
+  "Payment": "Zahlung",
+  "TransferOut": "Überweisung (Ausgehend)",
+  "TransferIn": "Überweisung (Eingehend)"
 }
