@@ -46,10 +46,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const quotes = [
-      t("quotes.str1"),
-      t("quotes.str2"),
-      t("quotes.str3"),
-      t("quotes.str4")
+      ("quotes.str1"),
+      ("quotes.str2"),
+      ("quotes.str3"),
+      ("quotes.str4")
     ];
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }, []);
@@ -249,7 +249,7 @@ export default function DashboardPage() {
             </>
           )}
         </div>
-        <footer className="text-center text-sm italic text-muted-foreground dark:text-gray-400 mt-10">"{quote}"</footer>
+        <footer className="text-center text-sm italic text-muted-foreground dark:text-gray-400 mt-10">"{t(quote)}"</footer>
       </main>
     </ProtectedRoute>
   );
