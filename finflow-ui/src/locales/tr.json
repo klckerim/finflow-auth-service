@@ -282,7 +282,7 @@
   "invalid_credentials": "Geçersiz email ya da şifre.",
   "full_name_required": "Ad soyad gereklidir",
   "full_name_min_length": "Ad soyad en az {minLength} karakter olmalıdır",
-  "full_name_max_length": "Ad soyad en fazla {{maxLength}} karakter olmalıdır",
+  "full_name_max_length": "Ad soyad en fazla {maxLength} karakter olmalıdır",
   "email_required": "E-posta gereklidir",
   "email_invalid": "Geçerli bir e-posta adresi giriniz",
   "password_required": "Şifre gereklidir",
