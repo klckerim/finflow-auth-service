@@ -164,7 +164,7 @@ export default function AboutPage() {
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   <Terminal className="w-5 h-5 text-emerald-500" />
-                  {t("dashboard.str_QuickStart")}
+                  {t("common.str_QuickStart")}
                 </h3>
 
                 <pre className="mt-3 bg-black/80 rounded p-3 text-sm text-emerald-500 overflow-auto">
