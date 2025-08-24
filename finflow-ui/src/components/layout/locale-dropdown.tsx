@@ -8,7 +8,7 @@ export function LocaleDropdown() {
     const { t } = useLocale();
 
     return (
-        <Select value={locale} onValueChange={(val) => setLocale(val as "en" | "tr")}>
+        <Select value={locale} onValueChange={(val) => setLocale(val as "en" | "tr" | "de")}>
             <SelectTrigger className="w-32">
                 <SelectValue placeholder={t("lang.select")}/>
             </SelectTrigger>
