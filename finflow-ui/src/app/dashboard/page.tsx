@@ -49,7 +49,7 @@ export default function DashboardPage() {
       t("quotes.str1"),
       t("quotes.str2"),
       t("quotes.str3"),
-      t("quotes.str4"),
+      t("quotes.str4")
     ];
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }, []);

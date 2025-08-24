@@ -5,12 +5,7 @@ import {
   CreditCard,
   History,
   Wallet,
-  Settings,
-  ChevronDown,
-  ChevronUp,
-  Menu,
-  BarChart2,
-  DollarSign,
+  Menu
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -19,24 +14,25 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import ProtectedRoute from "../utils/ProtectedRoute";
+import { useLocale } from "@/context/locale-context";
 
-const mainMenu = [ 
-{ name: "Home", href: "/dashboard", icon: Home }, 
-{ name: "Wallets", href: "/dashboard/wallets", icon: Wallet }, 
-{ name: "Cards", href: "/dashboard/cards", icon: CreditCard }, 
-{ name: "Transactions", href: "/dashboard/transactions", icon: History }, 
+const mainMenu = [
+  { key: "nav.home", href: "/dashboard", icon: Home },
+  { key: "nav.wallets", href: "/dashboard/wallets", icon: Wallet },
+  { key: "nav.cards", href: "/dashboard/cards", icon: CreditCard },
+  { key: "nav.transactions", href: "/dashboard/transactions", icon: History },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [openSettings, setOpenSettings] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLocale();
 
   const renderNavItem = (item: any) => {
     const isActive = pathname === item.href;
     return (
       <Link
-        key={item.name}
+        key={item.key}
         href={item.href}
         onClick={() => setIsOpen(false)}
         className={`flex items-center px-4 py-3 rounded-lg transition-colors duration-200 ${isActive
@@ -45,7 +41,7 @@ export default function Sidebar() {
           }`}
       >
         <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
-        <span className="font-medium">{item.name}</span>
+        <span className="font-medium">{t(item.key)}</span>
       </Link>
     );
   };

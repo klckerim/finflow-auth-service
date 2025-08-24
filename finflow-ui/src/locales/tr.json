@@ -2,6 +2,7 @@
   "dashboard": {
     "welcome": "Hoş geldin, {name}!",
     "welcomeTo": "FinFlow'a Hoş Geldin!",
+    "amountIn": "Tutar, {currency}!",
     "addWallet": "Yeni Cüzdan Ekle",
     "createWallet": "Cüzdan Oluştur",
     "createNewWallet": "Yeni Bir Cüzdan Oluştur",
@@ -70,6 +71,16 @@
     "balance": "Bakiye",
     "description": "Açıklama",
     "tips": "İpuçları",
+    "theme": "Tema",
+    "about": "Hakkında",
+    "logout": "Çıkış Yap",
+    "menu": "Menü",
+    "close": "Kapat",
+    "notifications": "Bildirimler",
+    "incoming": "Gelen",
+    "outgoing": "Giden",
+    "light": "Açık",
+    "dark": "Karanlık",
     "date": "Tarih",
     "footer": "Özenle geliştirildi • FinFlow © 2025 — Demo ve öğrenim için tasarlandı",
     "str_ReadMeExplanation": "Modern bir fintech oyun alanı — pragmatik mimariyi, güvenilir ödemeleri ve net bir geliştirici deneyimini göstermek için tasarlandı. Bu sayfayı projenin yaşayan README’si olarak düşün.",
@@ -77,6 +88,7 @@
     "str_ManageYourWallets": "Cüzdanlarını yönet, kartlarını takip et ve finansal hedeflerine ulaş.",
     "str_NoWallets": "Henüz cüzdanın yok.",
     "str_CreateNewWallet": "Yeni bir cüzdan oluşturarak başlayabilirsin.",
+    "str_CreateFirstWallet": "Create your first wallet to manage your budget and track spending in one place.",
     "str_ManageWallets": "Dijital cüzdanlarını yönet.",
     "str_WelcomeToPortal": "FinFlow Kullanıcı Portalına Hoş Geldin",
     "str_Greeting": "Cüzdanlarını yönet ve finansal hedeflerine ulaş.",
@@ -187,7 +199,20 @@
     "str_SelectCurrency": "Bu cüzdan için ana para birimini seç.",
     "str_MyWallets": "Cüzdanlarım",
     "str_LastActivity": "Son Aktivite",
-    "str_VirtualWallet": "Sanal Cüzdan"
+    "str_VirtualWallet": "Sanal Cüzdan",
+    "str_MyAccount": "Hesabım",
+    "str_Statistics": "İstatistik",
+    "str_StatisticsSummary": "Cüzdan işlemlerinizin özeti",
+    "str_NoEnoughData": "İstatistikleri göstermek için henüz yeterli veri yok.",
+    "str_TotalIn": "Toplam Giriş",
+    "str_TotalOut": "Toplam Çıkış",
+    "str_FinancialAnalysis": "Finansal Analiz",
+    "str_FinancialCharts": "Finansal grafikler burada gösterilecek",
+    "str_NewWallet": "Yeni Cüzdan",
+    "str_LastTransactions": "Last Transactions",
+    "str_AddMoney": "Para Ekle",
+    "str_AddMoneyToWallet": "Cüzdana Para Ekle",
+    "str_PayNow": "Şimdi Öde"
   },
   "warningsMessages": {
     "profileSaved": "Profil başarıyla güncellendi!",
@@ -202,7 +227,11 @@
     "fillAllFields": "Lütfen tüm alanları doldurun.",
     "amountMustBePositive": "Tutar pozitif olmalıdır.",
     "insufficientBalance": "Yetersiz bakiye.",
-    "walletsFetchFailed": "Cüzdan Alma İşlemi Başarısız Oldu."
+    "walletsFetchFailed": "Cüzdan Alma İşlemi Başarısız Oldu.",
+    "unknownException": "Bilinmeyen Hata",
+    "noTransaction": "İşlem Bilgisi Yok",
+    "noWallet": "Cüzdan Bilgisi Yok",
+    "noPaymentSession": "Ödeme Oturumu Bilgisi Yok"
   },
   "quotes": {
     "str1": "Bugünün planı, yarının başarısıdır.",
@@ -231,7 +260,7 @@
       "desc": "Son 100$ transferin başarıyla gerçekleşti."
     }
   },
-    "lang": {
+  "lang": {
     "select": "Dil Seçiniz",
     "tr": "Türkçe",
     "en": "İngilizce",
@@ -241,6 +270,13 @@
     "home": "Ana Sayfa",
     "wallets": "Cüzdanlar",
     "transactions": "İşlemler",
-    "profile": "Profil"
+    "profile": "Profil",
+    "cards": "Kartlar"
+  },
+  "greeting": {
+    "morning": "Günaydın 🌞",
+    "afternoon": "İyi Günler 🙌🏻",
+    "evening": "İyi Akşamlar 🌙",
+    "night": "İyi Geceler 🌌"
   }
 }

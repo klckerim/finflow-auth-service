@@ -2,6 +2,7 @@
   "dashboard": {
     "welcome": "Welcome, {name}!",
     "welcomeTo": "Welcome to FinFlow!",
+    "amountIn": "Amount In, {currency}!",
     "addWallet": "Add New Wallet",
     "createWallet": "Create Wallet",
     "createNewWallet": "Create a New Wallet",
@@ -70,13 +71,23 @@
     "balance": "Balance",
     "description": "Description",
     "tips": "Tips",
-    "date": "Date",
+    "theme": "Theme",
+    "about": "About",
+    "logout": "Logout",
+    "menu": "Menu",
+    "close": "Close",
+    "notifications": "Notifications",
+    "incoming": "Incoming",
+    "outgoing": "Outgoing",
+    "light": "Light",
+    "dark": "Dark",
     "footer": "Built with care • FinFlow © 2025 — Designed for demos & learning",
     "str_ReadMeExplanation": "A small, modern fintech playground — designed to demonstrate pragmatic architecture, reliable payments, and clear developer experience. Think of this page as the project's living README.",
     "str_DemoExplanation": "FinFlow is a focused wallet & payments demo combining a .NET backend, Postgres storage, and a Next.js frontend. It showcases real-world patterns: payment webhooks, transactional integrity, testing with Stripe, and a developer-friendly codebase suitable for portfolio/demo use.",
     "str_ManageYourWallets": "Manage your wallets, track your cards and achieve your financial goals.",
     "str_NoWallets": "You don't have a wallet yet.",
     "str_CreateNewWallet": "You can start by creating a new wallet.",
+    "str_CreateFirstWallet": "Create your first wallet to manage your budget and track spending in one place.",
     "str_ManageWallets": "Manage your digital wallets.",
     "str_WelcomeToPortal": "Welcome to your FinFlow User Portal",
     "str_Greeting": "Manage your wallets and achieve your financial goals.",
@@ -187,7 +198,20 @@
     "str_SelectCurrency": "Select the main currency for this wallet.",
     "str_MyWallets": "My Wallets",
     "str_LastActivity": "Last activity",
-    "str_VirtualWallet": "Virtual Wallet"
+    "str_VirtualWallet": "Virtual Wallet",
+    "str_MyAccount": "My Account",
+    "str_Statistics": "Statistics",
+    "str_StatisticsSummary": "Summary of your wallet transactions",
+    "str_NoEnoughData": "Not enough data to show statistics yet.",
+    "str_TotalIn": "Total In",
+    "str_TotalOut": "Total Out",
+    "str_FinancialAnalysis": "Financial Analysis",
+    "str_FinancialCharts": "Financial charts will be displayed here",
+    "str_NewWallet": "New Wallet",
+    "str_LastTransactions": "Last Transactions",
+    "str_AddMoney": "Add Money",
+    "str_AddMoneyToWallet": "Add Money To Wallet",
+    "str_PayNow": "Pay Now"
   },
   "warningsMessages": {
     "profileSaved": "Profile updated successfully!",
@@ -202,7 +226,11 @@
     "fillAllFields": "Please fill in all fields.",
     "amountMustBePositive": "Amount must be positive.",
     "insufficientBalance": "Insufficient balance.",
-    "walletsFetchFailed": "Wallets Fetch Failed"
+    "walletsFetchFailed": "Wallets Fetch Failed",
+    "unknownException": "Unknown Exception",
+    "noTransaction": "No Transactions Information",
+    "noWallet": "No Wallet Information",
+    "noPaymentSession": "No Payment Session Information"
   },
   "quotes": {
     "str1": "Today's plan is tomorrow's success.",
@@ -237,10 +265,17 @@
     "en": "English",
     "de": "German"
   },
-    "nav": {
+  "nav": {
     "home": "Home",
     "wallets": "Wallets",
     "transactions": "Transactions",
-    "profile": "Profile"
+    "profile": "Profile",
+    "cards": "Cards"
+  },
+  "greeting": {
+    "morning": "Good morning 🌞",
+    "afternoon": "Good afternoon 🙌🏻",
+    "evening": "Good evening 🌙",
+    "night": "Good night 🌌"
   }
 }

@@ -6,6 +6,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 import { motion } from "framer-motion";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { Transaction } from "@/shared/types/transaction";
+import { useLocale } from "@/context/locale-context";
 
 // Constants
 const COLORS = ["#22c55e", "#ef4444"]; // green & red
@@ -42,6 +43,8 @@ const isRelevantTransaction = (transaction: Transaction, statisticType: string):
 };
 
 const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }: StatisticsProps) => {
+  const { t } = useLocale();
+
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
   const [ratesLoading, setRatesLoading] = useState(true);
 
@@ -61,7 +64,7 @@ const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }:
           setExchangeRates(currencyData.rates);
         }
       } catch (err) {
-        console.error("Exchange rates fetch failed", err);
+        console.error(t("warningsMessages.ratesFetchFailed"), err);
       } finally {
         setRatesLoading(false);
       }
@@ -77,7 +80,7 @@ const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }:
     }
 
     const relevantTransactions = transactions.filter(t => isRelevantTransaction(t, statisticType));
-    
+
     const incoming = relevantTransactions
       .filter(t => isIncomingTransaction(t, statisticType))
       .reduce((acc, t) => acc + convertCurrency(t.amount, t.currency, currency), 0);
@@ -94,8 +97,8 @@ const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }:
   }, [transactions, currency, statisticType, convertCurrency, ratesLoading]);
 
   const chartData = useMemo(() => [
-    { name: "Incoming", value: totalIn },
-    { name: "Outgoing", value: Math.abs(totalOut) },
+    { name: t("common.incoming"), value: totalIn },
+    { name: t("common.outgoing"), value: Math.abs(totalOut) },
   ], [totalIn, totalOut]);
 
   const formatCurrency = (value: number) => {
@@ -110,11 +113,11 @@ const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }:
     return (
       <Card>
         <CardHeader>
-          <CardTitle>📊 Statistics</CardTitle>
-          <CardDescription>Summary of your wallet transactions</CardDescription>
+          <CardTitle>📊 {t("common.str_Statistics")}</CardTitle>
+          <CardDescription>{t("common.str_StatisticsSummary")}</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-6 text-sm text-muted-foreground">
-          {ratesLoading ? "Loading data..." : "Not enough data to show statistics yet."}
+          {ratesLoading ? t("common.loading") : t("common.str_NoEnoughData")}
         </CardContent>
       </Card>
     );
@@ -123,28 +126,28 @@ const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }:
   return (
     <Card>
       <CardHeader>
-        <CardTitle>📊 Statistics</CardTitle>
-        <CardDescription>Summary of your wallet transactions</CardDescription>
+        <CardTitle>📊 {t("common.str_Statistics")}</CardTitle>
+        <CardDescription>{t("common.str_StatisticsSummary")}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <KPICard 
-            label="Total In" 
-            value={formatCurrency(totalIn)} 
-            valueClassName="text-green-600" 
+          <KPICard
+            label={t("common.str_TotalIn")}
+            value={formatCurrency(totalIn)}
+            valueClassName="text-green-600"
           />
-          
-          <KPICard 
-            label="Total Out" 
-            value={formatCurrency(totalOut)} 
-            valueClassName="text-red-600" 
+
+          <KPICard
+            label={t("common.str_TotalOut")}
+            value={formatCurrency(totalOut)}
+            valueClassName="text-red-600"
           />
-          
-          <KPICard 
-            label="Transactions" 
-            value={transactionCount.toString()} 
+
+          <KPICard
+            label={t("common.str_Transactions")}
+            value={transactionCount.toString()}
           />
         </div>
 

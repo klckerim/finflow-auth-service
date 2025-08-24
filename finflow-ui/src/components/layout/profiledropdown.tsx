@@ -13,13 +13,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
-import { 
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger 
+    DropdownMenuTrigger
 } from "./dropdown-menu";
 import { useLocale } from "@/context/locale-context";
 
@@ -27,14 +27,8 @@ const ProfileDropdown = () => {
     const router = useRouter();
     const { user, logout } = useAuth();
     const [notifications, setNotifications] = useState(1);
-    const { locale, setLocale } = useLocale();
     const [theme, setTheme] = useState("light");
-
-    // Dil değiştir
-    const toggleLanguage = () => {
-        const newLocale = locale === "tr" ? "en" : "tr";
-        setLocale(newLocale);
-    };
+    const { t } = useLocale();
 
     // Tema değiştir
     const toggleTheme = () => {
@@ -55,7 +49,7 @@ const ProfileDropdown = () => {
                 {/* Kullanıcı Bilgisi */}
                 <DropdownMenuItem className="flex items-center" onClick={() => router.push("/dashboard/profile")}>
                     <User className="mr-2 h-4 w-4" />
-                    <span>{user?.fullName || "My Account"}</span>
+                    <span>{user?.fullName || t("common.str_MyAccount")}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
 
@@ -64,7 +58,7 @@ const ProfileDropdown = () => {
                     <div className="flex items-center justify-between w-full">
                         <div className="flex items-center">
                             <Bell className="mr-2 h-4 w-4" />
-                            <span>Notifications</span>
+                            <span>{t("common.notifications")}</span>
                         </div>
                         {notifications > 0 && (
                             <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs animate-pulse">
@@ -74,24 +68,16 @@ const ProfileDropdown = () => {
                     </div>
                 </DropdownMenuItem>
 
-                
-
-                {/* Language */}
-                <DropdownMenuItem onClick={toggleLanguage}>
-                    <Globe className="mr-2 h-4 w-4" />
-                    <span>Language: {locale.toUpperCase()}</span>
-                </DropdownMenuItem>
-
                 {/* Theme */}
                 <DropdownMenuItem onClick={toggleTheme}>
                     <SunMoon className="mr-2 h-4 w-4" />
-                    <span>Theme: {theme === "light" ? "Light" : "Dark"}</span>
+                    <span>{t("common.theme")}: {theme === "light" ? t("common.light") : t("common.dark")}</span>
                 </DropdownMenuItem>
 
                 {/* About */}
                 <DropdownMenuItem onClick={() => router.push("/dashboard/about")}>
                     <Info className="mr-2 h-4 w-4" />
-                    <span>About</span>
+                    <span>{t("common.about")}</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
@@ -99,7 +85,7 @@ const ProfileDropdown = () => {
                 {/* Logout */}
                 <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
+                    <span>{t("common.logout")}</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
