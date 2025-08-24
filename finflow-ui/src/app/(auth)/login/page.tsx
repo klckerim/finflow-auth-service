@@ -133,7 +133,7 @@ export default function LoginPage() {
 
               <div className="flex items-center my-4">
                 <div className="flex-grow h-px bg-gray-600" />
-                <span className="px-2 text-gray-400 text-sm">OR</span>
+                <span className="px-2 text-gray-400 text-sm">{t("common.or")}</span>
                 <div className="flex-grow h-px bg-gray-600" />
               </div>
 
