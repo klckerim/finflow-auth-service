@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
       router.push(`/reset-password?token=${data.token}`)
     } else {
       const msg = await parseApiResponseError(res);
-      parseUnknownError(new Error(msg));
+      parseUnknownError(new Error(t(msg.errorCode, msg.paramValue)));
     }
   }
 

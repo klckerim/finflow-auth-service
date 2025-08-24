@@ -20,7 +20,7 @@ namespace FinFlow.Application.Commands.Users
         {
             if (await _userRepository.ExistsByEmailAsync(request.Email, cancellationToken))
             {
-                throw new InvalidOperationException("User with this email already exists.");
+                    throw new AppException(ErrorCodes.UserAlreadyExists, "User with this email already exists.");
             }
 
             var user = new User

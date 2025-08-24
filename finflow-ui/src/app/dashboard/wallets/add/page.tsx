@@ -41,7 +41,7 @@ const AddWalletPage = () => {
 
       if (!response.ok) {
         const msg = await parseApiResponseError(response);
-        throw new Error(msg);
+        throw new Error(t(msg.errorCode, msg.paramValue));
       }
 
       router.push("/dashboard/wallets");

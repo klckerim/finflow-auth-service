@@ -14,7 +14,7 @@ export async function getMe() {
 
   if (!res.ok) {
     const msg = await parseApiResponseError(res);
-    throw new Error(msg);
+    throw new Error(msg.errorCode);
   }
 
   return res.json();
@@ -34,7 +34,7 @@ export async function login(email: string, password: string) {
 
   if (!res.ok) {
     const msg = await parseApiResponseError(res);
-    throw new Error(msg);
+    throw new Error(msg.errorCode);
   }
 
   return await res.json();
@@ -63,7 +63,7 @@ export async function refreshAccessToken() {
 
   if (!res.ok) {
     const msg = await parseApiResponseError(res);
-    throw new Error(msg);
+    throw new Error(msg.errorCode);
   }
 
   return await res.json();

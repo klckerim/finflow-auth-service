@@ -47,7 +47,7 @@ export default function RegisterPage() {
 
       if (!res.ok) {
         const msg = await parseApiResponseError(res);
-        throw new Error(msg);
+        throw new Error(t(msg.errorCode, msg.paramValue));
       }
 
       router.push("/login");
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                   name="email"
                   value={form.email}
                   onChange={handleChange}
-                  placeholder={t("common.str_EnterFullname")}
+                  placeholder={t("common.str_EnterEmail")}
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"
                 />
               </div>

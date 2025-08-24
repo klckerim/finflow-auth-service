@@ -1,4 +1,4 @@
-namespace  FinFlow.Application.Validators;
+namespace FinFlow.Application.Validators;
 
 using FinFlow.Application.Commands.Users;
 using FluentValidation;
@@ -8,10 +8,10 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
     public LoginUserCommandValidator()
     {
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email is required.")
-            .EmailAddress().WithMessage("Email is not valid.");
+    .NotEmpty().WithErrorCode("email_required")
+    .EmailAddress().WithErrorCode("email_invalid");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Password is required.");
+            .NotEmpty().WithErrorCode("password_required");
     }
 }

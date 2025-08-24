@@ -4,7 +4,10 @@ public class DepositCommandValidator : AbstractValidator<DepositCommand>
 {
     public DepositCommandValidator()
     {
-        RuleFor(x => x.WalletId).NotEmpty().WithMessage("Wallet ID is required.");
-        RuleFor(x => x.Amount).GreaterThan(0).WithMessage("Deposit amount must be greater than zero.");
+        RuleFor(x => x.WalletId)
+    .NotEmpty().WithErrorCode("wallet_id_required");
+
+        RuleFor(x => x.Amount)
+            .GreaterThan(0).WithErrorCode("amount_greater_than_zero").WithState(_ => new { MinAmount = 0 });
     }
 }

@@ -49,7 +49,7 @@ export default function ResetPasswordClient() {
       router.push("/login")
     } else {
       const msg = await parseApiResponseError(res);
-      parseUnknownError(new Error(msg));
+      parseUnknownError(new Error(t(msg.errorCode, msg.paramValue)));
     }
   }
 

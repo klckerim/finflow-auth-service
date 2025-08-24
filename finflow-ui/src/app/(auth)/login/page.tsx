@@ -40,8 +40,8 @@ export default function LoginPage() {
 
 
       if (!res.ok) {
-        const msg = await parseApiResponseError(res);
-        throw new Error(msg);
+        const err = await parseApiResponseError(res);
+        throw new Error(t(err.errorCode, err.paramValue));
       }
 
       const data = await res.json();

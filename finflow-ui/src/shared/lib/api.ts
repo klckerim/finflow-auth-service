@@ -37,7 +37,7 @@ export async function transferAmount(walletId: string, data: {
 
   if (!res.ok) {
     const msg = await parseApiResponseError(res);
-    throw new Error(msg);
+    throw new Error(msg.errorCode);
   }
 
   return res;
@@ -54,7 +54,7 @@ export async function getWalletById(id: string): Promise<WalletType | null> {
 
     if (!res.ok) {
       const msg = await parseApiResponseError(res);
-      throw new Error(msg);
+      throw new Error(msg.errorCode);
     }
 
     return await res.json();
@@ -80,7 +80,7 @@ export async function updateWalletById(id: string, data: { name: string; }) {
 
     if (!res.ok) {
       const msg = await parseApiResponseError(res);
-      throw new Error(msg);
+      throw new Error(msg.errorCode);
     }
 
     return res.status === 204 ? true : await res.json();
@@ -102,7 +102,7 @@ export const deleteWalletById = async (id: string) => {
 
     if (!res.ok) {
       const msg = await parseApiResponseError(res);
-      throw new Error(msg);
+      throw new Error(msg.errorCode);
     }
 
     return res.status === 204 ? true : await res.json();

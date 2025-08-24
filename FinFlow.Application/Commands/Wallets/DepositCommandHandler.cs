@@ -16,7 +16,7 @@ public class DepositCommandHandler : IRequestHandler<DepositCommand, bool>
             .IncreaseBalanceWithTransactionAsync(request.WalletId, request.Amount, cancellationToken);
 
         if (!success)
-            throw new KeyNotFoundException($"Wallet not found or filtered out. Id={request.WalletId}");
+            throw new AppException(ErrorCodes.WalletNotFound, "", 404, new Dictionary<string, object> { { "Id", request.WalletId }, });
 
         return true;
     }

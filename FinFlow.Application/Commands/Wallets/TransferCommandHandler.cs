@@ -18,17 +18,18 @@ public class TransferCommandHandler : IRequestHandler<TransferCommand>
     {
         var fromWallet = await _walletRepository.GetByIdAsync(request.FromWalletId, cancellationToken);
         if (fromWallet == null)
-            throw new KeyNotFoundException("Source wallet not found.");
+            throw new AppException(ErrorCodes.SourceWalletNotFound, "Source wallet not found.");
 
         var toWallet = await _walletRepository.GetByIdAsync(request.ToWalletId, cancellationToken);
         if (toWallet == null)
-            throw new KeyNotFoundException("Recipient wallet not found.");
+            throw new AppException(ErrorCodes.RecipientWalletNotFound, "Recipient wallet not found.");
+
 
         if (fromWallet.Balance < request.Amount)
-            throw new InvalidOperationException("Insufficient balance.");
+            throw new AppException(ErrorCodes.InsufficientBalance, "Insufficient balance.");
 
         if (fromWallet.Currency != toWallet.Currency)
-            throw new InvalidOperationException($"Recipient wallet currency must be {fromWallet.Currency}");
+            throw new AppException(ErrorCodes.RecipientWalletCurrency, "", 400, new Dictionary<string, object> { { "Currency", fromWallet.Currency } });
 
         fromWallet.Balance -= request.Amount;
         toWallet.Balance += request.Amount;

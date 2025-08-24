@@ -28,11 +28,11 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginRe
     {
         var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
         if (user is null)
-            throw new UnauthorizedAccessException("Invalid credentials.");
+            throw new AppException(ErrorCodes.InvalidCredentials, "");
 
         var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
         if (result != PasswordVerificationResult.Success)
-            throw new UnauthorizedAccessException("Invalid credentials.");
+            throw new AppException(ErrorCodes.InvalidCredentials, "");
 
         var accessToken = _tokenService.GenerateAccessToken(user);
         var refreshToken = _tokenService.GenerateRefreshToken(user);
@@ -41,12 +41,12 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginRe
 
         await _userRepository.UpdateAsync(refreshToken, cancellationToken);
 
-       
+
         return new LoginResponseDto(
             user,
             accessToken,
             refreshToken.Token,
-            refreshToken.ExpiresAt 
+            refreshToken.ExpiresAt
         );
 
     }

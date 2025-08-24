@@ -5,10 +5,11 @@ public class CreateWalletCommandValidator : AbstractValidator<CreateWalletComman
     public CreateWalletCommandValidator()
     {
         RuleFor(x => x.Balance)
-            .GreaterThanOrEqualTo(0).WithMessage("Wallet balance must be greater than 0");
+    .GreaterThanOrEqualTo(0).WithErrorCode("wallet_balance_positive");
+
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Wallet name is required.")
-            .MinimumLength(3).WithMessage("Wallet name must be at least 3 characters.")
-            .MaximumLength(100).WithMessage("Wallet name must be at most 100 characters.");
+            .NotEmpty().WithErrorCode("wallet_name_required")
+            .MinimumLength(3).WithErrorCode("wallet_name_min_length").WithState(_ => new { MinLength = 3 })
+            .MaximumLength(100).WithErrorCode("wallet_name_max_length").WithState(_ => new { MaxLength = 100 });
     }
 }

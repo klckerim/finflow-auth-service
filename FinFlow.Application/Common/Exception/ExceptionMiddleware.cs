@@ -1,4 +1,3 @@
-
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
@@ -21,26 +20,33 @@ public class ExceptionMiddleware
     {
         try
         {
-            _logger.LogInformation("Handling request: {Method} {Path}", context.Request.Method, context.Request.Path);
-
             await _next(context);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception occurred.");
-
             context.Response.ContentType = "application/json";
 
             var response = new ErrorResponse
             {
                 Title = ex.Message,
+                ErrorCode = ex switch
+                {
+                    AppException appEx => appEx.ErrorCode,
+                    ValidationException validationException=> ErrorCodes.ValidationFailed,
+                    KeyNotFoundException => ErrorCodes.UserNotFound,
+                    InvalidOperationException => ErrorCodes.InvalidCredentials,
+                    _ => ErrorCodes.InternalServerError
+                },
                 Status = ex switch
                 {
+                    AppException appEx => appEx.StatusCode,
                     ValidationException => StatusCodes.Status400BadRequest,
                     KeyNotFoundException => StatusCodes.Status404NotFound,
                     InvalidOperationException => StatusCodes.Status400BadRequest,
                     _ => StatusCodes.Status500InternalServerError
-                }
+                },
+                Params = ex is AppException exception ? exception.Params : null
             };
 
             if (ex is ValidationException validationEx)
@@ -49,12 +55,19 @@ public class ExceptionMiddleware
                     .GroupBy(e => e.PropertyName)
                     .ToDictionary(
                         g => g.Key,
-                        g => g.Select(e => e.ErrorMessage).ToArray()
-                    );
+                        g => g.Select(e => e.ErrorCode).ToArray()
+                );
+
+                response.Params = validationEx.Errors
+                    .Where(e => e.CustomState != null)
+                    .ToDictionary(
+                        e => e.PropertyName,
+                        e => e.CustomState!
+                );
+
             }
 
             context.Response.StatusCode = response.Status;
-
             await context.Response.WriteAsJsonAsync(response);
         }
     }
@@ -63,6 +76,8 @@ public class ExceptionMiddleware
 public class ErrorResponse
 {
     public string Title { get; set; } = "";
+    public string ErrorCode { get; set; } = "";
     public int Status { get; set; }
     public Dictionary<string, string[]>? Errors { get; set; }
+    public Dictionary<string, object>? Params { get; set; }
 }
