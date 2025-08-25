@@ -311,6 +311,8 @@
   "recipient_wallet_currency": "Alıcı cüzdanın para birimi {Currency} olmalıdır",
   "insufficient_balance": "Yetersiz bakiye.",
   "email_not_valid": "E-posta adresi geçerli değil.",
+  "wallets_not_match": "Cüzdan bilgileri eşleşmiyor.",
+  "invalid_refresh_token": "Geçersiz veya süresi dolmuş token.",
   "Deposit": "Para Yatırma",
   "Withdraw": "Para Çekme",
   "Payment": "Ödeme",

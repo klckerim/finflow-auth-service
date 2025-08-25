@@ -311,6 +311,8 @@
   "recipient_wallet_required": "Recipient wallet cannot be empty",
   "transfer_amount_positive": "Transfer amount must be greater than {minAmount}",
   "same_wallet_transfer": "Sender and recipient wallet cannot be the same",
+  "wallets_not_match": "Wallet informations do not match.",
+  "invalid_refresh_token": "Invalid or expired refresh token.",
   "Deposit": "Deposit",
   "Withdraw": "Withdraw",
   "Payment": "Payment",

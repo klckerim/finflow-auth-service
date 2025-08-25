@@ -311,6 +311,8 @@
   "recipient_wallet_currency": "Die Währung der Empfänger-Wallet muss {Currency} sein",
   "insufficient_balance": "Unzureichendes Guthaben.",
   "email_not_valid": "E-Mail ist ungültig.",
+  "wallets_not_match": "Wallet-Informationen stimmen nicht überein.",
+  "invalid_refresh_token": "Ungültiger oder abgelaufener Aktualisierungstoken.",
   "Deposit": "Einzahlung",
   "Withdraw": "Abhebung",
   "Payment": "Zahlung",

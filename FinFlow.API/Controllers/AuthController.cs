@@ -72,7 +72,7 @@ namespace FinFlow.API.Controllers
         {
             // Basit validasyon
             if (string.IsNullOrEmpty(request.Email))
-                throw new Exception("Email is required");
+                throw new Exception(ErrorCodes.EmailRequierd);
 
             // Sahte token üretelim
             var token = Guid.NewGuid().ToString();

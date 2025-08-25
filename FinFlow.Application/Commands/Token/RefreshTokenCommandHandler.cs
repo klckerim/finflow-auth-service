@@ -25,7 +25,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, A
 
         if (user is null)
         {
-            throw new Exception("Invalid or expired refresh token.");
+            throw new Exception(ErrorCodes.InvalidRefreshToken);
         }
 
         // 2. Refresh Token'ı işaretle (revoked)

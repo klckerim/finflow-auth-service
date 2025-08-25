@@ -81,7 +81,7 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> Transfer(Guid walletId, [FromBody] TransferDto transferDto)
     {
         if (walletId != transferDto.FromWalletId)
-            throw new Exception("Wallet informations do not match.");
+            throw new Exception(ErrorCodes.WalletsNotMatch);
 
         await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount));
         _logger.LogInformation("Transferred {Amount} from wallet {FromWalletId} to wallet {ToWalletId}",
