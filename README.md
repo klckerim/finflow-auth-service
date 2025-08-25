@@ -2,11 +2,12 @@
 
 ![.NET](https://img.shields.io/badge/.NET-9-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black)
-![Docker](https://img.shields.io/badge/Docker-20.10-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blue)
+![Docker](https://img.shields.io/badge/Docker-20.10-lightblue)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)
 ![Stripe](https://img.shields.io/badge/Stripe-Payments-yellow)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Version](https://img.shields.io/badge/Version-1.0.0-blue)
+![Version](https://img.shields.io/badge/Version-1.0.0-lightgrey)
 
 
 **FinFlow** is a small, modern fintech playground — designed to demonstrate pragmatic architecture, reliable payments, and clear developer experience. Think of this README as the project's living guide.
