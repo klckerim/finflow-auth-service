@@ -1,12 +1,12 @@
 using FinFlow.Domain.Entities;
 using MediatR;
 
-public class TransferCommandHandler : IRequestHandler<TransferCommand>
+public class TransferHandler : IRequestHandler<TransferCommand>
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly IWalletRepository _walletRepository;
 
-    public TransferCommandHandler(
+    public TransferHandler(
         IWalletRepository walletRepository,
         ITransactionRepository transactionRepository)
     {

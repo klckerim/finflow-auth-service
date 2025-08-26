@@ -191,7 +191,7 @@ export default function DashboardPage() {
         {wallets.length === 0 ? (
           <div className="text-center p-6 border-2 border-dashed rounded-lg dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-2">{t("common.str_NoWallets")}</h2>
-            <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">{t("warning.str_CreateNewWallet")}</p>
+            <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">{t("common.str_CreateNewWallet")}</p>
             <Button onClick={() => router.push("/dashboard/wallets/add")}>{t("dashboard.createWallet")}</Button>
           </div>
         ) : (

@@ -1,10 +1,10 @@
 using MediatR;
 
-public class UpdateWalletCommandHandler : IRequestHandler<UpdateWalletCommand, bool>
+public class UpdateWalletHandler : IRequestHandler<UpdateWalletCommand, bool>
 {
     private readonly IWalletRepository _walletRepository;
 
-    public UpdateWalletCommandHandler(IWalletRepository walletRepository)
+    public UpdateWalletHandler(IWalletRepository walletRepository)
     {
         _walletRepository = walletRepository;
     }

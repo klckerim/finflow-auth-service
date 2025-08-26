@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FinFlow.Application.Commands.Users
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Guid>
+    public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Guid>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public RegisterUserCommandHandler(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
+        public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;

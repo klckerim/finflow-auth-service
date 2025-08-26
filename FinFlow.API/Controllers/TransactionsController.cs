@@ -33,4 +33,12 @@ public class TransactionsController : ControllerBase
         _logger.LogInformation("Retrieved {Count} transactions for wallet {WalletId}", transactions.Count, walletId);
         return Ok(transactions);
     }
+
+    [HttpGet("card/{cardId}")]
+    public async Task<IActionResult> GetByCardId(Guid cardId, [FromQuery] int limit = 20)
+    {
+        var transactions = await _mediator.Send(new GetTransactionsByCardIdQuery(cardId, limit));
+        _logger.LogInformation("Retrieved {Count} transactions for card {CardId}", transactions.Count, cardId);
+        return Ok(transactions);
+    }
 }

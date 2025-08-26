@@ -109,7 +109,6 @@
     "str_CreateAccount": "Erstellen Sie Ihr FinFlow-Konto",
     "str_FillDetail": "Füllen Sie die folgenden Details aus, um sich zu registrieren.",
     "str_Fullname": "Ihr vollständiger Name",
-    "str_EnterFullname": "Vollständigen Namen eingeben",
     "str_AlreadySignUp": "Bereits registriert?",
     "str_Started": "Loslegen",
     "str_Demo": "Fintech • Demo",
@@ -212,7 +211,8 @@
     "str_LastTransactions": "Letzte Transaktionen",
     "str_AddMoney": "Geld hinzufügen",
     "str_AddMoneyToWallet": "Geld zur Wallet hinzufügen",
-    "str_PayNow": "Jetzt bezahlen"
+    "str_PayNow": "Jetzt bezahlen",
+    "str_CardNotRetrieved": "Karteninformationen konnten nicht abgerufen werden."
   },
   "warningsMessages": {
     "profileSaved": "Profil erfolgreich aktualisiert!",

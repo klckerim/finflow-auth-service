@@ -13,6 +13,7 @@ namespace FinFlow.Infrastructure.Persistence
         public DbSet<User> Users => Set<User>();
         public DbSet<Wallet> Wallets => Set<Wallet>();
         public DbSet<Transaction> Transactions => Set<Transaction>();
+        public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
         public DbSet<ResetPasswordToken> ResetPasswordTokens => Set<ResetPasswordToken>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
@@ -30,8 +31,6 @@ namespace FinFlow.Infrastructure.Persistence
                 .HasForeignKey(rt => rt.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-
-            // bu sonradan ekledim
             modelBuilder.Entity<RefreshToken>()
                 .HasOne(rt => rt.User)
                 .WithMany(u => u.RefreshTokens)
@@ -56,6 +55,17 @@ namespace FinFlow.Infrastructure.Persistence
                 .HasForeignKey(rpt => rpt.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<PaymentMethod>()
+                .HasOne(pm => pm.User)
+                .WithMany(u => u.PaymentMethods)
+                .HasForeignKey(pm => pm.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.DefaultPaymentMethod)
+                .WithMany()
+                .HasForeignKey(u => u.DefaultPaymentMethodId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             base.OnModelCreating(modelBuilder);
         }

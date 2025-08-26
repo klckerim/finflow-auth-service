@@ -5,12 +5,12 @@ using MediatR;
 
 namespace FinFlow.Application.Commands.Token;
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, AuthenticationResult>
+public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, AuthenticationResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public RefreshTokenCommandHandler(
+    public RefreshTokenHandler(
         IUserRepository userRepository,
         IJwtTokenGenerator jwtTokenGenerator)
     {

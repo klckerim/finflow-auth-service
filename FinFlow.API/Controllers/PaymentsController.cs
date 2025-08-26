@@ -18,6 +18,37 @@ public class PaymentsController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpPost("create-setup-session")]
+    public IActionResult CreateSetupSession([FromBody] CreateSetupRequest request)
+    {
+        var options = new SessionCreateOptions
+        {
+            PaymentMethodTypes = new List<string> { "card" },
+            Mode = "setup",
+            SuccessUrl = _config["Stripe:SuccessUrl"],
+            CancelUrl = _config["Stripe:CancelUrl"],
+            Metadata = new Dictionary<string, string>
+        {
+            { "userId", request.UserId.ToString() }
+        }
+        };
+
+        if (!string.IsNullOrEmpty(request.CustomerEmail))
+            options.CustomerEmail = request.CustomerEmail;
+
+        var service = new SessionService();
+        var session = service.Create(options);
+
+        if (session == null)
+        {
+            _logger.LogError("Failed to create Stripe setup session.");
+            return BadRequest("Failed to create setup session.");
+        }
+
+        _logger.LogInformation("Stripe setup session created: {SessionId}", session.Id);
+        return Ok(new { sessionId = session.Id, url = session.Url });
+    }
+
 
     [HttpPost("create-session")]
     public IActionResult CreateCheckoutSession([FromBody] CheckoutRequest request)
@@ -110,8 +141,58 @@ public class PaymentsController : ControllerBase
                     return BadRequest("Invalid session data.");
                 }
 
-                // Metadata kontrolü
-                if (session.Metadata != null && session.Metadata.TryGetValue("walletId", out var walletIdStr))
+
+                if (session.Mode == "setup" || (session.Metadata != null && session.Metadata.ContainsKey("userId")))
+                {
+                    try
+                    {
+                        var setupIntentId = session.SetupIntentId;
+                        if (!string.IsNullOrEmpty(setupIntentId))
+                        {
+                            var setupService = new SetupIntentService();
+                            var setupIntent = await setupService.GetAsync(setupIntentId);
+
+                            var paymentMethodId = setupIntent?.PaymentMethodId ?? setupIntent?.PaymentMethod.Id;
+
+                            if (!string.IsNullOrEmpty(paymentMethodId))
+                            {
+                                var pmService = new PaymentMethodService();
+                                var pm = await pmService.GetAsync(paymentMethodId);
+
+                                if (session.Metadata != null && session.Metadata.TryGetValue("userId", out var userIdStr)
+                                    && Guid.TryParse(userIdStr, out var userGuid))
+                                {
+                                    var card = pm.Card;
+                                    var saveCmd = new SavePaymentMethodCommand(
+                                        userGuid,
+                                        paymentMethodId,
+                                        card?.Brand ?? string.Empty,
+                                        card?.Last4 ?? string.Empty,
+                                        card?.ExpMonth ?? 0,
+                                        card?.ExpYear ?? 0,
+                                        pm.BillingDetails?.Name
+                                    );
+
+                                    var saved = await _mediator.Send(saveCmd);
+                                    if (saved)
+                                    {
+                                        _logger.LogInformation("Saved payment method {PM} for user {UserId}", paymentMethodId, userGuid);
+                                    }
+                                }
+                                else
+                                {
+                                    _logger.LogWarning("No userId metadata found on setup session {SessionId}", session.Id);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to process setup session.");
+                    }
+                }
+
+                else if (session.Mode == "payment" && session.Metadata != null && session.Metadata.TryGetValue("walletId", out var walletIdStr))
                 {
                     if (Guid.TryParse(walletIdStr, out var walletGuid))
                     {

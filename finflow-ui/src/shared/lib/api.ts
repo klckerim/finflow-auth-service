@@ -1,10 +1,18 @@
 import { Wallet as WalletType } from "@/shared/types/wallet";
+import { Card as CardType } from "@/shared/types/card";
+
 import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
 
 
 export async function getWalletsByUser(userId: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/user/${userId}`);
   if (!res.ok) throw new Error("No Wallets Information");
+  return res.json();
+}
+
+export async function getTransactionsByCardId(cardId: string, limit: number = 20) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/card/${cardId}?limit=${limit}`);
+  if (!res.ok) throw new Error("No Transactions Information");
   return res.json();
 }
 
@@ -18,6 +26,33 @@ export async function getTransactionsByUserId(userId: string, limit: number = 20
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/user/${userId}?limit=${limit}`);
   if (!res.ok) throw new Error("No Transactions Information");
   return res.json();
+}
+
+export async function getCardsByUserId(userId: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/cards/user/${userId}`);
+  if (!res.ok) throw new Error("No Cards Information");
+  return res.json();
+}
+
+export async function getCardById(id: string): Promise<CardType | null> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/cards/${id}`, {
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (!res.ok) {
+      const msg = await parseApiResponseError(res);
+      throw new Error(msg.errorCode);
+    }
+
+    return await res.json();
+  } catch (error) {
+    parseUnknownError(error);
+    return null;
+  }
 }
 
 

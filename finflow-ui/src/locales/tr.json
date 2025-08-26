@@ -109,7 +109,6 @@
     "str_CreateAccount": "FinFlow hesabını oluştur",
     "str_FillDetail": "Kayıt olmak için aşağıdaki bilgileri doldur.",
     "str_Fullname": "Tam ismin",
-    "str_EnterFullname": "Tam ismini gir",
     "str_AlreadySignUp": "Zaten üye misin?",
     "str_Started": "Başla",
     "str_Demo": "Fintech • Demo",
@@ -209,10 +208,11 @@
     "str_FinancialAnalysis": "Finansal Analiz",
     "str_FinancialCharts": "Finansal grafikler burada gösterilecek",
     "str_NewWallet": "Yeni Cüzdan",
-    "str_LastTransactions": "Last Transactions",
+    "str_LastTransactions": "Son İşlemler",
     "str_AddMoney": "Para Ekle",
     "str_AddMoneyToWallet": "Cüzdana Para Ekle",
-    "str_PayNow": "Şimdi Öde"
+    "str_PayNow": "Şimdi Öde",
+    "str_CardNotRetrieved": "Kart bilgileri alınamadı."
   },
   "warningsMessages": {
     "profileSaved": "Profil başarıyla güncellendi!",

@@ -1,13 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/features/cards/card";
 import {
   ArrowLeft,
   CreditCard,
-  Calendar,
   ShieldCheck,
   BadgeCheck,
   Snowflake,
@@ -16,27 +15,63 @@ import {
 } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { useLocale } from "@/context/locale-context";
+import { useEffect, useState } from "react";
+import { getCardById, getTransactionsByCardId } from "@/shared/lib/api";
+import { Card as CardType } from "@/shared/types/card";
+import { parseUnknownError } from "@/shared/lib/api-error-handler";
+import { toast } from "sonner";
 
-export default function CardDetailsPage() {
+
+const CardDetailsPage = () => {
+  const { id } = useParams();
   const router = useRouter();
   const { t } = useLocale();
+  const [card, setCard] = useState<CardType | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [lastTransactions, setLastTransactions] = useState<any[]>([]);
 
-  // Demo data
-  const cardData = {
-    type: "Visa",
-    holder: "Can K.",
-    last4: "5678",
-    expiry: "12/27",
-    limit: 5000,
-    balance: 1725.45,
-    currency: "TRY",
-    status: "Active",
-    transactions: [
-      { id: 1, title: "Amazon", amount: -250.75, date: "2025-08-01" },
-      { id: 2, title: "Spotify", amount: -59.99, date: "2025-07-29" },
-      { id: 3, title: "Refund - Trendyol", amount: +120.0, date: "2025-07-25" },
-    ],
+  useEffect(() => {
+    if (!id) return;
+    getCardById(id as string)
+      .then((data) => {
+        setCard(data);
+      })
+      .catch(() => {
+        toast.error(t("common.str_CardNotRetrieved"));
+        router.push("/dashboard/cards");
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!card) return;
+        const response = await getTransactionsByCardId(id as string, 10);
+        setLastTransactions(response);
+      } catch (err) {
+        parseUnknownError(err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [card]);
+
+  const cardBrandIcon = (brand?: string) => {
+    const normalized = brand?.toLowerCase();
+    switch (normalized) {
+      case "visa":
+        return <CreditCard className="text-orange-600" />;
+      case "mastercard":
+        return <CreditCard className="text-orange-500" />;
+      case "amex":
+        return <CreditCard className="text-green-500" />;
+      default:
+        return <CreditCard />;
+    }
   };
+
+  if (loading || !card) return <p className="text-center mt-6">{t("common.loading")}</p>;
 
   return (
     <motion.div
@@ -45,7 +80,6 @@ export default function CardDetailsPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Back Button */}
       <Button
         variant="ghost"
         onClick={() => router.back()}
@@ -54,29 +88,23 @@ export default function CardDetailsPage() {
         <ArrowLeft className="w-4 h-4" /> {t("card.back")}
       </Button>
 
-
       {/* Digital Card Preview */}
-      <motion.div
-        className="relative w-full h-56 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-6 text-white shadow-lg"
-        initial={{ rotateY: 15, opacity: 0 }}
-        animate={{ rotateY: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
+      <motion.div className="relative w-full h-56 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-6 text-white shadow-lg">
         <div className="flex justify-between items-start">
-          <span className="font-bold tracking-wider">{cardData.type}</span>
-          <CreditCard className="w-8 h-8" />
+          <span className="font-bold tracking-wider">{card.brand}</span>
+          {cardBrandIcon(card.brand)}
         </div>
         <div className="mt-12 text-2xl tracking-widest">
-          **** **** **** {cardData.last4}
+          **** **** **** {card.last4}
         </div>
         <div className="mt-4 flex justify-between text-sm">
           <div>
-            <span className="block text-xs opacity-80">{t("card.holder")}Card Holder</span>
-            {cardData.holder}
+            <span className="block text-xs opacity-80">{t("card.holder")}</span>
+            {card.cardHolderName}
           </div>
           <div>
-            <span className="block text-xs opacity-80">{t("card.expires")}Expires</span>
-            {cardData.expiry}
+            <span className="block text-xs opacity-80">{t("card.expires")}</span>
+            {`${card.expMonth}/${card.expYear}`}
           </div>
         </div>
       </motion.div>
@@ -85,29 +113,16 @@ export default function CardDetailsPage() {
         {/* Card Info */}
         <Card className="lg:col-span-2 border border-muted bg-muted/20 dark:bg-muted/30">
           <CardHeader>
-            <CardTitle className="text-xl flex items-center gap-2">
-              {t("card.info")}
-            </CardTitle>
+            <CardTitle className="text-xl flex items-center gap-2">{t("card.info")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">{t("card.status")}:</span>
               <span className="flex items-center gap-1 text-green-600 font-medium">
-                <BadgeCheck className="w-4 h-4" /> {cardData.status}
+                <BadgeCheck className="w-4 h-4" /> {card.isActive}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{t("card.limit")}:</span>
-              <span className="font-medium text-blue-600">
-                ₺{cardData.limit.toLocaleString("tr-TR")}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{t("card.currentBalance")}:</span>
-              <span className="font-medium">
-                ₺{cardData.balance.toLocaleString("tr-TR")}
-              </span>
-            </div>
+
             <Separator />
             <div className="text-xs text-muted-foreground">
               <ShieldCheck className="w-4 h-4 inline mr-1" />
@@ -141,34 +156,28 @@ export default function CardDetailsPage() {
           <CardTitle className="text-lg">{t("card.recentTransactions")}</CardTitle>
         </CardHeader>
         <CardContent>
-          {cardData.transactions.length > 0 ? (
+          {lastTransactions?.length > 0 ? (
             <div className="space-y-3">
-              {cardData.transactions.map((tx) => (
-                <div
-                  key={tx.id}
-                  className="flex justify-between items-center border-b border-muted pb-2 last:border-0 last:pb-0"
-                >
+              {lastTransactions.map((tx: any) => (
+                <div key={tx.id} className="flex justify-between items-center border-b border-muted pb-2 last:border-0 last:pb-0">
                   <div>
                     <p className="font-medium">{tx.title}</p>
                     <p className="text-xs text-muted-foreground">{tx.date}</p>
                   </div>
-                  <span
-                    className={`font-medium ${tx.amount < 0 ? "text-red-500" : "text-green-600"
-                      }`}
-                  >
-                    {tx.amount < 0 ? "-" : "+"}
-                    ₺{Math.abs(tx.amount).toLocaleString("tr-TR")}
+                  <span className={`font-medium ${tx.amount < 0 ? "text-red-500" : "text-green-600"}`}>
+                    {tx.amount < 0 ? "-" : "+"}{tx.currency} {Math.abs(tx.amount).toLocaleString()}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">
-              {t("card.noRecentTransactions")}
-            </p>
+            <p className="text-muted-foreground text-sm">{t("card.noRecentTransactions")}</p>
           )}
         </CardContent>
       </Card>
     </motion.div>
   );
 }
+
+
+export default CardDetailsPage;

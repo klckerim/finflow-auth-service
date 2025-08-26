@@ -22,6 +22,7 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public string? PasswordResetToken { get; set; }
+
     public DateTime? PasswordResetTokenExpiry { get; set; }
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
@@ -30,4 +31,12 @@ public class User
 
     [Timestamp]
     public byte[]? RowVersion { get; set; }
+
+    public string? StripeCustomerId { get; set; }
+
+    public Guid? DefaultPaymentMethodId { get; set; }
+
+    public PaymentMethod? DefaultPaymentMethod { get; set; }
+    
+    public ICollection<PaymentMethod> PaymentMethods { get; set; } = new List<PaymentMethod>();
 }

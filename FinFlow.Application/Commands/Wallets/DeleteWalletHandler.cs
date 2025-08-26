@@ -1,10 +1,10 @@
 using MediatR;
 
-public class DeleteWalletCommandHandler : IRequestHandler<DeleteWalletCommand, bool>
+public class DeleteWalletHandler : IRequestHandler<DeleteWalletCommand, bool>
 {
     private readonly IWalletRepository _walletRepository;
 
-    public DeleteWalletCommandHandler(IWalletRepository walletRepository)
+    public DeleteWalletHandler(IWalletRepository walletRepository)
     {
         _walletRepository = walletRepository;
     }

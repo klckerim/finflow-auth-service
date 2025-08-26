@@ -105,7 +105,7 @@ const AddWalletPage = () => {
 
           <CardFooter className="flex justify-between gap-2">
             <Button variant="outline" onClick={() => router.back()} className="w-1/2">
-              {t("common.cancel")}
+              {t("dashboard.cancel")}
             </Button>
             <Button
               onClick={handleSubmit}

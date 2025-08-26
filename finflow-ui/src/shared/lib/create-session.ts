@@ -22,3 +22,19 @@ export async function CreatePaymentSession(walletId: string, amount: number = 20
     return res.json();
 }
 
+export async function startCardSetup(userId: string) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/create-setup-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }) //customerEmail optional
+    });
+
+    const { sessionId } = await res.json();
+
+    const stripe = await stripePromise;
+    stripe?.redirectToCheckout({ sessionId });
+
+    if (!res.ok) throw new Error("No Payment Setup Session Information");
+    return res.json();
+}
+

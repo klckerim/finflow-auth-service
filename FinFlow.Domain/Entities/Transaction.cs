@@ -9,11 +9,15 @@ public class Transaction
 
     public Wallet? Wallet { get; set; }
 
+    public Guid? PaymentMethodId { get; set; }
+
+    public PaymentMethod? PaymentMethod { get; set; }
+
     public decimal Amount { get; set; }
 
     public TransactionType Type { get; set; }
 
     public string? Description { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;  
 }

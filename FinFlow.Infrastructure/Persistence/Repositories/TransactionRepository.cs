@@ -51,4 +51,15 @@ public class TransactionRepository : ITransactionRepository
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<List<Transaction>> GetTransactionsByCardIdAsync(Guid cardId, int limit = 20, CancellationToken cancellationToken = default)
+    {
+        var context = _contextFactory.CreateDbContext();
+
+        return await context.Transactions
+            .Where(t => t.PaymentMethodId == cardId)
+            .OrderByDescending(t => t.CreatedAt)
+            .Take(limit)
+            .ToListAsync();
+    }
 }

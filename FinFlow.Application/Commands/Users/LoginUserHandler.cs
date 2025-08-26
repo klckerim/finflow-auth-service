@@ -8,13 +8,13 @@ using FinFlow.Application.Interfaces;
 
 namespace FinFlow.Application.Auth.Handlers;
 
-public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginResponseDto>
+public class LoginUserHandler : IRequestHandler<LoginUserCommand, LoginResponseDto>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly ITokenService _tokenService;
 
-    public LoginUserCommandHandler(
+    public LoginUserHandler(
         IUserRepository userRepository,
         IPasswordHasher<User> passwordHasher,
         ITokenService tokenService)

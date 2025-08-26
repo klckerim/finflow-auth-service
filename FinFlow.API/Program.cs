@@ -37,9 +37,10 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 
 // MediatR
-builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
+builder.Services.AddMediatR(typeof(RegisterUserHandler).Assembly);
 
 //AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);

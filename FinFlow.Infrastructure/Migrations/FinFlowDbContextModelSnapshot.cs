@@ -22,6 +22,61 @@ namespace FinFlow.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("FinFlow.Domain.Entities.PaymentMethod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("CardHolderName")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("ExpMonth")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ExpYear")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ExternalReference")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Last4")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.Property<string>("StripePaymentMethodId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PaymentMethods");
+                });
+
             modelBuilder.Entity("FinFlow.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -67,6 +122,9 @@ namespace FinFlow.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<Guid?>("PaymentMethodId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
@@ -74,6 +132,8 @@ namespace FinFlow.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("WalletId");
 
@@ -88,6 +148,9 @@ namespace FinFlow.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DefaultPaymentMethodId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -119,12 +182,17 @@ namespace FinFlow.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("text");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DefaultPaymentMethodId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -194,6 +262,17 @@ namespace FinFlow.Infrastructure.Migrations
                     b.ToTable("ResetPasswordTokens");
                 });
 
+            modelBuilder.Entity("FinFlow.Domain.Entities.PaymentMethod", b =>
+                {
+                    b.HasOne("FinFlow.Domain.Entities.User", "User")
+                        .WithMany("PaymentMethods")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FinFlow.Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("FinFlow.Domain.Entities.User", "User")
@@ -207,13 +286,30 @@ namespace FinFlow.Infrastructure.Migrations
 
             modelBuilder.Entity("FinFlow.Domain.Entities.Transaction", b =>
                 {
+                    b.HasOne("FinFlow.Domain.Entities.PaymentMethod", "PaymentMethod")
+                        .WithMany()
+                        .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("FinFlow.Domain.Entities.Wallet", "Wallet")
                         .WithMany("Transactions")
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("PaymentMethod");
+
                     b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("FinFlow.Domain.Entities.User", b =>
+                {
+                    b.HasOne("FinFlow.Domain.Entities.PaymentMethod", "DefaultPaymentMethod")
+                        .WithMany()
+                        .HasForeignKey("DefaultPaymentMethodId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("DefaultPaymentMethod");
                 });
 
             modelBuilder.Entity("FinFlow.Domain.Entities.Wallet", b =>
@@ -240,6 +336,8 @@ namespace FinFlow.Infrastructure.Migrations
 
             modelBuilder.Entity("FinFlow.Domain.Entities.User", b =>
                 {
+                    b.Navigation("PaymentMethods");
+
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("Wallets");

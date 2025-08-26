@@ -1,11 +1,11 @@
 using FinFlow.Domain.Entities;
 using MediatR;
 
-public class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, Guid>
+public class CreateWalletHandler : IRequestHandler<CreateWalletCommand, Guid>
 {
     private readonly IWalletRepository _walletRepository;
 
-    public CreateWalletCommandHandler(IWalletRepository walletRepository)
+    public CreateWalletHandler(IWalletRepository walletRepository)
     {
         _walletRepository = walletRepository;
     }
