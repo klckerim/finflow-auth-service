@@ -5,7 +5,8 @@ import {
   CreditCard,
   History,
   Wallet,
-  Menu
+  Menu,
+  ReceiptText
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -21,6 +22,7 @@ const mainMenu = [
   { key: "nav.wallets", href: "/dashboard/wallets", icon: Wallet },
   { key: "nav.cards", href: "/dashboard/cards", icon: CreditCard },
   { key: "nav.transactions", href: "/dashboard/transactions", icon: History },
+  { key: "nav.bills", href: "/dashboard/pay-bill", icon: ReceiptText }
 ];
 
 export default function Sidebar() {

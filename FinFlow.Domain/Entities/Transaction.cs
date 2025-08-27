@@ -5,7 +5,7 @@ public class Transaction
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid WalletId { get; set; }
+    public Guid? WalletId { get; set; }
 
     public Wallet? Wallet { get; set; }
 
@@ -19,5 +19,5 @@ public class Transaction
 
     public string? Description { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;  
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

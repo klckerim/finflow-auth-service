@@ -271,7 +271,8 @@
     "wallets": "Cüzdanlar",
     "transactions": "İşlemler",
     "profile": "Profil",
-    "cards": "Kartlar"
+    "cards": "Kartlar",
+    "bills": "Ödemeler"
   },
   "greeting": {
     "morning": "Günaydın 🌞",
@@ -317,5 +318,6 @@
   "Withdraw": "Para Çekme",
   "Payment": "Ödeme",
   "TransferOut": "Para Transferi (Gönderim)",
-  "TransferIn": "Para Transferi (Alım)"
+  "TransferIn": "Para Transferi (Alım)",
+  "BillPayment": "Fatura Ödeme"
 }

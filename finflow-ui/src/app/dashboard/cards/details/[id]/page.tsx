@@ -20,6 +20,7 @@ import { getCardById, getTransactionsByCardId } from "@/shared/lib/api";
 import { Card as CardType } from "@/shared/types/card";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { toast } from "sonner";
+import { formatDate } from "@/shared/lib/utils";
 
 
 const CardDetailsPage = () => {
@@ -155,23 +156,54 @@ const CardDetailsPage = () => {
         <CardHeader>
           <CardTitle className="text-lg">{t("card.recentTransactions")}</CardTitle>
         </CardHeader>
-        <CardContent>
-          {lastTransactions?.length > 0 ? (
-            <div className="space-y-3">
-              {lastTransactions.map((tx: any) => (
-                <div key={tx.id} className="flex justify-between items-center border-b border-muted pb-2 last:border-0 last:pb-0">
-                  <div>
-                    <p className="font-medium">{tx.title}</p>
-                    <p className="text-xs text-muted-foreground">{tx.date}</p>
-                  </div>
-                  <span className={`font-medium ${tx.amount < 0 ? "text-red-500" : "text-green-600"}`}>
-                    {tx.amount < 0 ? "-" : "+"}{tx.currency} {Math.abs(tx.amount).toLocaleString()}
-                  </span>
-                </div>
-              ))}
+    
+        <CardContent className="p-4 sm:p-6 pt-0">
+          {lastTransactions.length === 0 ? (
+            <div className="flex items-center justify-center py-4 text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground">
+              {t("common.str_NoTransaction")}
             </div>
           ) : (
-            <p className="text-muted-foreground text-sm">{t("card.noRecentTransactions")}</p>
+            <>
+              <div className="hidden md:block overflow-x-auto w-full rounded-lg border shadow-sm dark:border-border">
+                <table className="w-full text-sm text-foreground dark:text-foreground">
+                  <thead className="bg-gray-50 dark:bg-zinc-700">
+                    <tr>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.description")}</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.type")}</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.date")}</th>
+                      <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t("common.amount")}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-zinc-700">
+                    {lastTransactions.map((tx, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
+                        <td className="px-3 py-2 truncate max-w-[200px]">{tx.description}</td>
+                        <td className="px-3 py-2">{t(tx.type)}</td>
+                        <td className="px-3 py-2 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
+                        <td className="px-3 py-2 font-medium text-right whitespace-nowrap">
+                          {tx.amount} {card?.currency || "USD"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="md:hidden space-y-2">
+                {lastTransactions.map((tx, idx) => (
+                  <div key={idx} className="p-3 rounded-lg border shadow-sm bg-white dark:bg-zinc-800 dark:border-border">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs font-medium bg-gray-100 dark:bg-zinc-700 px-2 py-1 rounded-md">{t(tx.type)}</span>
+                      <span className="text-xs font-semibold">
+                        {tx.amount} {card?.currency || "USD"}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">{tx.description}</div>
+                    <div className="text-[11px] text-gray-400 dark:text-gray-400">{formatDate(tx.createdAt)}</div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

@@ -4,6 +4,7 @@ public enum TransactionType
     Deposit,
     Withdraw,
     Payment,
+    BillPayment,
     TransferOut,
     TransferIn
 }

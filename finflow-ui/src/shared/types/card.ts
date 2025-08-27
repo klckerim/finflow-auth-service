@@ -8,5 +8,6 @@ export interface Card {
     isActive: boolean,
     isDefault: boolean,
     createdAt: Date,
-    stripePaymentMethodId: string;
+    stripePaymentMethodId: string,
+    currency: string
 }

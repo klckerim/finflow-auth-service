@@ -25,11 +25,12 @@ public class GetTransactionsByUserIdQueryHandler : IRequestHandler<GetTransactio
         return transactions.Select(t => new TransactionDto
         {
             WalletId = t.WalletId,
+            PaymentMethodId = t.PaymentMethodId,
             Id = t.Id,
             Amount = t.Amount,
             Type = t.Type.ToString(),
             CreatedAt = t.CreatedAt,
-            Currency = t.Wallet!.Currency,
+            Currency = t.Wallet?.Currency ?? "USD",
             Description = t.Description
         }).ToList();
     }

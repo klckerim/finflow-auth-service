@@ -18,6 +18,23 @@ public class PaymentsController : ControllerBase
         _mediator = mediator;
     }
 
+
+    [HttpPost("bill")]
+    public async Task<IActionResult> PayBill([FromBody] PayBillRequest request)
+    {
+        var paymentId = await _mediator.Send(new PayBillCommand(
+            request.Email,
+            request.Amount,
+            request.WalletId,
+            request.CardId,
+            request.Currency,
+            $"Bill {request.BillId}",
+            request.PaymentType
+        ));
+
+        return Ok(new { PaymentId = paymentId });
+    }
+
     [HttpPost("create-setup-session")]
     public IActionResult CreateSetupSession([FromBody] CreateSetupRequest request)
     {

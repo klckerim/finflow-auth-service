@@ -30,16 +30,16 @@ const isIncomingTransaction = (transaction: Transaction, type: string): boolean 
 
 const isOutgoingTransaction = (transaction: Transaction, type: string): boolean => {
   if (type === "User") {
-    return transaction.type === "Withdraw" || transaction.type === "Payment";
+    return transaction.type === "Withdraw" || transaction.type === "Payment" || transaction.type === "BillPayment";
   }
-  return transaction.type === "Withdraw" || transaction.type === "Payment" || transaction.type === "TransferOut";
+  return transaction.type === "Withdraw" || transaction.type === "Payment" || transaction.type === "TransferOut" || transaction.type === "BillPayment";
 };
 
 const isRelevantTransaction = (transaction: Transaction, statisticType: string): boolean => {
   if (statisticType === "User") {
-    return ["Withdraw", "Payment", "Deposit"].includes(transaction.type);
+    return ["Withdraw", "Payment", "Deposit", "BillPayment"].includes(transaction.type);
   }
-  return ["Withdraw", "Payment", "Deposit", "TransferOut", "TransferIn"].includes(transaction.type);
+  return ["Withdraw", "Payment", "Deposit", "TransferOut", "TransferIn", "BillPayment"].includes(transaction.type);
 };
 
 const Statistics = ({ transactions = [], currency = "EUR", statisticType = "" }: StatisticsProps) => {

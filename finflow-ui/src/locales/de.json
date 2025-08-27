@@ -271,7 +271,8 @@
     "wallets": "Brieftaschen",
     "transactions": "Transaktionen",
     "profile": "Profil",
-    "cards": "Karten"
+    "cards": "Karten",
+    "bills": "Rechnungen"
   },
   "greeting": {
     "morning": "Guten Morgen 🌞",
@@ -317,5 +318,6 @@
   "Withdraw": "Abhebung",
   "Payment": "Zahlung",
   "TransferOut": "Überweisung (Ausgehend)",
-  "TransferIn": "Überweisung (Eingehend)"
+  "TransferIn": "Überweisung (Eingehend)",
+  "BillPayment": "Rechnungszahlung"
 }

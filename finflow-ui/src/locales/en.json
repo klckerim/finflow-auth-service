@@ -271,7 +271,8 @@
     "wallets": "Wallets",
     "transactions": "Transactions",
     "profile": "Profile",
-    "cards": "Cards"
+    "cards": "Cards",
+    "bills": "Bills"
   },
   "greeting": {
     "morning": "Good morning 🌞",
@@ -317,5 +318,6 @@
   "Withdraw": "Withdraw",
   "Payment": "Payment",
   "TransferOut": "Transfer Out",
-  "TransferIn": "Transfer In"
+  "TransferIn": "Transfer In",
+  "BillPayment": "Bill Payment"
 }

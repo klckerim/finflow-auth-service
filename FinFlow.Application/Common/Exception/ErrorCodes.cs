@@ -14,5 +14,7 @@ public static class ErrorCodes
     public const string WalletsNotMatch = "wallets_not_match";
     public const string InvalidRefreshToken = "invalid_refresh_token";
     public const string PaymentMethodExists = "payment_method_exists";
+    public const string CardPaymentFailed = "card_payment_failed";
+    public const string NoPaymentMethodProvided = "no_payment_method_provided";
 }
 

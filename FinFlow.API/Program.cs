@@ -38,6 +38,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 
 // MediatR
 builder.Services.AddMediatR(typeof(RegisterUserHandler).Assembly);
