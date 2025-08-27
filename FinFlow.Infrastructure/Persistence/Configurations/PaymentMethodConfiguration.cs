@@ -21,12 +21,12 @@ namespace FinFlow.Infrastructure.Persistence.Configurations
 
             // Relationships
             builder.HasOne(x => x.User)
-                   .WithMany(u => u.PaymentMethods)
-                   .HasForeignKey(x => x.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
+               .WithMany(u => u.PaymentMethods)
+               .HasForeignKey(x => x.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<Transaction>()
-                   .WithOne(t => t.PaymentMethod!)
+            builder.HasMany(x => x.Transactions)
+                   .WithOne(t => t.PaymentMethod)
                    .HasForeignKey(t => t.PaymentMethodId)
                    .OnDelete(DeleteBehavior.SetNull);
         }

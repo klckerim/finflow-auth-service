@@ -18,7 +18,13 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.HasOne(x => x.Wallet)
                .WithMany(x => x.Transactions)
                .HasForeignKey(x => x.WalletId)
-               .OnDelete(DeleteBehavior.Cascade);
+               .IsRequired(false)
+               .OnDelete(DeleteBehavior.SetNull);
 
+        builder.HasOne(x => x.PaymentMethod)
+               .WithMany(x => x.Transactions)
+               .HasForeignKey(x => x.PaymentMethodId)
+               .IsRequired(false)
+               .OnDelete(DeleteBehavior.SetNull);
     }
 }

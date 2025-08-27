@@ -25,7 +25,9 @@ public class TransactionRepository : ITransactionRepository
 
         return await context.Transactions
             .Include(t => t.Wallet)
-            .Where(t => t.Wallet != null && t.Wallet.UserId == userId)
+            .Include(t => t.PaymentMethod)
+            .Where(t => (t.Wallet != null && t.Wallet.UserId == userId) ||
+                        (t.PaymentMethod != null && t.PaymentMethod.UserId == userId))
             .OrderByDescending(t => t.CreatedAt)
             .Take(limit)
             .ToListAsync();
@@ -52,12 +54,12 @@ public class TransactionRepository : ITransactionRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Transaction>> GetTransactionsByCardIdAsync(Guid cardId, int limit = 20, CancellationToken cancellationToken = default)
+    public async Task<List<Transaction>> GetTransactionsByCardIdAsync(Guid paymentMethodId, int limit = 20, CancellationToken cancellationToken = default)
     {
         var context = _contextFactory.CreateDbContext();
 
         return await context.Transactions
-            .Where(t => t.PaymentMethodId == cardId)
+            .Where(t => t.PaymentMethodId == paymentMethodId)
             .OrderByDescending(t => t.CreatedAt)
             .Take(limit)
             .ToListAsync();
