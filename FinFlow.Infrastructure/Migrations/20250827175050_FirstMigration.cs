@@ -133,7 +133,7 @@ namespace FinFlow.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    WalletId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WalletId = table.Column<Guid>(type: "uuid", nullable: true),
                     PaymentMethodId = table.Column<Guid>(type: "uuid", nullable: true),
                     Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),

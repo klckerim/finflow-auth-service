@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinFlow.Infrastructure.Migrations
 {
     [DbContext(typeof(FinFlowDbContext))]
-    [Migration("20250826191652_FirstMigration")]
+    [Migration("20250827175050_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -131,7 +131,7 @@ namespace FinFlow.Infrastructure.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("WalletId")
+                    b.Property<Guid?>("WalletId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -290,15 +290,14 @@ namespace FinFlow.Infrastructure.Migrations
             modelBuilder.Entity("FinFlow.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("FinFlow.Domain.Entities.PaymentMethod", "PaymentMethod")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("FinFlow.Domain.Entities.Wallet", "Wallet")
                         .WithMany("Transactions")
                         .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("PaymentMethod");
 
@@ -335,6 +334,11 @@ namespace FinFlow.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FinFlow.Domain.Entities.PaymentMethod", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("FinFlow.Domain.Entities.User", b =>
