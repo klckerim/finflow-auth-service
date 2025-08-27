@@ -30,13 +30,17 @@ public class PaymentMethodRepository : IPaymentMethodRepository
     public async Task<List<PaymentMethod>> GetByUserIdAsync(Guid userId, CancellationToken ct = default)
     {
         await using var db = await _contextFactory.CreateDbContextAsync(ct);
-        return await db.PaymentMethods.Where(p => p.UserId == userId).ToListAsync(ct);
+        return await db.PaymentMethods
+        .Include(p => p.Transactions)
+        .Where(p => p.UserId == userId).ToListAsync(ct);
     }
 
     public async Task<PaymentMethod?> GetByIdAsync(Guid cardId, CancellationToken ct)
     {
         await using var db = await _contextFactory.CreateDbContextAsync(ct);
-        return await db.PaymentMethods.FirstOrDefaultAsync(w => w.Id == cardId, ct);
+        return await db.PaymentMethods
+        .Include(p => p.Transactions)
+        .FirstOrDefaultAsync(p => p.Id == cardId, ct);
     }
 
     public async Task SetDefaultAsync(Guid userId, Guid paymentMethodId, CancellationToken ct = default)
