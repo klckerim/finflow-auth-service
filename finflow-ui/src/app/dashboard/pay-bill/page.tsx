@@ -28,14 +28,33 @@ export default function PayBillPage() {
     const [cards, setCards] = useState<{ id: string; brand: string; last4: string }[]>([]);
     const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
     const [selectedCard, setSelectedCard] = useState<string | null>(null);
+    const [isPaymentMethodSelected, setIsPaymentMethodSelected] = useState(false);
+
+    const handleSetPaymentMethod = (method: "wallet" | "card" | null) => {
+        setPaymentMethod(method);
+        setSelectedWallet(null);
+        setSelectedCard(null);
+        setIsPaymentMethodSelected(false);
+    };
+
+    useEffect(() => {
+        if (paymentMethod === "wallet" && selectedWallet) {
+            setIsPaymentMethodSelected(true);
+        } else if (paymentMethod === "card" && selectedCard) {
+            setIsPaymentMethodSelected(true);
+        } else {
+            setIsPaymentMethodSelected(false);
+        }
+    }, [selectedWallet, selectedCard, paymentMethod]);
 
     useEffect(() => {
         const userId = user?.userId;
+        if (!userId) return;
 
         if (paymentMethod === "wallet") {
             (async () => {
                 try {
-                    const wallets = await getWalletsByUser(userId as string);
+                    const wallets = await getWalletsByUser(userId);
                     setWallets(wallets);
                 } catch (err) {
                     parseUnknownError(err);
@@ -46,17 +65,20 @@ export default function PayBillPage() {
         if (paymentMethod === "card") {
             (async () => {
                 try {
-                    const data = await getCardsByUserId(userId as string);
+                    const data = await getCardsByUserId(userId);
                     setCards(data);
                 } catch (err) {
                     parseUnknownError(err);
                 }
             })();
         }
-    }, [paymentMethod]);
+    }, [paymentMethod, user?.userId]);
 
     const handlePay = async () => {
         if (!billAmount || !billReference || !paymentMethod) return;
+        if (paymentMethod === "wallet" && !selectedWallet) return;
+        if (paymentMethod === "card" && !selectedCard) return;
+
         setIsProcessing(true);
 
         try {
@@ -68,8 +90,8 @@ export default function PayBillPage() {
                 Currency: "USD"
             };
 
-            if (paymentMethod === "wallet" && selectedWallet) payload.WalletId = selectedWallet;
-            if (paymentMethod === "card" && selectedCard) payload.CardId = selectedCard;
+            if (paymentMethod === "wallet") payload.WalletId = selectedWallet;
+            if (paymentMethod === "card") payload.CardId = selectedCard;
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/bill`, {
                 method: "POST",
@@ -77,7 +99,7 @@ export default function PayBillPage() {
                 body: JSON.stringify(payload),
             });
 
-            if (!response.ok) throw new Error("common.str_PaymentFailed");
+            if (!response.ok) throw new Error(t("common.str_PaymentFailed"));
 
             const data = await response.json();
             setTransactionId(data.paymentId);
@@ -94,8 +116,11 @@ export default function PayBillPage() {
         setBillAmount(null);
         setBillReference("");
         setPaymentMethod(null);
+        setSelectedWallet(null);
+        setSelectedCard(null);
         setIsSuccess(false);
         setTransactionId(null);
+        setIsPaymentMethodSelected(false);
     };
 
     return (
@@ -215,7 +240,7 @@ export default function PayBillPage() {
                                                     ? "border-primary bg-primary/5"
                                                     : "border-muted hover:border-primary/50"
                                                     }`}
-                                                onClick={() => setPaymentMethod("wallet")}
+                                                onClick={() => handleSetPaymentMethod("wallet")}
                                             >
                                                 <Wallet className="w-8 h-8 mb-2 text-primary" />
                                                 <p className="font-medium">{t("common.str_Wallet")}</p>
@@ -229,7 +254,7 @@ export default function PayBillPage() {
                                                     ? "border-primary bg-primary/5"
                                                     : "border-muted hover:border-primary/50"
                                                     }`}
-                                                onClick={() => setPaymentMethod("card")}
+                                                onClick={() => handleSetPaymentMethod("card")}
                                             >
                                                 <CreditCard className="w-8 h-8 mb-2 text-primary" />
                                                 <p className="font-medium">{t("common.str_Card")}</p>
@@ -242,7 +267,11 @@ export default function PayBillPage() {
                                         <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>
                                             <ArrowLeft className="w-4 h-4 mr-2" /> {t("common.str_Back")}
                                         </Button>
-                                        <Button className="flex-1" onClick={() => setStep(3)} disabled={!paymentMethod}>
+                                        <Button
+                                            className="flex-1"
+                                            onClick={() => setStep(3)}
+                                            disabled={!paymentMethod}
+                                        >
                                             {t("common.str_Continue")}
                                         </Button>
                                     </div>
@@ -276,20 +305,26 @@ export default function PayBillPage() {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-muted-foreground">{t("common.str_PaymentMethod")}</span>
+                                            <span className="font-medium">
+                                                {paymentMethod === "wallet" ? t("common.str_Wallet") : t("common.str_Card")}
+                                            </span>
                                         </div>
 
                                         {paymentMethod === "wallet" && (
                                             <select
                                                 className="w-full border rounded-md p-2 mt-2"
                                                 value={selectedWallet ?? ""}
-                                                onChange={(e) => setSelectedWallet(e.target.value)}
+                                                onChange={(e) => {
+                                                    setSelectedWallet(e.target.value);
+                                                    setIsPaymentMethodSelected(!!e.target.value);
+                                                }}
                                             >
                                                 <option value="" disabled>
                                                     {t("common.str_SelectWallet")}
                                                 </option>
                                                 {wallets.map((w) => (
                                                     <option key={w.id} value={w.id}>
-                                                        {w.currency} Wallet – {t("common.str_Balance")}: {w.balance}
+                                                        {w.currency} {t("common.str_Wallet")} – {t("common.str_Balance")}: {w.balance}
                                                     </option>
                                                 ))}
                                             </select>
@@ -299,7 +334,10 @@ export default function PayBillPage() {
                                             <select
                                                 className="w-full border rounded-md p-2 mt-2"
                                                 value={selectedCard ?? ""}
-                                                onChange={(e) => setSelectedCard(e.target.value)}
+                                                onChange={(e) => {
+                                                    setSelectedCard(e.target.value);
+                                                    setIsPaymentMethodSelected(!!e.target.value);
+                                                }}
                                             >
                                                 <option value="" disabled>
                                                     {t("common.str_SelectCard")}
@@ -317,7 +355,11 @@ export default function PayBillPage() {
                                         <Button variant="outline" className="flex-1" onClick={() => setStep(2)}>
                                             <ArrowLeft className="w-4 h-4 mr-2" /> {t("common.str_Back")}
                                         </Button>
-                                        <Button className="flex-1" onClick={handlePay} disabled={isProcessing}>
+                                        <Button
+                                            className="flex-1"
+                                            onClick={handlePay}
+                                            disabled={isProcessing || !isPaymentMethodSelected}
+                                        >
                                             {isProcessing ? t("common.str_Processing") : t("common.str_PayNow")}
                                         </Button>
                                     </div>
