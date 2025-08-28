@@ -53,3 +53,15 @@ export function formatTime(date: Date | string): string {
   });
 }
 
+export function formatAmount(
+  amount: string | number | null | undefined,
+  fractionDigits: number = 2
+): string {
+  if (amount === undefined || amount === null) return "0.00";
+
+  const num = typeof amount === "string" ? parseFloat(amount) : amount;
+
+  if (isNaN(num)) return "0.00";
+
+  return num.toFixed(fractionDigits);
+}
