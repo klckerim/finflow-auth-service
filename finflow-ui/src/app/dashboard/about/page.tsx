@@ -7,10 +7,7 @@ import {
   Rocket,
   Server,
   Layers,
-  Terminal,
-  GitFork,
-  Mail,
-  Calendar
+  Terminal
 } from "lucide-react";
 import { Card, CardContent } from "@/features/cards/card";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";

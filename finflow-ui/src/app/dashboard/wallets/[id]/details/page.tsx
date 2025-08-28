@@ -30,16 +30,24 @@ import { CreatePaymentSession } from "@/shared/lib/create-session";
 import AddMoneyModal from "@/features/payments/topupmodal";
 import Statistics from "@/components/ui/statistic";
 import { useLocale } from "@/context/locale-context";
+import { useAuth } from "@/context/auth-context";
 
 const WalletDetailPage = () => {
-  const { id } = useParams();
   const router = useRouter();
+  const { user, isLoading } = useAuth();
+  const { id } = useParams();
+  const { t } = useLocale();
+
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [lastTransfers, setLastTransfers] = useState<any[]>([]);
-  const { t } = useLocale();
+
+  // Auth kontrolü
+  useEffect(() => {
+    if (!isLoading && !user) router.push("/login");
+  }, [isLoading, user, router]);
 
   useEffect(() => {
     if (!id) return;
@@ -209,7 +217,7 @@ const WalletDetailPage = () => {
             <div className="sm:col-span-2">
               {t("common.str_State")}:{" "}
               <Badge variant={wallet.isActive ? "default" : "destructive"} className="text-xs">
-                {wallet.isActive ? t("common.active") : t("common.inactive") }
+                {wallet.isActive ? t("common.active") : t("common.inactive")}
               </Badge>
             </div>
           </div>

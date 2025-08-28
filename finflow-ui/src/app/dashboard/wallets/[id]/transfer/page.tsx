@@ -15,10 +15,12 @@ import { useWalletStore } from "@/app/store/walletStore";
 import { getTransactionsByWalletId, transferAmount } from "@/shared/lib/api";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { useLocale } from "@/context/locale-context";
+import { useAuth } from "@/context/auth-context";
 
 export default function TransferPage() {
-  const { id: walletId } = useParams();
   const router = useRouter();
+  const { user, isLoading } = useAuth();
+  const { id: walletId } = useParams();
   const { t } = useLocale();
 
   const [toWalletId, setToWalletId] = useState("");
@@ -30,6 +32,11 @@ export default function TransferPage() {
 
   const wallets = useWalletStore((state) => state.wallets);
   const currentWallet = wallets.find((w) => w.id === walletId);
+
+  // Auth kontrolü
+  useEffect(() => {
+    if (!isLoading && !user) router.push("/login");
+  }, [isLoading, user, router]);
 
   useEffect(() => {
     (async () => {

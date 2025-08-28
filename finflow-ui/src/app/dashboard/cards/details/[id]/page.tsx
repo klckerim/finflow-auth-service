@@ -21,6 +21,7 @@ import { Card as CardType } from "@/shared/types/card";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { toast } from "sonner";
 import { formatDate } from "@/shared/lib/utils";
+import { useAuth } from "@/context/auth-context";
 
 
 const CardDetailsPage = () => {
@@ -30,6 +31,13 @@ const CardDetailsPage = () => {
   const [card, setCard] = useState<CardType | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastTransactions, setLastTransactions] = useState<any[]>([]);
+  const { user, isLoading } = useAuth();
+
+  // Auth kontrolü
+  useEffect(() => {
+    if (!isLoading && !user) router.push("/login");
+  }, [isLoading, user, router]);
+
 
   useEffect(() => {
     if (!id) return;
@@ -156,7 +164,7 @@ const CardDetailsPage = () => {
         <CardHeader>
           <CardTitle className="text-lg">{t("card.recentTransactions")}</CardTitle>
         </CardHeader>
-    
+
         <CardContent className="p-4 sm:p-6 pt-0">
           {lastTransactions.length === 0 ? (
             <div className="flex items-center justify-center py-4 text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground">

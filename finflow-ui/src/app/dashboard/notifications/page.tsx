@@ -2,16 +2,26 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardContent } from "@/features/cards/card";
+import { Card, CardTitle, CardContent } from "@/features/cards/card";
 import { Button } from "@/components/ui/button";
 import { Bell, Check } from "lucide-react";
 import { getNotificationsByUser, markNotificationAsRead, Notification } from "./lib/mockApi";
 import { useLocale } from "@/context/locale-context";
+import { useAuth } from "@/context/auth-context";
+import router from "next/router";
 
 const NotificationsPage = () => {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
     const { t } = useLocale();
+
+    const { user, isLoading } = useAuth();
+
+    // Auth kontrolü
+    useEffect(() => {
+        if (!isLoading && !user) router.push("/login");
+    }, [isLoading, user, router]);
+
 
     useEffect(() => {
         getNotificationsByUser()

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,12 +16,18 @@ import { useLocale } from "@/context/locale-context";
 
 const AddWalletPage = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const { t } = useLocale();
 
   const [name, setName] = useState("");
   const [currency, setCurrency] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Auth kontrolü
+  useEffect(() => {
+    if (!isLoading && !user) router.push("/login");
+  }, [isLoading, user, router]);
+
 
   const handleSubmit = async () => {
     if (!user) return alert("Please login first!");

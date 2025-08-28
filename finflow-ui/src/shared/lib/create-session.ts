@@ -2,10 +2,10 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
 
 export async function CreatePaymentSession(walletId: string, amount: number = 20, currency: string = "usd") {
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/create-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -23,6 +23,8 @@ export async function CreatePaymentSession(walletId: string, amount: number = 20
 }
 
 export async function startCardSetup(userId: string) {
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/create-setup-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

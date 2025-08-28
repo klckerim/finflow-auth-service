@@ -11,10 +11,12 @@ import { Wallet } from "@/shared/types/wallet";
 import { getWalletById, updateWalletById } from "@/shared/lib/api";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useLocale } from "@/context/locale-context";
+import { useAuth } from "@/context/auth-context";
 
 const EditWalletPage = () => {
-  const { id } = useParams();
   const router = useRouter();
+  const { user, isLoading } = useAuth();
+  const { id } = useParams();
   const { t } = useLocale();
 
   const [wallet, setWallet] = useState<Wallet | null>(null);
@@ -25,6 +27,11 @@ const EditWalletPage = () => {
     name: "",
     isActive: true
   });
+
+  // Auth kontrolü
+  useEffect(() => {
+    if (!isLoading && !user) router.push("/login");
+  }, [isLoading, user, router]);
 
   useEffect(() => {
     if (!id) return;

@@ -26,11 +26,17 @@ import { useLocale } from "@/context/locale-context";
 
 const WalletsPage = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const [wallets, setWallets] = useState<WalletType[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useLocale();
-  
+
+
+  // Auth kontrolü
+  useEffect(() => {
+    if (!isLoading && !user) router.push("/login");
+  }, [isLoading, user, router]);
+
   useEffect(() => {
     if (!user) return;
 
@@ -40,7 +46,7 @@ const WalletsPage = () => {
         useWalletStore.getState().setWallets(wallets);
         setWallets(wallets);
       } catch (error) {
-        console.error( t("warningsMessages.walletsFetchFailed"), error);
+        console.error(t("warningsMessages.walletsFetchFailed"), error);
       } finally {
         setLoading(false);
       }

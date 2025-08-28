@@ -12,7 +12,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const { user, isLoading } = useAuth();
   const [transactionsLoading, setTransactionsLoading] = useState(true);
-  const { t : tr } = useLocale();
+  const { t: tr } = useLocale();
 
   // Auth kontrolü
   useEffect(() => {
