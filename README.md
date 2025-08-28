@@ -18,7 +18,7 @@
 ## 🌐 Live Demo
 Try the project live here: [FinFlow Live](https://finflow-swart.vercel.app)
 
-Reach test data here: [Stripe Testing](https://docs.stripe.com/testing)
+Reach test data here: [Stripe Testing Guide](https://docs.stripe.com/testing)
 
 ⚠️ Use mock data only. Do not use real payment information.
 
@@ -51,11 +51,13 @@ Reach test data here: [Stripe Testing](https://docs.stripe.com/testing)
 ---
 
 ## 📂 Project Structure
-- `FinFlow.API` – Backend API controllers and models  
-- `FinFlow.Application` – CQRS commands, queries, handlers, services  
-- `FinFlow.Domain` – Entities & domain logic  
-- `FinFlow.Infrastructure` – EF Core DbContext, Repositories, Stripe integration  
-- `FinFlow.Web` – Optional Next.js frontend dashboard  
+- `FinFlow.API` → ASP.NET Core Web API (controllers, endpoints) 
+- `FinFlow.Application` → Business logic (CQRS, services, handlers)  
+- `FinFlow.Domain` → Core domain entities & rules  
+- `FinFlow.Infrastructure` → EF Core, DbContext, Stripe integration 
+- `FinFlow.Web` → Next.js 14 frontend dashboard 
+
+
 
 ---
 
