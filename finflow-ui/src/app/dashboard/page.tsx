@@ -51,7 +51,7 @@ export default function DashboardPage() {
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
   const [ratesLoading, setRatesLoading] = useState(true);
 
-  const [baseCurrency, setBaseCurrency] = useState("USD");
+  const [baseCurrency, setBaseCurrency] = useState("EUR");
 
   const greeting = getGreeting();
 
