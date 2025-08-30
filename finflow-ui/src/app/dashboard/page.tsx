@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
-import { Card, CardHeader, CardTitle, CardContent } from "@/features/cards/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/features/cards/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/layout/skeleton";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 import QuickActions from "@/features/dashboard/quickactions";
 import AnalyticsWidget from "@/features/dashboard/AnalyticsWidget";
@@ -20,6 +21,16 @@ import { Wallet } from "@/shared/types/wallet";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import Statistics from "@/components/ui/statistic";
 import { useLocale } from "@/context/locale-context";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  TrendingUp,
+  Wallet as WalletIcon,
+  Target,
+  PieChart,
+  Plus,
+  LogOut,
+  ArrowRight
+} from "lucide-react";
 
 export default function DashboardPage() {
   const { user, isLoading, logout } = useAuth();
@@ -35,20 +46,15 @@ export default function DashboardPage() {
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
   const [ratesLoading, setRatesLoading] = useState(true);
 
-  const [baseCurrency, setBaseCurrency] = useState("EUR");
-  const [quote, setQuote] = useState("");
+  const [baseCurrency, setBaseCurrency] = useState("USD");
+  const [activeTab, setActiveTab] = useState("overview");
+
   const greeting = getGreeting();
 
   // Auth kontrolü
   useEffect(() => {
     if (!isLoading && !user) router.push("/login");
   }, [isLoading, user, router]);
-
-  // Rastgele quote
-  useEffect(() => {
-    const quotes = ["quotes.str1", "quotes.str2", "quotes.str3", "quotes.str4"];
-    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
-  }, []);
 
   // Cüzdanları çek
   useEffect(() => {
@@ -112,116 +118,268 @@ export default function DashboardPage() {
   const progressPercent = Math.min((spendingUsed / spendingLimit) * 100, 100);
   const availableCurrencies = Object.keys(exchangeRates).sort();
 
+  // Son işlemler
+  const recentTransactions = transactions.slice(0, 5);
+
   if (isLoading || !user || walletsLoading || ratesLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Skeleton className="h-12 w-1/2" />
+        <div className="text-center space-y-4">
+          <Skeleton className="h-12 w-48 mx-auto" />
+          <Skeleton className="h-6 w-64 mx-auto" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-32 rounded-xl" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <ProtectedRoute>
-      <main className="flex flex-col gap-10 px-4 sm:px-8 md:px-16 py-10 max-w-screen-2xl mx-auto">
-        {/* HEADER */}
-        <header className="space-y-3 text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-            {t("dashboard.welcome", { name: user.fullName })}
-          </h1>
-          <p className="text-lg font-medium text-primary">{greeting}</p>
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
-            <label htmlFor="currency-select" className="text-sm font-medium">
-              {t("common.currency")}:
-            </label>
-            <select
-              id="currency-select"
-              value={baseCurrency}
-              onChange={(e) => setBaseCurrency(e.target.value)}
-              className="border px-3 py-1 rounded-md bg-white dark:bg-zinc-800 dark:text-gray-100 dark:border-gray-700"
-            >
-              {availableCurrencies.map((cur) => (
-                <option key={cur} value={cur}>
-                  {cur}
-                </option>
-              ))}
-            </select>
-          </div>
-        </header>
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+        <main className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+          {/* HEADER */}
+          <motion.header
+            className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="space-y-2">
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                {greeting}, {user.fullName} 👋
+              </h1>
+              <p className="text-muted-foreground">Welcome to your financial dashboard</p>
+            </div>
 
-        {/* METRİKLER */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card><CardHeader><CardTitle>{t("dashboard.numberOfWallets")}</CardTitle></CardHeader>
-            <CardContent><p className="text-3xl font-bold">{wallets.length}</p></CardContent>
-          </Card>
-          <Card><CardHeader><CardTitle>{t("dashboard.totalBalance")} ({baseCurrency})</CardTitle></CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                {totalBalance.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })}
-              </p>
-            </CardContent>
-          </Card>
-          <Card><CardHeader><CardTitle>{t("dashboard.expenseLimit")}</CardTitle></CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-2">
-                {spendingUsed.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })} /{" "}
-                {spendingLimit.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })}
-              </p>
-              <Progress value={progressPercent} />
-            </CardContent>
-          </Card>
-        </section>
+            <div className="flex items-center gap-3">
+              <select
+                value={baseCurrency}
+                onChange={(e) => setBaseCurrency(e.target.value)}
+                className="border border-muted rounded-lg px-3 py-2 bg-background text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+              >
+                {availableCurrencies.map((cur) => (
+                  <option key={cur} value={cur}>
+                    {cur}
+                  </option>
+                ))}
+              </select>
+              <Button variant="outline" size="sm" onClick={logout} className="gap-2">
+                <LogOut className="w-4 h-4" />
+                Logout
+              </Button>
+            </div>
+          </motion.header>
 
-        {/* CÜZDANLAR */}
-        {wallets.length === 0 ? (
-          <div className="text-center p-6 border-2 border-dashed rounded-lg">
-            <h2 className="text-xl font-semibold mb-2">{t("common.str_NoWallets")}</h2>
-            <p className="text-sm text-muted-foreground mb-4">{t("common.str_CreateNewWallet")}</p>
-            <Button onClick={() => router.push("/dashboard/wallets/add")}>{t("dashboard.createWallet")}</Button>
-          </div>
-        ) : (
-          <section className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {wallets.map((wallet) => {
-              const converted = convertCurrency(wallet.balance, wallet.currency, baseCurrency);
-              return (
-                <Card key={wallet.id}>
-                  <CardHeader><CardTitle>{wallet.name}</CardTitle></CardHeader>
+          {/* TOP METRİKLER */}
+          <motion.section
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
+                <TrendingUp className="h-4 w-4 text-blue-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {totalBalance.toLocaleString("en-US", { style: "currency", currency: baseCurrency })}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Across all wallets</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Active Wallets</CardTitle>
+                <WalletIcon className="h-4 w-4 text-green-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{wallets.length}</div>
+                <p className="text-xs text-muted-foreground mt-1">Managed accounts</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-0">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Monthly Budget</CardTitle>
+                <Target className="h-4 w-4 text-orange-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {spendingUsed.toLocaleString("en-US", { style: "currency", currency: baseCurrency })}
+                </div>
+                <Progress value={progressPercent} />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {progressPercent.toFixed(0)}% of {spendingLimit.toLocaleString("en-US", {
+                    style: "currency", currency: baseCurrency
+                  })}
+                </p>
+              </CardContent>
+            </Card>
+          </motion.section>
+
+          {/* ANA İÇERİK ALANI */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* SOL SÜTUN - Cüzdanlar ve Hızlı İşlemler */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* CÜZDANLAR */}
+              <motion.section
+                className="space-y-4"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    <WalletIcon className="w-5 h-5" /> Your Wallets
+                  </h2>
+                  <Button size="sm" onClick={() => router.push("/dashboard/wallets/add")} className="gap-1">
+                    <Plus className="w-4 h-4" /> Add Wallet
+                  </Button>
+                </div>
+
+                {wallets.length === 0 ? (
+                  <Card className="text-center py-8 border-dashed">
+                    <CardContent>
+                      <WalletIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="font-semibold mb-2">No wallets yet</h3>
+                      <p className="text-muted-foreground mb-4">Create your first wallet to get started</p>
+                      <Button onClick={() => router.push("/dashboard/wallets/add")}>
+                        Create Wallet
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {wallets.slice(0, 4).map((wallet) => {
+                      const converted = convertCurrency(wallet.balance, wallet.currency, baseCurrency);
+                      return (
+                        <Card key={wallet.id} className="group hover:shadow-md transition-shadow">
+                          <CardHeader className="pb-2">
+                            <div className="flex justify-between items-start">
+                              <CardTitle className="text-sm">{wallet.name}</CardTitle>
+                              <Badge variant="outline" className="text-xs">{wallet.currency}</Badge>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-xl font-bold">
+                              {wallet.balance.toLocaleString("en-US", {
+                                style: "currency", currency: wallet.currency
+                              })}
+                            </p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              ≈ {converted.toLocaleString("en-US", {
+                                style: "currency", currency: baseCurrency
+                              })}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                    {wallets.length > 4 && (
+                      <Card className="flex items-center justify-center group hover:shadow-md transition-shadow">
+                        <CardContent className="text-center py-6">
+                          <p className="text-sm text-muted-foreground mb-2">
+                            +{wallets.length - 4} more wallets
+                          </p>
+                          <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/wallets")}>
+                            View All
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                )}
+              </motion.section>
+
+              {/* HIZLI İŞLEMLER */}
+              <motion.section
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <QuickActions />
+              </motion.section>
+            </div>
+
+            {/* SAĞ SÜTUN - İstatistikler ve Son İşlemler */}
+            <div className="space-y-6">
+              {/* İSTATİSTİKLER */}
+              <motion.section
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <PieChart className="w-5 h-5" /> Statistics
+                    </CardTitle>
+                  </CardHeader>
                   <CardContent>
-                    <p className="text-lg font-bold">
-                      {wallet.balance.toLocaleString("en-EN", { style: "currency", currency: wallet.currency })}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      ({converted.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })} {baseCurrency})
-                    </p>
+                    <Statistics transactions={transactions} currency={baseCurrency} statisticType="User" />
                   </CardContent>
                 </Card>
-              );
-            })}
-          </section>
-        )}
+              </motion.section>
 
-        {/* ANALYTICS */}
-        <section className="grid md:grid-cols-2 gap-6">
-          <Card><CardContent><Statistics transactions={transactions} currency={baseCurrency} statisticType="User" /></CardContent></Card>
-          <AnalyticsWidget />
-        </section>
+              {/* ANALYTICS */}
+              <motion.section
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <AnalyticsWidget />
+              </motion.section>
 
-        {/* HIZLI İŞLEMLER */}
-        <QuickActions />
-
-        {/* ALT CTA */}
-        <div className="flex flex-wrap justify-center gap-4 mt-10">
-          {user ? (
-            <Button variant="outline" onClick={logout}>🚪 {t("dashboard.logout")}</Button>
-          ) : (
-            <>
-              <Button onClick={() => router.push("/register")}>🚀 {t("dashboard.signup")}</Button>
-              <Button variant="outline" onClick={() => router.push("/login")}>🔐 {t("dashboard.signin")}</Button>
-            </>
-          )}
-        </div>
-
-        <footer className="text-center text-sm italic text-muted-foreground mt-10">"{t(quote)}"</footer>
-      </main>
+              {/* SON İŞLEMLER */}
+              <motion.section
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Recent Transactions</span>
+                      <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard/transactions")}>
+                        View All <ArrowRight className="w-4 h-4 ml-1" />
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {recentTransactions.length === 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-4">No transactions yet</p>
+                    ) : (
+                      recentTransactions.map((transaction) => (
+                        <div key={transaction.id} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div>
+                            <p className="text-sm font-medium">{transaction.description}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(transaction.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <p className={`text-sm font-medium ${transaction.amount < 0 ? 'text-red-600' : 'text-green-600'
+                            }`}>
+                            {transaction.amount > 0 ? '+' : ''}
+                            {transaction.amount.toLocaleString("en-US", {
+                              style: "currency", currency: transaction.currency
+                            })}
+                          </p>
+                        </div>
+                      ))
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.section>
+            </div>
+          </div>
+        </main>
+      </div>
     </ProtectedRoute>
   );
 }
