@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/features/cards/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/features/cards/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/layout/skeleton";
 import { Button } from "@/components/ui/button";
@@ -13,18 +13,20 @@ import QuickActions from "@/features/dashboard/quickactions";
 import AnalyticsWidget from "@/features/dashboard/AnalyticsWidget";
 
 import { useAuth } from "@/context/auth-context";
-import { getTransactionsByUserId, getWalletsByUser } from "@/shared/lib/api";
+import { getTransactionsByUserId, getWalletsByUser, getCardsByUserId } from "@/shared/lib/api";
 import { getGreeting } from "@/components/ui/label";
 import currencyData from "@/shared/data/currency/currency.json";
 
 import { Wallet } from "@/shared/types/wallet";
+import { Card as CardType } from "@/shared/types/card";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import Statistics from "@/components/ui/statistic";
 import { useLocale } from "@/context/locale-context";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  TrendingUp,
-  Wallet as WalletIcon,
+import { motion } from "framer-motion";
+import { 
+  TrendingUp, 
+  Wallet as WalletIcon, 
+  CreditCard,
   Target,
   PieChart,
   Plus,
@@ -40,6 +42,9 @@ export default function DashboardPage() {
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [walletsLoading, setWalletsLoading] = useState(true);
 
+  const [userCards, setUserCards] = useState<CardType[]>([]);
+  const [cardsLoading, setCardsLoading] = useState(true);
+
   const [transactions, setTransactions] = useState<any[]>([]);
   const [transactionsLoading, setTransactionsLoading] = useState(true);
 
@@ -47,7 +52,6 @@ export default function DashboardPage() {
   const [ratesLoading, setRatesLoading] = useState(true);
 
   const [baseCurrency, setBaseCurrency] = useState("USD");
-  const [activeTab, setActiveTab] = useState("overview");
 
   const greeting = getGreeting();
 
@@ -68,6 +72,23 @@ export default function DashboardPage() {
           parseUnknownError(err);
         } finally {
           setWalletsLoading(false);
+        }
+      })();
+    }
+  }, [user]);
+
+  // Kartları çek
+  useEffect(() => {
+    if (user) {
+      (async () => {
+        try {
+          setCardsLoading(true);
+          const response = await getCardsByUserId(user.userId);
+          setUserCards(response);
+        } catch (err) {
+          parseUnknownError(err);
+        } finally {
+          setCardsLoading(false);
         }
       })();
     }
@@ -121,7 +142,7 @@ export default function DashboardPage() {
   // Son işlemler
   const recentTransactions = transactions.slice(0, 5);
 
-  if (isLoading || !user || walletsLoading || ratesLoading) {
+  if (isLoading || !user || walletsLoading || cardsLoading || ratesLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center space-y-4">
@@ -142,7 +163,7 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
         <main className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
           {/* HEADER */}
-          <motion.header
+          <motion.header 
             className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -153,7 +174,7 @@ export default function DashboardPage() {
               </h1>
               <p className="text-muted-foreground">Welcome to your financial dashboard</p>
             </div>
-
+            
             <div className="flex items-center gap-3">
               <select
                 value={baseCurrency}
@@ -174,7 +195,7 @@ export default function DashboardPage() {
           </motion.header>
 
           {/* TOP METRİKLER */}
-          <motion.section
+          <motion.section 
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -213,22 +234,22 @@ export default function DashboardPage() {
                 <div className="text-2xl font-bold">
                   {spendingUsed.toLocaleString("en-US", { style: "currency", currency: baseCurrency })}
                 </div>
-                <Progress value={progressPercent} />
+                <Progress value={progressPercent}/>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {progressPercent.toFixed(0)}% of {spendingLimit.toLocaleString("en-US", {
-                    style: "currency", currency: baseCurrency
+                  {progressPercent.toFixed(0)}% of {spendingLimit.toLocaleString("en-US", { 
+                    style: "currency", currency: baseCurrency 
                   })}
                 </p>
               </CardContent>
             </Card>
           </motion.section>
 
-          {/* ANA İÇERİK ALANI */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* SOL SÜTUN - Cüzdanlar ve Hızlı İşlemler */}
-            <div className="lg:col-span-2 space-y-6">
+          {/* ANA İÇERİK ALANI - YENİ LAYOUT */}
+          <div className="grid grid-cols-1 xl:grid-cols-7 gap-8">
+            {/* SOL SÜTUN - Cüzdanlar ve Kartlar */}
+            <div className="xl:col-span-4 space-y-6">
               {/* CÜZDANLAR */}
-              <motion.section
+              <motion.section 
                 className="space-y-4"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -268,13 +289,13 @@ export default function DashboardPage() {
                           </CardHeader>
                           <CardContent>
                             <p className="text-xl font-bold">
-                              {wallet.balance.toLocaleString("en-US", {
-                                style: "currency", currency: wallet.currency
+                              {wallet.balance.toLocaleString("en-US", { 
+                                style: "currency", currency: wallet.currency 
                               })}
                             </p>
                             <p className="text-sm text-muted-foreground mt-1">
-                              ≈ {converted.toLocaleString("en-US", {
-                                style: "currency", currency: baseCurrency
+                              ≈ {converted.toLocaleString("en-US", { 
+                                style: "currency", currency: baseCurrency 
                               })}
                             </p>
                           </CardContent>
@@ -297,46 +318,117 @@ export default function DashboardPage() {
                 )}
               </motion.section>
 
+              {/* KARTLAR */}
+              <motion.section 
+                className="space-y-4"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    <CreditCard className="w-5 h-5" /> Your Cards
+                  </h2>
+                  <Button size="sm" onClick={() => router.push("/dashboard/cards/new")} className="gap-1">
+                    <Plus className="w-4 h-4" /> Add Card
+                  </Button>
+                </div>
+
+                {userCards.length === 0 ? (
+                  <Card className="text-center py-8 border-dashed">
+                    <CardContent>
+                      <CreditCard className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="font-semibold mb-2">No cards yet</h3>
+                      <p className="text-muted-foreground mb-4">Add your first card for easy payments</p>
+                      <Button onClick={() => router.push("/dashboard/cards/new")}>
+                        Add Card
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {userCards.slice(0, 2).map((card) => (
+                      <Card key={card.id} className="group hover:shadow-md transition-shadow bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                        <CardHeader className="pb-2">
+                          <div className="flex justify-between items-start">
+                            <CardTitle className="text-sm">{card.brand}</CardTitle>
+                            <Badge variant="secondary" className="text-xs bg-white/20">
+                              {card.currency}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-lg font-bold tracking-widest mb-2">
+                            **** **** **** {card.last4}
+                          </p>
+                          <div className="flex justify-between text-sm">
+                            <span>{card.cardHolderName}</span>
+                            <span>{`${card.expMonth}/${card.expYear}`}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                    {userCards.length > 2 && (
+                      <Card className="flex items-center justify-center group hover:shadow-md transition-shadow col-span-2">
+                        <CardContent className="text-center py-6">
+                          <p className="text-sm text-muted-foreground mb-2">
+                            +{userCards.length - 2} more cards
+                          </p>
+                          <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/cards")}>
+                            View All
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                )}
+              </motion.section>
+
               {/* HIZLI İŞLEMLER */}
               <motion.section
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.4 }}
               >
                 <QuickActions />
               </motion.section>
             </div>
 
-            {/* SAĞ SÜTUN - İstatistikler ve Son İşlemler */}
-            <div className="space-y-6">
-              {/* İSTATİSTİKLER */}
-              <motion.section
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <PieChart className="w-5 h-5" /> Statistics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Statistics transactions={transactions} currency={baseCurrency} statisticType="User" />
-                  </CardContent>
-                </Card>
-              </motion.section>
+            {/* SAĞ SÜTUN - İstatistikler, Analytics ve İşlemler */}
+            <div className="xl:col-span-3 space-y-6">
+              {/* İSTATİSTİKLER VE ANALYTICS - YAN YANA */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-6">
+                <motion.section
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-sm">
+                        <PieChart className="w-4 h-4" /> Statistics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4">
+                      <Statistics 
+                        transactions={transactions} 
+                        currency={baseCurrency} 
+                        statisticType="User" 
+                      />
+                    </CardContent>
+                  </Card>
+                </motion.section>
 
-              {/* ANALYTICS */}
-              <motion.section
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <AnalyticsWidget />
-              </motion.section>
+                <motion.section
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <AnalyticsWidget />
+                </motion.section>
+              </div>
 
-              {/* SON İŞLEMLER */}
+              {/* SON İŞLEMLER - TAM GENİŞLİK */}
               <motion.section
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -345,29 +437,30 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                      <span>Recent Transactions</span>
+                      <span className="text-base">Recent Transactions</span>
                       <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard/transactions")}>
-                        View All <ArrowRight className="w-4 h-4 ml-1" />
+                        View All <ArrowRight className="w-3 h-3 ml-1" />
                       </Button>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="p-4 space-y-3">
                     {recentTransactions.length === 0 ? (
                       <p className="text-sm text-muted-foreground text-center py-4">No transactions yet</p>
                     ) : (
                       recentTransactions.map((transaction) => (
                         <div key={transaction.id} className="flex items-center justify-between py-2 border-b last:border-0">
-                          <div>
-                            <p className="text-sm font-medium">{transaction.description}</p>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{transaction.description}</p>
                             <p className="text-xs text-muted-foreground">
                               {new Date(transaction.createdAt).toLocaleDateString()}
                             </p>
                           </div>
-                          <p className={`text-sm font-medium ${transaction.amount < 0 ? 'text-red-600' : 'text-green-600'
-                            }`}>
+                          <p className={`text-sm font-medium whitespace-nowrap ${
+                            transaction.amount < 0 ? 'text-red-600' : 'text-green-600'
+                          }`}>
                             {transaction.amount > 0 ? '+' : ''}
-                            {transaction.amount.toLocaleString("en-US", {
-                              style: "currency", currency: transaction.currency
+                            {transaction.amount.toLocaleString("en-US", { 
+                              style: "currency", currency: transaction.currency 
                             })}
                           </p>
                         </div>
