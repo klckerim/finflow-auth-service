@@ -44,13 +44,9 @@ export default function DashboardPage() {
     if (!isLoading && !user) router.push("/login");
   }, [isLoading, user, router]);
 
+  // Rastgele quote
   useEffect(() => {
-    const quotes = [
-      ("quotes.str1"),
-      ("quotes.str2"),
-      ("quotes.str3"),
-      ("quotes.str4")
-    ];
+    const quotes = ["quotes.str1", "quotes.str2", "quotes.str3", "quotes.str4"];
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
   }, []);
 
@@ -71,6 +67,7 @@ export default function DashboardPage() {
     }
   }, [user]);
 
+  // İşlemleri çek
   useEffect(() => {
     (async () => {
       try {
@@ -85,20 +82,16 @@ export default function DashboardPage() {
     })();
   }, [user]);
 
-  // Kur verisini al
+  // Kur verisi
   useEffect(() => {
-    (async () => {
-      try {
-        setRatesLoading(true);
-        if (currencyData?.rates) {
-          setExchangeRates(currencyData.rates);
-        }
-      } catch (err) {
-        console.error(t("warningsMessages.ratesFetchFailed"), err);
-      } finally {
-        setRatesLoading(false);
-      }
-    })();
+    try {
+      setRatesLoading(true);
+      if (currencyData?.rates) setExchangeRates(currencyData.rates);
+    } catch (err) {
+      console.error(t("warningsMessages.ratesFetchFailed"), err);
+    } finally {
+      setRatesLoading(false);
+    }
   }, [baseCurrency]);
 
   function convertCurrency(amount: number, from: string, to: string): number {
@@ -129,18 +122,14 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <main className="flex flex-col gap-12 px-4 sm:px-8 md:px-16 py-10 max-w-screen-2xl mx-auto text-gray-900 dark:text-gray-100">
+      <main className="flex flex-col gap-10 px-4 sm:px-8 md:px-16 py-10 max-w-screen-2xl mx-auto">
         {/* HEADER */}
-        <header className="space-y-4 text-center">
+        <header className="space-y-3 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
             {t("dashboard.welcome", { name: user.fullName })}
           </h1>
-          <p className="text-lg sm:text-xl font-medium text-primary">{greeting}</p>
-          <p className="text-base text-muted-foreground dark:text-gray-400">
-            {t("common.str_ManageYourWallets")}
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
+          <p className="text-lg font-medium text-primary">{greeting}</p>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-3">
             <label htmlFor="currency-select" className="text-sm font-medium">
               {t("common.currency")}:
             </label>
@@ -161,24 +150,19 @@ export default function DashboardPage() {
 
         {/* METRİKLER */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
-            <CardHeader><CardTitle>{t("dashboard.numberOfWallets")}</CardTitle></CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{wallets.length}</p>
-            </CardContent>
+          <Card><CardHeader><CardTitle>{t("dashboard.numberOfWallets")}</CardTitle></CardHeader>
+            <CardContent><p className="text-3xl font-bold">{wallets.length}</p></CardContent>
           </Card>
-          <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
-            <CardHeader><CardTitle>{t("dashboard.totalBalance")} ({baseCurrency})</CardTitle></CardHeader>
+          <Card><CardHeader><CardTitle>{t("dashboard.totalBalance")} ({baseCurrency})</CardTitle></CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">
                 {totalBalance.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })}
               </p>
             </CardContent>
           </Card>
-          <Card className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
-            <CardHeader><CardTitle>{t("dashboard.expenseLimit")}</CardTitle></CardHeader>
+          <Card><CardHeader><CardTitle>{t("dashboard.expenseLimit")}</CardTitle></CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground dark:text-gray-400 mb-2">
+              <p className="text-sm text-muted-foreground mb-2">
                 {spendingUsed.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })} /{" "}
                 {spendingLimit.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })}
               </p>
@@ -189,9 +173,9 @@ export default function DashboardPage() {
 
         {/* CÜZDANLAR */}
         {wallets.length === 0 ? (
-          <div className="text-center p-6 border-2 border-dashed rounded-lg dark:border-gray-700">
+          <div className="text-center p-6 border-2 border-dashed rounded-lg">
             <h2 className="text-xl font-semibold mb-2">{t("common.str_NoWallets")}</h2>
-            <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">{t("common.str_CreateNewWallet")}</p>
+            <p className="text-sm text-muted-foreground mb-4">{t("common.str_CreateNewWallet")}</p>
             <Button onClick={() => router.push("/dashboard/wallets/add")}>{t("dashboard.createWallet")}</Button>
           </div>
         ) : (
@@ -199,20 +183,14 @@ export default function DashboardPage() {
             {wallets.map((wallet) => {
               const converted = convertCurrency(wallet.balance, wallet.currency, baseCurrency);
               return (
-                <Card key={wallet.id} className="hover:shadow-md transition dark:bg-zinc-900 dark:border-gray-700">
+                <Card key={wallet.id}>
                   <CardHeader><CardTitle>{wallet.name}</CardTitle></CardHeader>
                   <CardContent>
                     <p className="text-lg font-bold">
-                      {wallet.balance.toLocaleString("en-EN", {
-                        style: "currency",
-                        currency: wallet.currency,
-                      })}
+                      {wallet.balance.toLocaleString("en-EN", { style: "currency", currency: wallet.currency })}
                     </p>
-                    <p className="text-sm text-muted-foreground dark:text-gray-400">
-                      ({converted.toLocaleString("tr-TR", {
-                        style: "currency",
-                        currency: baseCurrency,
-                      })} {baseCurrency})
+                    <p className="text-sm text-muted-foreground">
+                      ({converted.toLocaleString("tr-TR", { style: "currency", currency: baseCurrency })} {baseCurrency})
                     </p>
                   </CardContent>
                 </Card>
@@ -221,24 +199,16 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {/* GRAFİKLER */}
+        {/* ANALYTICS */}
         <section className="grid md:grid-cols-2 gap-6">
-          <Card className="dark:bg-zinc-900 dark:border-gray-700">
-            <CardContent>
-              <Statistics
-                transactions={transactions ?? []}
-                currency={baseCurrency ?? "EUR"}
-                statisticType={"User"}
-              />
-            </CardContent>
-          </Card>
+          <Card><CardContent><Statistics transactions={transactions} currency={baseCurrency} statisticType="User" /></CardContent></Card>
+          <AnalyticsWidget />
         </section>
 
         {/* HIZLI İŞLEMLER */}
         <QuickActions />
-        <AnalyticsWidget />
 
-        {/* ALT BUTONLAR */}
+        {/* ALT CTA */}
         <div className="flex flex-wrap justify-center gap-4 mt-10">
           {user ? (
             <Button variant="outline" onClick={logout}>🚪 {t("dashboard.logout")}</Button>
@@ -249,7 +219,8 @@ export default function DashboardPage() {
             </>
           )}
         </div>
-        <footer className="text-center text-sm italic text-muted-foreground dark:text-gray-400 mt-10">"{t(quote)}"</footer>
+
+        <footer className="text-center text-sm italic text-muted-foreground mt-10">"{t(quote)}"</footer>
       </main>
     </ProtectedRoute>
   );
