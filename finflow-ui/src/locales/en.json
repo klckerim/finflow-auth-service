@@ -32,8 +32,9 @@
     "back": "Back",
     "myCards": "My Cards",
     "addNewCard": "Add New Card",
+    "moreCards": "more cards",
     "noCards": "No cards yet",
-    "addCard": "Add New Card",
+    "addCard": "Add Card",
     "addFirstCard": "Add your first card to start managing your expenses easily.",
     "owner": "Owner",
     "expiry": "Expiry",
@@ -147,6 +148,7 @@
     "str_AddCard": "Add your first card to start managing your expenses easily.",
     "str_AddFirstCard": "Add Your First Card",
     "str_ViewDetails": "View Details",
+    "str_ViewAll": "View All",
     "str_Owner": "Owner",
     "str_Expiry": "Expiry",
     "str_MyCards": "My Cards",
@@ -241,7 +243,10 @@
     "str_BillProcessed": "Your bill payment of {amount} has been processed successfully.",
     "str_TransactionId": "Transaction ID",
     "str_MakeAnotherPayment": "Make Another Payment",
-    "str_PaymentFailed": "Payment failed, please try again."
+    "str_PaymentFailed": "Payment failed, please try again.",
+    "str_AmountIn": "Across all wallets",
+    "str_ManagedAccounts": "Managed Accounts",
+    "str_MoreWallets": "more wallets"
   },
   "warningsMessages": {
     "profileSaved": "Profile updated successfully!",

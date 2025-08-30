@@ -32,6 +32,7 @@
     "back": "Zurück",
     "myCards": "Meine Karten",
     "addNewCard": "Neue Karte hinzufügen",
+    "moreCards": "weitere Karten",
     "noCards": "Noch keine Karten",
     "addCard": "Karte hinzufügen",
     "addFirstCard": "Fügen Sie Ihre erste Karte hinzu, um Ihre Ausgaben einfach zu verwalten.",
@@ -147,6 +148,7 @@
     "str_AddCard": "Fügen Sie Ihre erste Karte hinzu, um Ihre Ausgaben einfach zu verwalten.",
     "str_AddFirstCard": "Erste Karte hinzufügen",
     "str_ViewDetails": "Details anzeigen",
+    "str_ViewAll": "Alle anzeigen",
     "str_Owner": "Inhaber",
     "str_Expiry": "Ablaufdatum",
     "str_MyCards": "Meine Karten",
@@ -241,7 +243,10 @@
     "str_BillProcessed": "Ihre Rechnung über {amount} wurde erfolgreich bezahlt.",
     "str_TransactionId": "Transaktions-ID",
     "str_MakeAnotherPayment": "Weitere Rechnung bezahlen",
-    "str_PaymentFailed": "Zahlung fehlgeschlagen, bitte erneut versuchen."
+    "str_PaymentFailed": "Zahlung fehlgeschlagen, bitte erneut versuchen.",
+    "str_AmountIn": "Über alle Wallets hinweg",
+    "str_ManagedAccounts": "Verwaltete Konten",
+    "str_MoreWallets": "weitere Wallet"
   },
   "warningsMessages": {
     "profileSaved": "Profil erfolgreich aktualisiert!",

@@ -32,8 +32,9 @@
     "back": "Geri",
     "myCards": "Kartlarım",
     "addNewCard": "Yeni Kart Ekle",
+    "moreCards": "kart daha",
     "noCards": "Henüz kart yok",
-    "addCard": "Yeni Kart Ekle",
+    "addCard": "Kart Ekle",
     "addFirstCard": "Harcamalarını kolayca yönetmeye başlamak için ilk kartını ekle.",
     "owner": "Sahip",
     "expiry": "Son Kullanma",
@@ -147,6 +148,7 @@
     "str_AddCard": "Harcamalarını kolayca yönetmeye başlamak için ilk kartını ekle.",
     "str_AddFirstCard": "İlk Kartını Ekle",
     "str_ViewDetails": "Detayları Gör",
+    "str_ViewAll": "Tümünü Görüntüle",
     "str_Owner": "Sahip",
     "str_Expiry": "Son Kullanma",
     "str_MyCards": "Kartlarım",
@@ -241,7 +243,10 @@
     "str_BillProcessed": "{amount} tutarındaki faturanız başarıyla ödendi.",
     "str_TransactionId": "İşlem Numarası",
     "str_MakeAnotherPayment": "Başka Fatura Öde",
-    "str_PaymentFailed": "Ödeme başarısız oldu, lütfen tekrar deneyin."
+    "str_PaymentFailed": "Ödeme başarısız oldu, lütfen tekrar deneyin.",
+    "str_AmountIn": "Tüm cüzdanlarda",
+    "str_ManagedAccounts": "Yönetilen Hesaplar",
+    "str_MoreWallets": "cüzdan daha"
   },
   "warningsMessages": {
     "profileSaved": "Profil başarıyla güncellendi!",

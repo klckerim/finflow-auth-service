@@ -119,7 +119,7 @@ export default function DashboardPage() {
     } finally {
       setRatesLoading(false);
     }
-  }, [baseCurrency]);
+  }, [baseCurrency, t]);
 
   function convertCurrency(amount: number, from: string, to: string): number {
     if (from === to) return amount;
@@ -172,7 +172,7 @@ export default function DashboardPage() {
               <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                 {greeting}, {user.fullName} 👋
               </h1>
-              <p className="text-muted-foreground">Welcome to your financial dashboard</p>
+              <p className="text-muted-foreground">{t("common.str_WelcomeToPortal")}</p>
             </div>
             
             <div className="flex items-center gap-3">
@@ -189,7 +189,7 @@ export default function DashboardPage() {
               </select>
               <Button variant="outline" size="sm" onClick={logout} className="gap-2">
                 <LogOut className="w-4 h-4" />
-                Logout
+                {t("dashboard.logout")}
               </Button>
             </div>
           </motion.header>
@@ -203,40 +203,40 @@ export default function DashboardPage() {
           >
             <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
+                <CardTitle className="text-sm font-medium">{t("dashboard.totalBalance")}</CardTitle>
                 <TrendingUp className="h-4 w-4 text-blue-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {totalBalance.toLocaleString("en-US", { style: "currency", currency: baseCurrency })}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Across all wallets</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("common.str_AmountIn", { currency: baseCurrency })}</p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-br from-green-50 to-green-100 border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Wallets</CardTitle>
+                <CardTitle className="text-sm font-medium">{t("dashboard.numberOfWallets")}</CardTitle>
                 <WalletIcon className="h-4 w-4 text-green-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{wallets.length}</div>
-                <p className="text-xs text-muted-foreground mt-1">Managed accounts</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("common.str_ManagedAccounts")}</p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Monthly Budget</CardTitle>
+                <CardTitle className="text-sm font-medium">{t("dashboard.expenseLimit")}</CardTitle>
                 <Target className="h-4 w-4 text-orange-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {spendingUsed.toLocaleString("en-US", { style: "currency", currency: baseCurrency })}
                 </div>
-                <Progress value={progressPercent}/>
+                <Progress value={progressPercent} />
                 <p className="text-xs text-muted-foreground mt-1">
-                  {progressPercent.toFixed(0)}% of {spendingLimit.toLocaleString("en-US", { 
+                  {progressPercent.toFixed(0)}% / {spendingLimit.toLocaleString("en-US", { 
                     style: "currency", currency: baseCurrency 
                   })}
                 </p>
@@ -257,10 +257,10 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <WalletIcon className="w-5 h-5" /> Your Wallets
+                    <WalletIcon className="w-5 h-5" /> {t("common.str_MyWallets")}
                   </h2>
                   <Button size="sm" onClick={() => router.push("/dashboard/wallets/add")} className="gap-1">
-                    <Plus className="w-4 h-4" /> Add Wallet
+                    <Plus className="w-4 h-4" /> {t("dashboard.addWallet")}
                   </Button>
                 </div>
 
@@ -268,10 +268,10 @@ export default function DashboardPage() {
                   <Card className="text-center py-8 border-dashed">
                     <CardContent>
                       <WalletIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="font-semibold mb-2">No wallets yet</h3>
-                      <p className="text-muted-foreground mb-4">Create your first wallet to get started</p>
+                      <h3 className="font-semibold mb-2">{t("common.str_NoWallets")}</h3>
+                      <p className="text-muted-foreground mb-4">{t("common.str_CreateFirstWallet")}</p>
                       <Button onClick={() => router.push("/dashboard/wallets/add")}>
-                        Create Wallet
+                        {t("dashboard.createWallet")}
                       </Button>
                     </CardContent>
                   </Card>
@@ -306,10 +306,10 @@ export default function DashboardPage() {
                       <Card className="flex items-center justify-center group hover:shadow-md transition-shadow">
                         <CardContent className="text-center py-6">
                           <p className="text-sm text-muted-foreground mb-2">
-                            +{wallets.length - 4} more wallets
+                            +{wallets.length - 4} {t("common.str_MoreWallets")}
                           </p>
                           <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/wallets")}>
-                            View All
+                            {t("common.str_ViewAll")}
                           </Button>
                         </CardContent>
                       </Card>
@@ -327,10 +327,10 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" /> Your Cards
+                    <CreditCard className="w-5 h-5" /> {t("card.myCards")}
                   </h2>
                   <Button size="sm" onClick={() => router.push("/dashboard/cards/new")} className="gap-1">
-                    <Plus className="w-4 h-4" /> Add Card
+                    <Plus className="w-4 h-4" /> {t("card.addNewCard")}
                   </Button>
                 </div>
 
@@ -338,10 +338,10 @@ export default function DashboardPage() {
                   <Card className="text-center py-8 border-dashed">
                     <CardContent>
                       <CreditCard className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="font-semibold mb-2">No cards yet</h3>
-                      <p className="text-muted-foreground mb-4">Add your first card for easy payments</p>
+                      <h3 className="font-semibold mb-2">{t("card.noCards")}</h3>
+                      <p className="text-muted-foreground mb-4">{t("card.addFirstCard")}</p>
                       <Button onClick={() => router.push("/dashboard/cards/new")}>
-                        Add Card
+                        {t("card.addCard")}
                       </Button>
                     </CardContent>
                   </Card>
@@ -372,10 +372,10 @@ export default function DashboardPage() {
                       <Card className="flex items-center justify-center group hover:shadow-md transition-shadow col-span-2">
                         <CardContent className="text-center py-6">
                           <p className="text-sm text-muted-foreground mb-2">
-                            +{userCards.length - 2} more cards
+                            +{userCards.length - 2} {t("card.moreCards")}
                           </p>
                           <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/cards")}>
-                            View All
+                            {t("common.str_ViewAll")}
                           </Button>
                         </CardContent>
                       </Card>
@@ -406,7 +406,7 @@ export default function DashboardPage() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2 text-sm">
-                        <PieChart className="w-4 h-4" /> Statistics
+                        <PieChart className="w-4 h-4" /> {t("common.str_Statistics")}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-4">
@@ -437,15 +437,15 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                      <span className="text-base">Recent Transactions</span>
+                      <span className="text-base">{t("common.str_LastTransactions")}</span>
                       <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard/transactions")}>
-                        View All <ArrowRight className="w-3 h-3 ml-1" />
+                        {t("common.str_ViewAll")} <ArrowRight className="w-3 h-3 ml-1" />
                       </Button>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 space-y-3">
                     {recentTransactions.length === 0 ? (
-                      <p className="text-sm text-muted-foreground text-center py-4">No transactions yet</p>
+                      <p className="text-sm text-muted-foreground text-center py-4">{t("common.str_NoTransaction")}</p>
                     ) : (
                       recentTransactions.map((transaction) => (
                         <div key={transaction.id} className="flex items-center justify-between py-2 border-b last:border-0">
