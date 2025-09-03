@@ -57,6 +57,7 @@
     "currency": "Währung",
     "loading": "Lädt...",
     "sending": "Senden...",
+    "saving": "Speichern...",
     "creating": "Erstellen...",
     "ok": "OK",
     "or": "Oder",
@@ -246,7 +247,15 @@
     "str_PaymentFailed": "Zahlung fehlgeschlagen, bitte erneut versuchen.",
     "str_AmountIn": "Über alle Wallets hinweg",
     "str_ManagedAccounts": "Verwaltete Konten",
-    "str_MoreWallets": "weitere Wallet"
+    "str_MoreWallets": "weitere Wallet",
+    "str_DemoMode": "Demo-Modus",
+    "str_OpenResetPage": "Seite zum Zurücksetzen öffnen",
+    "str_CheckingResetLink": "Bitte warten Sie, während wir Ihren Link zum Zurücksetzen validieren.",
+    "str_InvalidResetLink": "Link zum Zurücksetzen ungültig oder abgelaufen",
+    "str_RequestNewLink": "Neuen Link anfordern",
+    "str_PasswordRequirements": "Verwenden Sie mindestens 8 Zeichen mit Zahlen, Groß-/Kleinbuchstaben und Sonderzeichen.",
+    "str_ConfirmPassword": "Passwort bestätigen",
+    "str_EnterPasswordAgain": "Geben Sie Ihr Passwort erneut ein."
   },
   "warningsMessages": {
     "profileSaved": "Profil erfolgreich aktualisiert!",
@@ -265,7 +274,8 @@
     "unknownException": "Unbekannter Fehler",
     "noTransaction": "Keine Transaktionsinformationen",
     "noWallet": "Keine Wallet-Informationen",
-    "noPaymentSession": "Keine Zahlungsinformationen"
+    "noPaymentSession": "Keine Zahlungsinformationen",
+    "passwordResetLinkSent": "Wenn ein Konto vorhanden ist, wurde ein Link zum Zurücksetzen gesendet."
   },
   "quotes": {
     "str1": "Der Plan von heute ist der Erfolg von morgen.",
@@ -326,6 +336,8 @@
   "password_lowercase_required": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten",
   "password_number_required": "Das Passwort muss mindestens eine Zahl enthalten",
   "password_special_char_required": "Das Passwort muss mindestens ein Sonderzeichen enthalten",
+  "confirm_password_required": "Passwortbestätigung ist erforderlich",
+  "passwords_do_not_match": "Passwörter stimmen nicht überein",
   "wallet_balance_positive": "Wallet-Betrag muss größer oder gleich 0 sein",
   "wallet_name_required": "Wallet-Name ist erforderlich",
   "wallet_name_min_length": "Wallet-Name muss mindestens {minLength} Zeichen lang sein",

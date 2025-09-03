@@ -2,8 +2,10 @@ using System.Security.Claims;
 using Asp.Versioning;
 using FinFlow.API.Models;
 using FinFlow.Application.Commands.Users;
+using FinFlow.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +18,17 @@ namespace FinFlow.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<AuthController> _logger;
+        private readonly IAuthRepository _repo;
+        private readonly IConfiguration _config;
 
-        public AuthController(IMediator mediator, ILogger<AuthController> logger)
+
+        public AuthController(IMediator mediator, ILogger<AuthController> logger, IAuthRepository repo, IConfiguration config)
         {
             _mediator = mediator;
             _logger = logger;
+            _config = config;
+            _repo = repo;
+
         }
 
         [HttpPost("login")]
@@ -51,7 +59,6 @@ namespace FinFlow.API.Controllers
             }
         }
 
-
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {
@@ -67,20 +74,6 @@ namespace FinFlow.API.Controllers
             }
         }
 
-        [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword([FromBody] ResetPasswordCommand request)
-        {
-            // Basit validasyon
-            if (string.IsNullOrEmpty(request.Email))
-                throw new Exception(ErrorCodes.EmailRequierd);
-
-            // Sahte token üretelim
-            var token = Guid.NewGuid().ToString();
-            _logger.LogInformation("Password reset token generated for {Email}: {Token}", request.Email, token);
-            // Gerçekte burada email gönderilir ama şimdilik simüle ediyoruz
-            return Ok(new { token });
-        }
-
         [HttpPost("logout")]
         public IActionResult Logout()
         {
@@ -93,7 +86,6 @@ namespace FinFlow.API.Controllers
 
             return Ok(new { message = "Logged out successfully" });
         }
-
 
         [Authorize]
         [HttpGet("me")]
@@ -121,8 +113,6 @@ namespace FinFlow.API.Controllers
             return Ok(response);
         }
 
-
-
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
@@ -145,7 +135,6 @@ namespace FinFlow.API.Controllers
             });
         }
 
-
         private void SetRefreshTokenCookie(string refreshToken)
         {
             var cookieOptions = new CookieOptions
@@ -159,6 +148,56 @@ namespace FinFlow.API.Controllers
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand req, CancellationToken ct)
+        {
+            try
+            {
+                var demoEnabled = _config.GetValue<bool>("Demo:Enabled");
 
+                var resetUrl = await _mediator.Send(req, ct);
+                _logger.LogInformation("User registered successfully with ID {Email}", req.Email);
+
+                if (demoEnabled)
+                {
+                    return Ok(new { message = "If an account exists, a reset link is generated.", resetUrl });
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                throw new Exception(e.Message, e);
+            }
+
+            return Ok(new { message = "If an account exists, a reset link has been sent." });
+        }
+
+
+        [HttpGet("validate-reset-token")]
+        public async Task<IActionResult> ValidateResetToken([FromQuery] string token, CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                return BadRequest(new { valid = false });
+
+            var entry = await _repo.GetValidResetTokenAsync(token, ct);
+            if (entry is null) return Ok(new ValidateResetTokenCommand(false, null));
+
+            return Ok(new ValidateResetTokenCommand(true, SecurityHelpers.MaskEmail(entry.User.Email)));
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand req, CancellationToken ct)
+        {
+            try
+            {
+                var resetUrl = await _mediator.Send(req, ct);
+                return Ok(new { message = "Password has been reset." });
+            }
+            catch (OperationCanceledException e)
+            {
+                throw new Exception(e.Message, e);
+            }
+        }
     }
+
 }
+

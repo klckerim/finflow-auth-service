@@ -57,6 +57,7 @@
     "currency": "Currency",
     "loading": "Loading...",
     "sending": "Sending...",
+    "saving": "Saving...",
     "creating": "Creating...",
     "ok": "OK",
     "or": "Or",
@@ -246,7 +247,15 @@
     "str_PaymentFailed": "Payment failed, please try again.",
     "str_AmountIn": "Across all wallets",
     "str_ManagedAccounts": "Managed Accounts",
-    "str_MoreWallets": "more wallets"
+    "str_MoreWallets": "more wallets",
+    "str_DemoMode": "Demo Mode",
+    "str_OpenResetPage": "Open Reset Page",
+    "str_CheckingResetLink": "Please wait while we validate your reset link.",
+    "str_InvalidResetLink": "Reset link invalid or expired",
+    "str_RequestNewLink": "Request new link",
+    "str_PasswordRequirements": "Use 8+ chars with numbers, upper/lowercase and symbol.",
+    "str_ConfirmPassword": "Confirm password",
+    "str_EnterPasswordAgain": "Enter your password again"
   },
   "warningsMessages": {
     "profileSaved": "Profile updated successfully!",
@@ -265,7 +274,8 @@
     "unknownException": "Unknown Exception",
     "noTransaction": "No Transactions Information",
     "noWallet": "No Wallet Information",
-    "noPaymentSession": "No Payment Session Information"
+    "noPaymentSession": "No Payment Session Information",
+    "passwordResetLinkSent": "If an account exists, a reset link has been sent."
   },
   "quotes": {
     "str1": "Today's plan is tomorrow's success.",
@@ -336,6 +346,8 @@
   "password_lowercase_required": "Password must contain at least one lowercase letter",
   "password_number_required": "Password must contain at least one number",
   "password_special_char_required": "Password must contain at least one special character",
+  "confirm_password_required": "Confirm password is required",
+  "passwords_do_not_match": "Passwords do not match",
   "wallet_balance_positive": "Wallet balance must be greater than or equal to 0",
   "wallet_name_required": "Wallet name is required",
   "wallet_name_min_length": "Wallet name must be at least {minLength} characters",

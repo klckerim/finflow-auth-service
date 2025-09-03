@@ -57,6 +57,7 @@
     "currency": "Para Birimi",
     "loading": "Yükleniyor...",
     "sending": "Gönderiliyor...",
+    "saving": "Kaydediliyor...",
     "creating": "Oluşturuluyor...",
     "ok": "Tamam",
     "or": "Veya",
@@ -246,7 +247,15 @@
     "str_PaymentFailed": "Ödeme başarısız oldu, lütfen tekrar deneyin.",
     "str_AmountIn": "Tüm cüzdanlarda",
     "str_ManagedAccounts": "Yönetilen Hesaplar",
-    "str_MoreWallets": "cüzdan daha"
+    "str_MoreWallets": "cüzdan daha",
+    "str_DemoMode": "Demo Modu",
+    "str_OpenResetPage": "Sıfırlama Sayfasını Aç",
+    "str_CheckingResetLink": "Sıfırlama bağlantınız doğrulanırken lütfen bekleyin.",
+    "str_InvalidResetLink": "Sıfırlama bağlantısı geçersiz veya süresi dolmuş",
+    "str_RequestNewLink": "Yeni bağlantı iste",
+    "str_PasswordRequirements": "Rakamlar, büyük/küçük harfler ve semboller içeren 8+ karakter kullanın.",
+    "str_ConfirmPassword": "Şifreyi onayla",
+    "str_EnterPasswordAgain": "Şifrenizi tekrar girin"
   },
   "warningsMessages": {
     "profileSaved": "Profil başarıyla güncellendi!",
@@ -265,7 +274,8 @@
     "unknownException": "Bilinmeyen Hata",
     "noTransaction": "İşlem Bilgisi Yok",
     "noWallet": "Cüzdan Bilgisi Yok",
-    "noPaymentSession": "Ödeme Oturumu Bilgisi Yok"
+    "noPaymentSession": "Ödeme Oturumu Bilgisi Yok",
+    "passwordResetLinkSent": "Bir hesap varsa, sıfırlama bağlantısı gönderilmiştir."
   },
   "quotes": {
     "str1": "Bugünün planı, yarının başarısıdır.",
@@ -326,6 +336,8 @@
   "password_lowercase_required": "Şifre en az bir küçük harf içermelidir",
   "password_number_required": "Şifre en az bir rakam içermelidir",
   "password_special_char_required": "Şifre en az bir özel karakter içermelidir",
+  "confirm_password_required": "Şifre tekrarı gereklidir",
+  "passwords_do_not_match": "Şifreler eşleşmiyor",
   "wallet_balance_positive": "Cüzdan bakiyesi 0'dan büyük veya eşit olmalıdır",
   "wallet_name_required": "Cüzdan adı gereklidir",
   "wallet_name_min_length": "Cüzdan adı en az {minLength} karakter olmalıdır",
