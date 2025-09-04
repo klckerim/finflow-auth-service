@@ -143,7 +143,7 @@
     "str_DatabaseTech": "PostgreSQL + EF Core",
     "str_FrontendTech": "Next.js 14 + Tailwind",
     "str_PaymentsTech": "Stripe (Checkout + Webhooks)",
-    "str_DeploymentTech": "Docker / Railway / Vercel",
+    "str_DeploymentTech": "Docker / Render / Vercel / Neon",
     "str_QuickStart": "Schnellstart (Dev)",
     "str_NoCard": "Noch keine Karten",
     "str_AddCard": "Fügen Sie Ihre erste Karte hinzu, um Ihre Ausgaben einfach zu verwalten.",
