@@ -161,6 +161,12 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FinFlowDbContext>();
+    db.Database.Migrate();
+}
+
 var stripeKey = builder.Configuration["Stripe:SecretKey"];
 Stripe.StripeConfiguration.ApiKey = stripeKey;
 
