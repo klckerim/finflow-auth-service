@@ -23,9 +23,9 @@ import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import Statistics from "@/components/ui/statistic";
 import { useLocale } from "@/context/locale-context";
 import { motion } from "framer-motion";
-import { 
-  TrendingUp, 
-  Wallet as WalletIcon, 
+import {
+  TrendingUp,
+  Wallet as WalletIcon,
   CreditCard,
   Target,
   PieChart,
@@ -163,18 +163,18 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
         <main className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
           {/* HEADER */}
-          <motion.header 
+          <motion.header
             className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="space-y-2">
-              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary bg-clip-text">
                 {greeting}, {user.fullName} 👋
               </h1>
               <p className="text-muted-foreground">{t("common.str_WelcomeToPortal")}</p>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <select
                 value={baseCurrency}
@@ -195,7 +195,7 @@ export default function DashboardPage() {
           </motion.header>
 
           {/* TOP METRİKLER */}
-          <motion.section 
+          <motion.section
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -236,8 +236,8 @@ export default function DashboardPage() {
                 </div>
                 <Progress value={progressPercent} />
                 <p className="text-xs text-muted-foreground mt-1">
-                  {progressPercent.toFixed(0)}% / {spendingLimit.toLocaleString("en-US", { 
-                    style: "currency", currency: baseCurrency 
+                  {progressPercent.toFixed(0)}% / {spendingLimit.toLocaleString("en-US", {
+                    style: "currency", currency: baseCurrency
                   })}
                 </p>
               </CardContent>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
             {/* SOL SÜTUN - Cüzdanlar ve Kartlar */}
             <div className="xl:col-span-4 space-y-6">
               {/* CÜZDANLAR */}
-              <motion.section 
+              <motion.section
                 className="space-y-4"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -289,13 +289,13 @@ export default function DashboardPage() {
                           </CardHeader>
                           <CardContent>
                             <p className="text-xl font-bold">
-                              {wallet.balance.toLocaleString("en-US", { 
-                                style: "currency", currency: wallet.currency 
+                              {wallet.balance.toLocaleString("en-US", {
+                                style: "currency", currency: wallet.currency
                               })}
                             </p>
                             <p className="text-sm text-muted-foreground mt-1">
-                              ≈ {converted.toLocaleString("en-US", { 
-                                style: "currency", currency: baseCurrency 
+                              ≈ {converted.toLocaleString("en-US", {
+                                style: "currency", currency: baseCurrency
                               })}
                             </p>
                           </CardContent>
@@ -319,7 +319,7 @@ export default function DashboardPage() {
               </motion.section>
 
               {/* KARTLAR */}
-              <motion.section 
+              <motion.section
                 className="space-y-4"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -410,10 +410,10 @@ export default function DashboardPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-4">
-                      <Statistics 
-                        transactions={transactions} 
-                        currency={baseCurrency} 
-                        statisticType="User" 
+                      <Statistics
+                        transactions={transactions}
+                        currency={baseCurrency}
+                        statisticType="User"
                       />
                     </CardContent>
                   </Card>
@@ -455,12 +455,11 @@ export default function DashboardPage() {
                               {new Date(transaction.createdAt).toLocaleDateString()}
                             </p>
                           </div>
-                          <p className={`text-sm font-medium whitespace-nowrap ${
-                            transaction.amount < 0 ? 'text-red-600' : 'text-green-600'
-                          }`}>
+                          <p className={`text-sm font-medium whitespace-nowrap ${transaction.amount < 0 ? 'text-red-600' : 'text-green-600'
+                            }`}>
                             {transaction.amount > 0 ? '+' : ''}
-                            {transaction.amount.toLocaleString("en-US", { 
-                              style: "currency", currency: transaction.currency 
+                            {transaction.amount.toLocaleString("en-US", {
+                              style: "currency", currency: transaction.currency
                             })}
                           </p>
                         </div>

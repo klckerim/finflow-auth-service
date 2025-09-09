@@ -5,15 +5,18 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FadeInWrapper } from "@/features/dashboard/fadeinwrapper";
+import loadingAnimation from "@/shared/assets/lottie/loading.json";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 import { useLocale } from "@/context/locale-context";
+import Lottie from "react-lottie-player";
 
 export default function RegisterPage() {
   const { user } = useAuth();
   const router = useRouter();
   const { t } = useLocale();
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     userName: "",
@@ -36,6 +39,8 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     setError("");
+    setLoading(true);
+
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -53,6 +58,8 @@ export default function RegisterPage() {
       router.push("/login");
     } catch (err) {
       parseUnknownError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,7 +138,11 @@ export default function RegisterPage() {
                 onClick={handleRegister}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 py-2 text-white font-semibold"
               >
-                {t("dashboard.signup")}
+                 {loading ? (
+                  <Lottie animationData={loadingAnimation} loop style={{ width: 40, height: 40 }} />
+                ) : (
+                  t("dashboard.signup")
+                )}
               </Button>
 
               <div className="flex items-center my-4">

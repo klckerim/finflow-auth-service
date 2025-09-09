@@ -5,16 +5,19 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import loadingAnimation from "@/shared/assets/lottie/loading.json";
 import { FadeInWrapper } from "@/features/dashboard/fadeinwrapper";
 import { useAuth } from "@/context/auth-context";
 import { getMe } from "@/shared/lib/auth";
 import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error-handler";
 import { useLocale } from "@/context/locale-context";
+import Lottie from "react-lottie-player";
 
 export default function LoginPage() {
   const { user, login } = useAuth();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,6 +31,8 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     setError("");
+    setLoading(true);
+
     try {
       const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -53,6 +58,8 @@ export default function LoginPage() {
 
     } catch (err) {
       parseUnknownError(err);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -108,7 +115,12 @@ export default function LoginPage() {
                 onClick={handleLogin}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 rounded-soft py-2 text-white font-semibold transition-all duration-150"
               >
-                {t("dashboard.login")}
+                 {loading ? (
+                  <Lottie animationData={loadingAnimation} loop style={{ width: 40, height: 40 }} />
+                ) : (
+                  t("dashboard.login")
+                )}
+
               </Button>
 
               <div className="flex items-center justify-between text-sm text-blue-400 mt-2">
