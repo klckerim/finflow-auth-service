@@ -23,14 +23,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Configuration & Services
 // ------------------------------
 
-// Url binding
-// builder.WebHost.UseUrls("http://+:80");
-
 // DbContext
 builder.Services.AddDbContextFactory<FinFlowDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Repositories
+// Repositories & Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -44,7 +41,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 // MediatR
 builder.Services.AddMediatR(typeof(RegisterUserHandler).Assembly);
 
-//AutoMapper
+// AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 // Controllers
@@ -58,14 +55,13 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 
 // Serilog
 Log.Logger = new LoggerConfiguration()
-  .MinimumLevel.Debug()
-  .WriteTo.Console()
-  .WriteTo.File("logs/finflow-.log", rollingInterval: RollingInterval.Day)
-  .WriteTo.Seq("http://localhost:5341")
-  .CreateLogger();
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("logs/finflow-.log", rollingInterval: RollingInterval.Day)
+    .WriteTo.Seq(builder.Configuration["Seq:Url"] ?? "http://localhost:5341")
+    .CreateLogger();
 
 builder.Host.UseSerilog();
-
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -96,9 +92,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// CORS
 var allowedOrigins = builder.Configuration["FRONTEND_URLS"]
-?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-?? Array.Empty<string>();
+    ?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+    ?? Array.Empty<string>();
 
 builder.Services.AddCors(options =>
 {
@@ -111,9 +108,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// API Explorer & Versioning
 builder.Services.AddEndpointsApiExplorer();
 
-// API Versioning
 builder.Services
     .AddApiVersioning(options =>
     {
@@ -121,16 +118,17 @@ builder.Services
         options.AssumeDefaultVersionWhenUnspecified = true;
         options.ReportApiVersions = true;
         options.ApiVersionReader = ApiVersionReader.Combine(
-            new UrlSegmentApiVersionReader(),                  // /api/v{version}/...
-            new HeaderApiVersionReader("x-api-version")        // Header: x-api-version: 1.0
+            new UrlSegmentApiVersionReader(),
+            new HeaderApiVersionReader("x-api-version")
         );
     })
     .AddApiExplorer(options =>
     {
-        options.GroupNameFormat = "'v'VVV";                    // v1, v1.1, v2
+        options.GroupNameFormat = "'v'VVV";
         options.SubstituteApiVersionInUrl = true;
     });
 
+// Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -161,13 +159,15 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// ------------------------------
+// Middleware Pipeline
+// ------------------------------
+
 if (app.Environment.IsProduction())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var db = scope.ServiceProvider.GetRequiredService<FinFlowDbContext>();
-        db.Database.Migrate();
-    }
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<FinFlowDbContext>();
+    db.Database.Migrate();
 }
 
 var stripeKey = builder.Configuration["Stripe:SecretKey"];
@@ -185,22 +185,18 @@ if (app.Environment.IsDevelopment())
             options.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json",
                 $"FinFlow API {desc.GroupName.ToUpperInvariant()}");
         }
+        options.RoutePrefix = "swagger";
     });
 }
 
-builder.Logging.AddConsole();
-Console.WriteLine($"[BOOT] Current Connection: {builder.Configuration.GetConnectionString("DefaultConnection")}");
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FinFlow API V1");
-    c.RoutePrefix = "swagger";
-});
+// Root endpoint (health check için)
+app.MapGet("/", () => Results.Ok("FinFlow API is running 🚀"));
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.Run();
