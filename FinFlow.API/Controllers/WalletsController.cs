@@ -70,10 +70,10 @@ public class WalletsController : ControllerBase
     }
 
     [HttpPost("{walletId}/deposit")]
-    public async Task<IActionResult> Deposit(Guid walletId, [FromBody] decimal amount)
+    public async Task<IActionResult> Deposit(Guid walletId, [FromBody] DepositRequest request)
     {
-        await _mediator.Send(new DepositCommand(walletId, amount));
-        _logger.LogInformation("Deposited {Amount} to wallet {WalletId}", amount, walletId);
+        await _mediator.Send(new DepositCommand(walletId, request.Amount, request.Currency));
+        _logger.LogInformation("Deposited {Amount} to wallet {WalletId}", request.Amount, walletId);
         return NoContent();
     }
 
