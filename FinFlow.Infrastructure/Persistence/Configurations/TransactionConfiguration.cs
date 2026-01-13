@@ -11,6 +11,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Amount).HasColumnType("decimal(18,2)").IsRequired();
+        builder.Property(x => x.Currency).HasMaxLength(3).IsRequired().HasDefaultValue("EUR");
         builder.Property(x => x.Description).HasMaxLength(500);
         builder.Property(x => x.CreatedAt).IsRequired();
 
