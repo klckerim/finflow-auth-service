@@ -158,7 +158,7 @@
     "str_Transactions": "İşlemler",
     "str_NoTransaction": "Henüz işlem yok",
     "str_NoTransactionExplanation": "İlk işlemini yaptıktan sonra işlemlerin burada görünecek.",
-    "str_TransactionDescrption": "100$ tutarındaki son transferin başarılı oldu.",
+    "str_TransactionDescription": "100$ tutarındaki son transferin başarılı oldu.",
     "str_ManageInfo": "Kişisel bilgilerini ve güvenlik ayarlarını yönet.",
     "str_NoNotifications": "Henüz bildirim yok.",
     "str_MarkAsRead": "Okundu Olarak İşaretle",

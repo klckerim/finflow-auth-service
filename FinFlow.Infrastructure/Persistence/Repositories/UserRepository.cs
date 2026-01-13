@@ -1,7 +1,5 @@
 using FinFlow.Application.Interfaces;
 using FinFlow.Domain.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -18,21 +16,21 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
 
         public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var context = _contextFactory.CreateDbContext();
+            using var context = _contextFactory.CreateDbContext();
             return await context.Users.AnyAsync(u => u.Email == email, cancellationToken);
         }
 
         public async Task AddAsync(User user, CancellationToken cancellationToken)
         {
-            var context = _contextFactory.CreateDbContext();
+            using var context = _contextFactory.CreateDbContext();
 
             await context.Users.AddAsync(user, cancellationToken);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var context = _contextFactory.CreateDbContext();
+            using var context = _contextFactory.CreateDbContext();
 
             return await context.Users
             .Include(u => u.RefreshTokens)
@@ -41,7 +39,7 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByPasswordResetTokenAsync(string token, CancellationToken cancellationToken)
         {
-            var context = _contextFactory.CreateDbContext();
+            using var context = _contextFactory.CreateDbContext();
 
             return await context.Users
             .Include(u => u.RefreshTokens)
@@ -50,7 +48,7 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetUserByRefreshTokenAsync(string token)
         {
-            var context = _contextFactory.CreateDbContext();
+            using var context = _contextFactory.CreateDbContext();
 
             return await context.Users
                 .Include(u => u.RefreshTokens)
@@ -59,7 +57,7 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
 
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
         {
-            var context = _contextFactory.CreateDbContext();
+            using var context = _contextFactory.CreateDbContext();
 
             return await context.Users
                 .Include(u => u.RefreshTokens)
@@ -70,12 +68,12 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
         {
             try
             {
-                var context = _contextFactory.CreateDbContext();
+                using var context = _contextFactory.CreateDbContext();
 
                 // RefreshToken'ı doğrudan context'e ekle
                 context.RefreshTokens.Add(refreshToken);
 
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateConcurrencyException ex)
             {

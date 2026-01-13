@@ -55,7 +55,7 @@ Reach test data here: [Stripe Testing Guide](https://docs.stripe.com/testing)
 - `FinFlow.Application` → Business logic (CQRS, services, handlers)  
 - `FinFlow.Domain` → Core domain entities & rules  
 - `FinFlow.Infrastructure` → EF Core, DbContext, Stripe integration 
-- `FinFlow.Web` → Next.js 14 frontend dashboard 
+- `finflow-ui` → Next.js 14 frontend dashboard 
 
 
 
@@ -102,5 +102,4 @@ Stripe__WebhookSecret
 ```bash
 stripe listen --forward-to http://localhost:5001/api/payments/webhook
 ```
-
 
