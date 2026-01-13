@@ -158,7 +158,7 @@
     "str_Transactions": "Transaktionen",
     "str_NoTransaction": "Noch keine Transaktion",
     "str_NoTransactionExplanation": "Ihre Transaktionen erscheinen hier, sobald Sie Ihre erste Transaktion durchführen.",
-    "str_TransactionDescrption": "Ihre letzte Überweisung von $100 war erfolgreich.",
+    "str_TransactionDescription": "Ihre letzte Überweisung von $100 war erfolgreich.",
     "str_ManageInfo": "Verwalten Sie Ihre persönlichen Informationen und Sicherheitseinstellungen.",
     "str_NoNotifications": "Noch keine Benachrichtigungen.",
     "str_MarkAsRead": "Als gelesen markieren",

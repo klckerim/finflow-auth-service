@@ -158,7 +158,7 @@
     "str_Transactions": "Transactions",
     "str_NoTransaction": "No transaction yet",
     "str_NoTransactionExplanation": "Your transactions will appear here once you make your first transaction.",
-    "str_TransactionDescrption": "Your last transfer of $100 was successful.",
+    "str_TransactionDescription": "Your last transfer of $100 was successful.",
     "str_ManageInfo": "Manage your personal information and security preferences.",
     "str_NoNotifications": "No notifications yet.",
     "str_MarkAsRead": "Mark As Read",
