@@ -39,7 +39,6 @@ public class TransferHandler : IRequestHandler<TransferCommand>
         {
             WalletId = fromWallet.Id,
             Amount = -request.Amount,
-            Currency = fromWallet.Currency,
             Type = TransactionType.TransferOut,
             Description = $"Transfer to wallet {toWallet.Name}"
         };
@@ -48,7 +47,6 @@ public class TransferHandler : IRequestHandler<TransferCommand>
         {
             WalletId = toWallet.Id,
             Amount = request.Amount,
-            Currency = toWallet.Currency,
             Type = TransactionType.TransferIn,
             Description = $"Transfer from wallet {fromWallet.Name}"
         };

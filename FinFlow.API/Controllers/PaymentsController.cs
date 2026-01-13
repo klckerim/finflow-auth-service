@@ -215,11 +215,7 @@ public class PaymentsController : ControllerBase
                     {
                         var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
 
-                        var currency = string.IsNullOrWhiteSpace(session.Currency)
-                            ? "EUR"
-                            : session.Currency.ToUpperInvariant();
-
-                        var result = await _mediator.Send(new DepositCommand(walletGuid, amount, currency));
+                        var result = await _mediator.Send(new DepositCommand(walletGuid, amount));
                         if (result)
                         {
                             _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);

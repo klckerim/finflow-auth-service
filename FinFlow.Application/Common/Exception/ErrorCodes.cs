@@ -10,8 +10,6 @@ public static class ErrorCodes
     public const string RecipientWalletNotFound = "recipient_wallet_not_found";
     public const string InsufficientBalance = "insufficient_balance";
     public const string RecipientWalletCurrency = "recipient_wallet_currency";
-    public const string WalletCurrencyMismatch = "wallet_currency_mismatch";
-    public const string InvalidCurrency = "invalid_currency";
     public const string EmailRequierd = "email_required";
     public const string WalletsNotMatch = "wallets_not_match";
     public const string InvalidRefreshToken = "invalid_refresh_token";
@@ -19,3 +17,4 @@ public static class ErrorCodes
     public const string CardPaymentFailed = "card_payment_failed";
     public const string NoPaymentMethodProvided = "no_payment_method_provided";
 }
+
