@@ -74,7 +74,6 @@ public class WalletRepository : IWalletRepository
             {
                 WalletId = walletId,
                 Amount = amount,
-                Currency = wallet.Currency,
                 Type = TransactionType.Deposit,
                 Description = "Money has been deposited."
             });

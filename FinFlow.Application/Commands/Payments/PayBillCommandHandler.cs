@@ -42,7 +42,6 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
             {
                 WalletId = wallet.Id,
                 Amount = request.Amount,
-                Currency = wallet.Currency,
                 Type = TransactionType.BillPayment,
                 Description = request.Description,
                 CreatedAt = DateTime.UtcNow
@@ -73,7 +72,6 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
                 {
                     PaymentMethodId = request.CardId,
                     Amount = request.Amount,
-                    Currency = request.Currency,
                     Type = TransactionType.BillPayment,
                     Description = request.Description,
                     CreatedAt = DateTime.UtcNow
