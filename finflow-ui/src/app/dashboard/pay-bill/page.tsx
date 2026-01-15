@@ -11,6 +11,7 @@ import { parseUnknownError } from "@/shared/lib/api-error-handler";
 import { useLocale } from "@/context/locale-context";
 import { useAuth } from "@/context/auth-context";
 import { getCardsByUserId, getWalletsByUser } from "@/shared/lib/api";
+import { generateIdempotencyKey } from "@/shared/lib/idempotency";
 import { formatAmount } from "@/shared/lib/utils";
 
 export default function PayBillPage() {
@@ -93,9 +94,13 @@ export default function PayBillPage() {
             if (paymentMethod === "wallet") payload.WalletId = selectedWallet;
             if (paymentMethod === "card") payload.CardId = selectedCard;
 
+            const idempotencyKey = generateIdempotencyKey();
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/bill`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Idempotency-Key": idempotencyKey
+                },
                 body: JSON.stringify(payload),
             });
 

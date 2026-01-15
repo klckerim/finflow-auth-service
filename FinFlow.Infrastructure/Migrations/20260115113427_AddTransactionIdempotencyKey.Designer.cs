@@ -3,6 +3,7 @@ using System;
 using FinFlow.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FinFlow.Infrastructure.Migrations
 {
     [DbContext(typeof(FinFlowDbContext))]
-    partial class FinFlowDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260115113427_AddTransactionIdempotencyKey")]
+    partial class AddTransactionIdempotencyKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

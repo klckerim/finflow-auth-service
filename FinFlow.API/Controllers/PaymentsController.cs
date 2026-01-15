@@ -20,7 +20,7 @@ public class PaymentsController : ControllerBase
 
 
     [HttpPost("bill")]
-    public async Task<IActionResult> PayBill([FromBody] PayBillRequest request)
+    public async Task<IActionResult> PayBill([FromBody] PayBillRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
         var paymentId = await _mediator.Send(new PayBillCommand(
             request.Email,
@@ -29,7 +29,8 @@ public class PaymentsController : ControllerBase
             request.CardId,
             request.Currency,
             $"Bill {request.BillId}",
-            request.PaymentType
+            request.PaymentType,
+            idempotencyKey
         ));
 
         return Ok(new { PaymentId = paymentId });
@@ -68,8 +69,20 @@ public class PaymentsController : ControllerBase
 
 
     [HttpPost("create-session")]
-    public IActionResult CreateCheckoutSession([FromBody] CheckoutRequest request)
+    public IActionResult CreateCheckoutSession([FromBody] CheckoutRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
+        var metadata = new Dictionary<string, string>
+        {
+            { "walletId", request.WalletId ?? Guid.Empty.ToString() },
+            { "amount", request.Amount.ToString() },
+            { "currency", request.Currency ?? "usd" }
+        };
+
+        if (!string.IsNullOrWhiteSpace(idempotencyKey))
+        {
+            metadata["idempotencyKey"] = idempotencyKey;
+        }
+
         var options = new SessionCreateOptions
         {
             PaymentMethodTypes = new List<string> { "card" },
@@ -92,20 +105,10 @@ public class PaymentsController : ControllerBase
             Mode = "payment",
             SuccessUrl = _config["Stripe:SuccessUrl"],
             CancelUrl = _config["Stripe:CancelUrl"],
-            Metadata = new Dictionary<string, string>
-            {
-                { "walletId", request.WalletId ?? Guid.Empty.ToString() },
-                { "amount", request.Amount.ToString() },
-                { "currency", request.Currency ?? "usd" }
-            },
+            Metadata = metadata,
             PaymentIntentData = new SessionPaymentIntentDataOptions
             {
-                Metadata = new Dictionary<string, string>
-            {
-                { "walletId", request.WalletId ?? Guid.Empty.ToString() },
-                { "amount", request.Amount.ToString() },
-                { "currency", request.Currency ?? "usd" }
-            }
+                Metadata = metadata
             }
         };
 
@@ -214,8 +217,9 @@ public class PaymentsController : ControllerBase
                     if (Guid.TryParse(walletIdStr, out var walletGuid))
                     {
                         var amount = session.AmountTotal.HasValue ? session.AmountTotal.Value / 100m : 0m;
+                        session.Metadata.TryGetValue("idempotencyKey", out var idempotencyKeyValue);
 
-                        var result = await _mediator.Send(new DepositCommand(walletGuid, amount));
+                        var result = await _mediator.Send(new DepositCommand(walletGuid, amount, idempotencyKeyValue));
                         if (result)
                         {
                             _logger.LogInformation("Wallet {WalletId} balance updated with {Amount}. TestMode={TestMode}", walletIdStr, amount, !session.Livemode);

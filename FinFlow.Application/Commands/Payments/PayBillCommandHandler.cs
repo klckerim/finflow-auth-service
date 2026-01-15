@@ -25,6 +25,15 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
 
     public async Task<Guid> Handle(PayBillCommand request, CancellationToken ct)
     {
+        if (!string.IsNullOrWhiteSpace(request.IdempotencyKey))
+        {
+            var existing = await _txRepo.GetByIdempotencyKeyAsync(request.IdempotencyKey, TransactionType.BillPayment, ct);
+            if (existing != null)
+            {
+                return existing.Id;
+            }
+        }
+
         // Wallet payment
         if (request.PaymentType == PaymentType.Wallet && request.WalletId.HasValue)
         {
@@ -38,16 +47,19 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
             wallet.Balance -= request.Amount;
             await _walletRepo.UpdateAsync(wallet);
 
-            await _txRepo.AddAsync(new Transaction
+            var transaction = new Transaction
             {
                 WalletId = wallet.Id,
                 Amount = request.Amount,
                 Type = TransactionType.BillPayment,
                 Description = request.Description,
-                CreatedAt = DateTime.UtcNow
-            });
+                CreatedAt = DateTime.UtcNow,
+                IdempotencyKey = request.IdempotencyKey
+            };
 
-            return Guid.NewGuid();
+            await _txRepo.AddAsync(transaction, ct);
+
+            return transaction.Id;
         }
 
         // Card payment
@@ -68,16 +80,19 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
                 if (!paymentResult.Succeeded)
                     throw new AppException(ErrorCodes.CardPaymentFailed, "Card payment failed");
 
-                await _txRepo.AddAsync(new Transaction
+                var transaction = new Transaction
                 {
                     PaymentMethodId = request.CardId,
                     Amount = request.Amount,
                     Type = TransactionType.BillPayment,
                     Description = request.Description,
-                    CreatedAt = DateTime.UtcNow
-                });
+                    CreatedAt = DateTime.UtcNow,
+                    IdempotencyKey = request.IdempotencyKey
+                };
 
-                return Guid.NewGuid();
+                await _txRepo.AddAsync(transaction, ct);
+
+                return transaction.Id;
             }
         }
 

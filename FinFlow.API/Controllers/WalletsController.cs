@@ -70,20 +70,26 @@ public class WalletsController : ControllerBase
     }
 
     [HttpPost("{walletId}/deposit")]
-    public async Task<IActionResult> Deposit(Guid walletId, [FromBody] decimal amount)
+     public async Task<IActionResult> Deposit(
+        Guid walletId,
+        [FromBody] decimal amount,
+        [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
-        await _mediator.Send(new DepositCommand(walletId, amount));
+        await _mediator.Send(new DepositCommand(walletId, amount, idempotencyKey));
         _logger.LogInformation("Deposited {Amount} to wallet {WalletId}", amount, walletId);
         return NoContent();
     }
 
     [HttpPost("{walletId}/transfer")]
-    public async Task<IActionResult> Transfer(Guid walletId, [FromBody] TransferDto transferDto)
+    public async Task<IActionResult> Transfer(
+        Guid walletId,
+        [FromBody] TransferDto transferDto,
+        [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
         if (walletId != transferDto.FromWalletId)
             throw new Exception(ErrorCodes.WalletsNotMatch);
 
-        await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount));
+        await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount, idempotencyKey));
         _logger.LogInformation("Transferred {Amount} from wallet {FromWalletId} to wallet {ToWalletId}",
             transferDto.Amount, transferDto.FromWalletId, transferDto.ToWalletId);
         return NoContent();

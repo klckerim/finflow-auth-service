@@ -1,8 +1,7 @@
 import { Wallet as WalletType } from "@/shared/types/wallet";
 import { Card as CardType } from "@/shared/types/card";
-
+import { generateIdempotencyKey } from "./idempotency"
 import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
-
 
 export async function getWalletsByUser(userId: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/user/${userId}`);
@@ -61,10 +60,13 @@ export async function transferAmount(walletId: string, data: {
   toWalletId: string;
   amount: number;
 }) {
+
+  const idempotencyKey = generateIdempotencyKey();
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${walletId}/transfer`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Idempotency-Key": idempotencyKey,
     },
     credentials: "include",
     body: JSON.stringify(data),

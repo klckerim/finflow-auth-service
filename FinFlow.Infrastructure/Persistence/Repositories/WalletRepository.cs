@@ -52,7 +52,7 @@ public class WalletRepository : IWalletRepository
     }
 
     // one context, one commit
-    public async Task<bool> IncreaseBalanceWithTransactionAsync(Guid walletId, decimal amount, CancellationToken ct)
+    public async Task<bool> IncreaseBalanceWithTransactionAsync(Guid walletId, decimal amount,  string? idempotencyKey, CancellationToken ct)
     {
         await using var db = await _contextFactory.CreateDbContextAsync(ct);
         await using var transaction = await db.Database.BeginTransactionAsync(ct);
@@ -75,7 +75,8 @@ public class WalletRepository : IWalletRepository
                 WalletId = walletId,
                 Amount = amount,
                 Type = TransactionType.Deposit,
-                Description = "Money has been deposited."
+                Description = "Money has been deposited.",
+                IdempotencyKey = idempotencyKey
             });
 
             await db.SaveChangesAsync(ct);

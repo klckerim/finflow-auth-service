@@ -16,6 +16,18 @@ public class TransferHandler : IRequestHandler<TransferCommand>
 
     public async Task<Unit> Handle(TransferCommand request, CancellationToken cancellationToken)
     {
+        if (!string.IsNullOrWhiteSpace(request.IdempotencyKey))
+        {
+            var existing = await _transactionRepository.GetByIdempotencyKeyAsync(
+                request.IdempotencyKey,
+                TransactionType.TransferOut,
+                cancellationToken);
+            if (existing != null)
+            {
+                return Unit.Value;
+            }
+        }
+
         var fromWallet = await _walletRepository.GetByIdAsync(request.FromWalletId, cancellationToken);
         if (fromWallet == null)
             throw new AppException(ErrorCodes.SourceWalletNotFound, "Source wallet not found.");
@@ -40,7 +52,8 @@ public class TransferHandler : IRequestHandler<TransferCommand>
             WalletId = fromWallet.Id,
             Amount = -request.Amount,
             Type = TransactionType.TransferOut,
-            Description = $"Transfer to wallet {toWallet.Name}"
+            Description = $"Transfer to wallet {toWallet.Name}",
+            IdempotencyKey = request.IdempotencyKey
         };
 
         var toTransaction = new Transaction
@@ -48,7 +61,8 @@ public class TransferHandler : IRequestHandler<TransferCommand>
             WalletId = toWallet.Id,
             Amount = request.Amount,
             Type = TransactionType.TransferIn,
-            Description = $"Transfer from wallet {fromWallet.Name}"
+            Description = $"Transfer from wallet {fromWallet.Name}",
+            IdempotencyKey = request.IdempotencyKey
         };
 
         await _transactionRepository.AddAsync(fromTransaction, cancellationToken);

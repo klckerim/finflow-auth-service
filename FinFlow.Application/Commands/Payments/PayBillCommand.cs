@@ -8,5 +8,6 @@ public record PayBillCommand(
     Guid? CardId,
     string Currency,
     string Description,
-    PaymentType? PaymentType
+    PaymentType? PaymentType,
+    string? IdempotencyKey
 ) : IRequest<Guid>;

@@ -19,6 +19,15 @@ public class TransactionRepository : ITransactionRepository
         await context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<Transaction?> GetByIdempotencyKeyAsync(string idempotencyKey, TransactionType type, CancellationToken cancellationToken = default)
+    {
+        var context = _contextFactory.CreateDbContext();
+
+        return await context.Transactions
+            .Where(t => t.IdempotencyKey == idempotencyKey && t.Type == type)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<List<Transaction>> GetTransactionsByUserIdAsync(Guid userId, int limit = 20, CancellationToken cancellationToken = default)
     {
         var context = _contextFactory.CreateDbContext();

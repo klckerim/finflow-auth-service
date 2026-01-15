@@ -12,7 +12,9 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Amount).HasColumnType("decimal(18,2)").IsRequired();
         builder.Property(x => x.Description).HasMaxLength(500);
+        builder.Property(x => x.IdempotencyKey).HasMaxLength(100);
         builder.Property(x => x.CreatedAt).IsRequired();
+        builder.HasIndex(x => new { x.IdempotencyKey, x.Type }).IsUnique();
 
         // Relationships
         builder.HasOne(x => x.Wallet)

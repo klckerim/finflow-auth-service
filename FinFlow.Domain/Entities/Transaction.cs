@@ -19,5 +19,7 @@ public class Transaction
 
     public string? Description { get; set; }
 
+    public string? IdempotencyKey { get; set; }
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
