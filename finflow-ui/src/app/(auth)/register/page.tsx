@@ -38,8 +38,10 @@ export default function RegisterPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     setError("");
+
     setLoading(true);
 
     try {
@@ -58,6 +60,10 @@ export default function RegisterPage() {
 
       router.push("/login");
     } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+      if (message) {
+        setError(message);
+      }
       parseUnknownError(err);
     } finally {
       setLoading(false);
@@ -96,9 +102,11 @@ export default function RegisterPage() {
               {t("common.str_FillDetail")}
             </p>
 
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={handleRegister} aria-busy={loading}>
               <div>
-                <label className="text-sm mb-1 block text-gray-300">{t("dashboard.fullname")}</label>
+                <label htmlFor="fullName" className="text-sm mb-1 block text-gray-300">
+                  {t("dashboard.fullname")}
+                </label>
                 <Input
                   id="fullName"
                   type="text"
@@ -106,12 +114,18 @@ export default function RegisterPage() {
                   value={form.fullName}
                   onChange={handleChange}
                   placeholder={t("common.str_Fullname")}
+                  autoComplete="name"
+                  disabled={loading}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "register-error" : undefined}
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-300">{t("dashboard.email")}</label>
+                <label htmlFor="email" className="text-sm mb-1 block text-gray-300">
+                  {t("dashboard.email")}
+                </label>
                 <Input
                   id="email"
                   type="email"
@@ -119,12 +133,18 @@ export default function RegisterPage() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder={t("common.str_EnterEmail")}
+                  autoComplete="email"
+                  disabled={loading}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "register-error" : undefined}
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-300">{t("dashboard.password")}</label>
+                <label htmlFor="password" className="text-sm mb-1 block text-gray-300">
+                  {t("dashboard.password")}
+                </label>
                 <Input
                   id="password"
                   type="password"
@@ -132,14 +152,23 @@ export default function RegisterPage() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder={t("common.str_SecurePassword")}
+                  autoComplete="new-password"
+                  disabled={loading}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "register-error" : undefined}
                   className="w-full bg-inputBg text-white px-4 py-2 border border-gray-600"
                 />
               </div>
 
-              {error && <p className="text-red-400 text-sm">{error}</p>}
+              {error && (
+                <p id="register-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
+                  {error}
+                </p>
+              )}
 
               <Button
-                onClick={handleRegister}
+                type="submit"
+                disabled={loading || !form.fullName || !form.email || !form.password}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 py-2 text-white font-semibold"
               >
                 {loading ? (
@@ -156,12 +185,12 @@ export default function RegisterPage() {
               </div>
 
               <div className="flex gap-4">
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
+                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
                   <Image src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" width={20} height={20} />
                   {t("common.str_ContinueWithGoogle")}
                 </Button>
 
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
+                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
                   <Image src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" width={20} height={20} />
                   {t("common.str_ContinueWithApple")}
                 </Button>
@@ -173,10 +202,10 @@ export default function RegisterPage() {
                   {t("dashboard.signin")}
                 </Link>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
-    </FadeInWrapper>
+    </FadeInWrapper >
   );
 }

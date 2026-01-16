@@ -30,8 +30,8 @@ export default function LoginPage() {
     }
   }, [user, router]);
 
-  const handleLogin = async () => {
-    setError("");
+  const handleLogin = async (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault(); setError("");
     setLoading(true);
 
     try {
@@ -58,8 +58,12 @@ export default function LoginPage() {
       router.push("/dashboard");
 
     } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+      if (message) {
+        setError(message);
+      }
       parseUnknownError(err);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -89,7 +93,7 @@ export default function LoginPage() {
             </h2>
             <p className="text-center text-gray-400 mb-6 text-sm"> {t("common.str_Login")}</p>
 
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={handleLogin} aria-busy={loading}>
               <div>
                 <label htmlFor="email" className="text-sm mb-1 block text-gray-300">
                   {t("common.str_Email")}
@@ -101,6 +105,9 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t("common.str_EnterEmail")}
                   autoComplete="email"
+                  disabled={loading}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "login-error" : undefined}
                   className="w-full bg-inputBg text-white rounded-soft px-4 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -116,17 +123,24 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t("common.str_EnterPassword")}
                   autoComplete="current-password"
+                  disabled={loading}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "login-error" : undefined}
                   className="w-full bg-inputBg text-white rounded-soft px-4 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
-              {error && <p className="text-red-400 text-sm">{error}</p>}
+              {error && (
+                <p id="login-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
+                  {error}
+                </p>
+              )}
               <Button
-                onClick={handleLogin}
+                type="submit"
                 disabled={loading || !email || !password}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 rounded-soft py-2 text-white font-semibold transition-all duration-150"
               >
-                 {loading ? (
+                {loading ? (
                   <Lottie animationData={loadingAnimation} loop style={{ width: 40, height: 40 }} />
                 ) : (
                   t("dashboard.login")
@@ -143,12 +157,12 @@ export default function LoginPage() {
               <div className="text-center text-sm text-gray-500 mt-4">{t("common.str_LogWith")}</div>
 
               <div className="flex gap-4 mt-2">
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
+                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
                   <Image src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" width={20} height={20} />
                   {t("common.str_ContinueWithGoogle")}
                 </Button>
 
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
+                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
                   <Image src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" width={20} height={20} />
                   {t("common.str_ContinueWithApple")}
                 </Button>
@@ -168,7 +182,7 @@ export default function LoginPage() {
                   {t("dashboard.signup")}
                 </Link>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
