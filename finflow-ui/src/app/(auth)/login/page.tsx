@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -71,10 +72,13 @@ export default function LoginPage() {
           <p className="text-lg max-w-md text-gray-300 text-center">
             {t("common.str_ManageWallets")} ✨
           </p>
-          <img
+          <Image
             src="/images/finance-illustration.svg"
             alt="Finance illustration"
             className="w-80 mt-8"
+            width={320}
+            height={320}
+            priority
           />
         </div>
 
@@ -87,25 +91,31 @@ export default function LoginPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="text-sm mb-1 block text-gray-300">{t("common.str_Email")}</label>
+                <label htmlFor="email" className="text-sm mb-1 block text-gray-300">
+                  {t("common.str_Email")}
+                </label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t("common.str_EnterEmail")}
+                  autoComplete="email"
                   className="w-full bg-inputBg text-white rounded-soft px-4 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
               <div>
-                <label className="text-sm mb-1 block text-gray-300">{t("common.str_Password")}</label>
+                <label htmlFor="password" className="text-sm mb-1 block text-gray-300">
+                  {t("common.str_Password")}
+                </label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t("common.str_EnterPassword")}
+                  autoComplete="current-password"
                   className="w-full bg-inputBg text-white rounded-soft px-4 py-2 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -113,6 +123,7 @@ export default function LoginPage() {
               {error && <p className="text-red-400 text-sm">{error}</p>}
               <Button
                 onClick={handleLogin}
+                disabled={loading || !email || !password}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 rounded-soft py-2 text-white font-semibold transition-all duration-150"
               >
                  {loading ? (
@@ -133,13 +144,13 @@ export default function LoginPage() {
 
               <div className="flex gap-4 mt-2">
                 <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
-                  <img src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" />
-                  Google
+                  <Image src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" width={20} height={20} />
+                  {t("common.str_ContinueWithGoogle")}
                 </Button>
 
                 <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
-                  <img src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" />
-                  Apple
+                  <Image src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" width={20} height={20} />
+                  {t("common.str_ContinueWithApple")}
                 </Button>
               </div>
 

@@ -196,7 +196,7 @@ export default function PayBillPage() {
                                         <Input
                                             id="amount"
                                             type="number"
-                                            placeholder="0.00"
+                                            placeholder={t("common.str_BillAmountPlaceholder")}
                                             value={formatAmount(billAmount ?? 0)}
                                             onChange={(e) => setBillAmount(Number(e.target.value))}
                                         />

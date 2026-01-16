@@ -26,6 +26,7 @@ export default function TransferPage() {
   const [toWalletId, setToWalletId] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lastTransfersLoading, setLastTransfersLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [walletOptions, setWalletOptions] = useState<any[]>([]);
   const [lastTransfers, setLastTransfers] = useState<any[]>([]);
@@ -43,6 +44,7 @@ export default function TransferPage() {
       if (!walletId) return;
 
       setWalletOptions(wallets.filter((w) => w.id !== walletId));
+      setLastTransfersLoading(true);
 
       try {
         const response = await getTransactionsByWalletId(walletId as string, 5);
@@ -50,7 +52,7 @@ export default function TransferPage() {
       } catch (err) {
         parseUnknownError(err);
       } finally {
-        setLoading(false);
+        setLastTransfersLoading(false);
       }
     })();
   }, [walletId, wallets]);
@@ -125,7 +127,7 @@ export default function TransferPage() {
               <label className="block text-sm font-medium mb-1">{t("common.str_RecipientWallet")}</label>
               <Select value={toWalletId} onValueChange={setToWalletId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Choose recipient wallet" />
+                  <SelectValue placeholder={t("common.str_ChooseRecipientWallet")} />
                 </SelectTrigger>
                 <SelectContent>
                   {walletOptions.map((wallet) => (
@@ -182,7 +184,16 @@ export default function TransferPage() {
           <CardTitle className="text-lg">📜 {t("common.str_LastTransfers")}</CardTitle>
         </CardHeader>
         <CardContent>
-          {lastTransfers.length === 0 ? (
+          {lastTransfersLoading ? (
+            <div className="space-y-3">
+              {[0, 1, 2].map((item) => (
+                <div key={item} className="flex justify-between text-sm py-2">
+                  <div className="h-4 w-2/3 rounded bg-muted animate-pulse" />
+                  <div className="h-4 w-16 rounded bg-muted animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ) : lastTransfers.length === 0 ? (
             <p className="text-sm text-muted-foreground">{t("common.str_NoRecentTransfers")}</p>
           ) : (
             lastTransfers.map((tx, idx) => (

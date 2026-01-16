@@ -1,23 +1,108 @@
 // components/AnalyticsWidget.tsx
 /**
- * Analytics widget placeholder - For future dashboard charts.
+ * Analytics widget summary for dashboard charts.
  */
+
+import { useMemo } from "react";
 import { useLocale } from "@/context/locale-context";
-import { BarChart } from "lucide-react";
+import { useWalletStore } from "@/app/store/walletStore";
+import { BarChart, TrendingUp, Wallet } from "lucide-react";
+
 
 const AnalyticsWidget = () => {
   const { t } = useLocale();
+  const wallets = useWalletStore((state) => state.wallets);
+  const summary = useMemo(() => {
+    const totalBalance = wallets.reduce((sum, wallet) => sum + wallet.balance, 0);
+    const topWallet = wallets.reduce(
+      (current, wallet) => (wallet.balance > current.balance ? wallet : current),
+      wallets[0] ?? { name: "", balance: 0, currency: "" }
+    );
+    const currency = wallets[0]?.currency ?? "";
+    const sortedWallets = [...wallets].sort((a, b) => b.balance - a.balance).slice(0, 4);
+    const maxBalance = sortedWallets[0]?.balance ?? 0;
+
+    return {
+      totalBalance,
+      topWallet,
+      currency,
+      walletCount: wallets.length,
+      chartItems: sortedWallets,
+      maxBalance,
+    };
+  }, [wallets]);
 
   return (
-    <div className="mt-8 border rounded-lg p-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="mt-8 border rounded-lg p-6 bg-card">
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold">{t("common.str_FinancialAnalysis")}</h2>
         <BarChart className="h-5 w-5 text-primary" />
       </div>
-      <div className="h-64 bg-muted rounded-lg flex items-center justify-center">
-        <p className="text-muted-foreground">
-          {t("common.str_FinancialCharts")}
-        </p>
+      
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="rounded-lg border bg-muted/30 p-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Wallet className="h-4 w-4 text-primary" />
+            {t("common.str_TotalBalance")}
+          </div>
+          <div className="mt-2 text-2xl font-semibold">
+            {summary.totalBalance.toLocaleString()} {summary.currency}
+          </div>
+        </div>
+        <div className="rounded-lg border bg-muted/30 p-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <TrendingUp className="h-4 w-4 text-primary" />
+            {t("common.str_TopWallet")}
+          </div>
+          <div className="mt-2 text-lg font-semibold">
+            {summary.topWallet.name || t("common.str_NoData")}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {summary.topWallet.balance.toLocaleString()} {summary.topWallet.currency}
+          </p>
+        </div>
+        <div className="rounded-lg border bg-muted/30 p-4">
+          <div className="text-sm text-muted-foreground">{t("common.str_WalletCount")}</div>
+          <div className="mt-2 text-2xl font-semibold">{summary.walletCount}</div>
+          <p className="text-sm text-muted-foreground">{t("common.str_ActiveWallets")}</p>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-lg border bg-muted/20 p-4">
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <span>{t("common.str_WalletDistribution")}</span>
+          <span>{t("common.str_Last30Days")}</span>
+        </div>
+        {summary.chartItems.length === 0 ? (
+          <div className="h-32 flex items-center justify-center text-sm text-muted-foreground">
+            {t("common.str_FinancialCharts")}
+          </div>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {summary.chartItems.map((wallet) => {
+              const widthPercent = summary.maxBalance
+                ? Math.max(8, Math.round((wallet.balance / summary.maxBalance) * 100))
+                : 0;
+
+              return (
+                <div key={wallet.id} className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{wallet.name}</span>
+                    <span className="text-muted-foreground">
+                      {wallet.balance.toLocaleString()} {wallet.currency}
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-muted">
+                    <div
+                      className="h-2 rounded-full bg-primary transition-all"
+                      style={{ width: `${widthPercent}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

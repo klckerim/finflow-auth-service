@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -75,10 +76,13 @@ export default function RegisterPage() {
           <p className="text-lg max-w-md text-gray-300 text-center">
             {t("common.str_Roadway")}  🚀
           </p>
-          <img
+          <Image
             src="/images/finance-illustration.svg"
             alt="Finance illustration"
             className="w-80 mt-8"
+            width={320}
+            height={320}
+            priority
           />
         </div>
 
@@ -138,7 +142,7 @@ export default function RegisterPage() {
                 onClick={handleRegister}
                 className="w-full bg-primary hover:bg-blue-700 mt-4 py-2 text-white font-semibold"
               >
-                 {loading ? (
+                {loading ? (
                   <Lottie animationData={loadingAnimation} loop style={{ width: 40, height: 40 }} />
                 ) : (
                   t("dashboard.signup")
@@ -153,13 +157,13 @@ export default function RegisterPage() {
 
               <div className="flex gap-4">
                 <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
-                  <img src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" />
-                  Google
+                  <Image src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" width={20} height={20} />
+                  {t("common.str_ContinueWithGoogle")}
                 </Button>
 
                 <Button variant="outline" className="flex-1 rounded-xl bg-white text-black">
-                  <img src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" />
-                  Apple
+                  <Image src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" width={20} height={20} />
+                  {t("common.str_ContinueWithApple")}
                 </Button>
               </div>
 
