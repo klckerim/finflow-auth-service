@@ -68,29 +68,71 @@ Reach test data here: [Stripe Testing Guide](https://docs.stripe.com/testing)
 - Developer-friendly, portfolio-ready codebase  
 
 ---
+## 📌 Installation & Local Development
 
-## 📌 Quick Start (Development)
+Choose one of the following setups. Docker Compose is the fastest way to boot the full stack.
 
+### ✅ Option A: Docker Compose (Full Stack)
+This starts PostgreSQL, API, UI, and pgAdmin together.
 
-### Backend
+```bash
+docker compose up --build
+```
+
+**Services**
+- API: http://localhost:5001
+- UI: http://localhost:3000
+- pgAdmin: http://localhost:5050
+
+---
+
+### ✅ Option B: Local Development (Docker-free)
+
+#### 1) Start PostgreSQL
+Use the same connection values used by the API:
+
+```
+Host=localhost
+Port=5432
+Database=finflowdb
+Username=finflowuser
+Password=finflowpass
+```
+
+If you prefer Docker for Postgres only:
+```bash
+docker run --name finflow-postgres \
+  -e POSTGRES_USER=finflowuser \
+  -e POSTGRES_PASSWORD=finflowpass \
+  -e POSTGRES_DB=finflowdb \
+  -p 5432:5432 \
+  -d postgres:15
+```
+
+#### 2) Run the API (.NET 9)
+From repo root:
 ```bash
 dotnet restore
-dotnet build
+dotnet ef database update --project FinFlow.Infrastructure --startup-project FinFlow.API
 dotnet run --project FinFlow.API
 ```
 
-### Frontend
+API will be available on: **http://localhost:5001**
+
+#### 3) Run the UI (Next.js)
+From `finflow-ui`:
 ```bash
+cd finflow-ui
 npm install
-npm run dev
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5001 npm run dev
 ```
 
-### Docker (Local)
-```bash
-docker-compose up --build
-```
+UI will be available on: **http://localhost:3000**
+
+---
 
 ### Environment Variables
+Minimum configuration used by the API:
 ```bash
 ConnectionStrings__DefaultConnection
 Jwt__Key
@@ -102,4 +144,3 @@ Stripe__WebhookSecret
 ```bash
 stripe listen --forward-to http://localhost:5001/api/payments/webhook
 ```
-
