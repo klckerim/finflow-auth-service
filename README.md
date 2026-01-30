@@ -84,6 +84,9 @@ docker compose up --build
 - UI: http://localhost:3000
 - pgAdmin: http://localhost:5050
 
+> ℹ️ **Note:** If you only run the UI inside Docker, you do not need `npm install` on your host.  
+> You only need `npm install` when running the UI directly on your machine (e.g., `npm run dev` for IDE/TS tooling).
+
 ---
 
 ### ✅ Option B: Local Development (Docker-free)
