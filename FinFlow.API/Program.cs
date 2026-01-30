@@ -54,6 +54,29 @@ builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
+    options.OnRejected = async (context, token) =>
+{
+    if (context.HttpContext.Response.HasStarted)
+        return;
+
+    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+    context.HttpContext.Response.ContentType = "application/json";
+
+    var response = new ErrorResponse
+    {
+        Title = "Rate limit exceeded. Please try again later.",
+        ErrorCode = ErrorCodes.RateLimitExceeded,
+        Status = StatusCodes.Status429TooManyRequests,
+        Params = new Dictionary<string, object>
+        {
+            ["retryAfterSeconds"] = 60
+        }
+    };
+
+    await context.HttpContext.Response.WriteAsJsonAsync(response, cancellationToken: token);
+};
+
+
     options.AddPolicy("AuthSensitive", context =>
         RateLimitPartition.GetFixedWindowLimiter(
             partitionKey: $"{context.Connection.RemoteIpAddress}:{context.Request.Path.Value?.ToLowerInvariant()}",

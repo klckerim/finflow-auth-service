@@ -371,6 +371,7 @@
   "email_not_valid": "E-Mail ist ungültig.",
   "wallets_not_match": "Wallet-Informationen stimmen nicht überein.",
   "invalid_refresh_token": "Ungültiger oder abgelaufener Aktualisierungstoken.",
+  "rate_limit_exceeded": "Zu viele Versuche. Bitte versuche es später erneut.",
   "Deposit": "Einzahlung",
   "Withdraw": "Abhebung",
   "Payment": "Zahlung",

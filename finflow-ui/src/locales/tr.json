@@ -371,6 +371,7 @@
   "email_not_valid": "E-posta adresi geçerli değil.",
   "wallets_not_match": "Cüzdan bilgileri eşleşmiyor.",
   "invalid_refresh_token": "Geçersiz veya süresi dolmuş token.",
+  "rate_limit_exceeded": "Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin.",
   "Deposit": "Para Yatırma",
   "Withdraw": "Para Çekme",
   "Payment": "Ödeme",

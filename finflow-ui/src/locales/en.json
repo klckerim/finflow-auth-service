@@ -371,6 +371,7 @@
   "same_wallet_transfer": "Sender and recipient wallet cannot be the same",
   "wallets_not_match": "Wallet informations do not match.",
   "invalid_refresh_token": "Invalid or expired refresh token.",
+  "rate_limit_exceeded": "Too many attempts. Please try again later.",
   "Deposit": "Deposit",
   "Withdraw": "Withdraw",
   "Payment": "Payment",
