@@ -55,38 +55,36 @@ builder.Services.AddRateLimiter(options =>
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
     options.OnRejected = async (context, token) =>
-{
-    if (context.HttpContext.Response.HasStarted)
-        return;
-
-    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-    context.HttpContext.Response.ContentType = "application/json";
-
-    var response = new ErrorResponse
     {
-        Title = "Rate limit exceeded. Please try again later.",
-        ErrorCode = ErrorCodes.RateLimitExceeded,
-        Status = StatusCodes.Status429TooManyRequests,
-        Params = new Dictionary<string, object>
+        if (context.HttpContext.Response.HasStarted) return;
+
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+
+        var response = new ErrorResponse
         {
-            ["retryAfterSeconds"] = 60
-        }
+            Title = "Rate limit exceeded. Please try again later.",
+            ErrorCode = ErrorCodes.RateLimitExceeded,
+            Status = StatusCodes.Status429TooManyRequests,
+            Params = new Dictionary<string, object>
+            {
+                ["retryAfterSeconds"] = 60
+            }
+        };
+
+        await context.HttpContext.Response.WriteAsJsonAsync(response, cancellationToken: token);
     };
 
-    await context.HttpContext.Response.WriteAsJsonAsync(response, cancellationToken: token);
-};
-
-
     options.AddPolicy("AuthSensitive", context =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: $"{context.Connection.RemoteIpAddress}:{context.Request.Path.Value?.ToLowerInvariant()}",
-            factory: _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = 10,
-                Window = TimeSpan.FromMinutes(1),
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0
-            }));
+    RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: $"{context.Connection.RemoteIpAddress?.ToString() ?? "unknown"}:auth",
+        factory: _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
+            Window = TimeSpan.FromMinutes(1),
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        }));
 
     options.AddPolicy("Payments", context =>
         RateLimitPartition.GetFixedWindowLimiter(
@@ -100,15 +98,15 @@ builder.Services.AddRateLimiter(options =>
             }));
 
     options.AddPolicy("StripeWebhook", context =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: context.Request.Path.Value?.ToLowerInvariant() ?? "stripe-webhook",
-            factory: _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = 120,
-                Window = TimeSpan.FromMinutes(1),
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0
-            }));
+    RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        factory: _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 120,
+            Window = TimeSpan.FromMinutes(1),
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        }));
 });
 
 // FluentValidation
@@ -224,8 +222,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    // 
+
+    options.ForwardLimit = 1;
+
+    // Deploy için kullandığım Render gibi platformlarda KnownProxies sabit olmayabilir.
+    // Bu yüzden burada KnownProxies eklemiyoruz.
 });
+
+
 
 var app = builder.Build();
 
@@ -263,9 +267,9 @@ if (app.Environment.IsDevelopment())
 // Root endpoint (health check için)
 app.MapGet("/", () => Results.Ok("FinFlow API is running 🚀"));
 
+app.UseForwardedHeaders();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("AllowFrontend");
-app.UseForwardedHeaders();
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
