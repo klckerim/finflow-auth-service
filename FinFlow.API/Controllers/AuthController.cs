@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FinFlow.API.Controllers
 {
@@ -32,6 +33,7 @@ namespace FinFlow.API.Controllers
         }
 
         [HttpPost("login")]
+        [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
         {
             try
@@ -60,6 +62,7 @@ namespace FinFlow.API.Controllers
         }
 
         [HttpPost("register")]
+        [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {
             try
@@ -114,6 +117,7 @@ namespace FinFlow.API.Controllers
         }
 
         [HttpPost("refresh-token")]
+        [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             var command = new RefreshTokenCommand(request.RefreshToken);
@@ -149,6 +153,7 @@ namespace FinFlow.API.Controllers
         }
 
         [HttpPost("forgot-password")]
+        [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand req, CancellationToken ct)
         {
             try
@@ -173,6 +178,7 @@ namespace FinFlow.API.Controllers
 
 
         [HttpGet("validate-reset-token")]
+        [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> ValidateResetToken([FromQuery] string token, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(token))
@@ -185,6 +191,7 @@ namespace FinFlow.API.Controllers
         }
 
         [HttpPost("reset-password")]
+        [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand req, CancellationToken ct)
         {
             try

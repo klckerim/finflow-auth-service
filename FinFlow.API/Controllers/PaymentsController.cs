@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using MediatR;
 using Stripe;
+using Microsoft.AspNetCore.RateLimiting;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,6 +21,7 @@ public class PaymentsController : ControllerBase
 
 
     [HttpPost("bill")]
+    [EnableRateLimiting("Payments")]
     public async Task<IActionResult> PayBill([FromBody] PayBillRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
         var paymentId = await _mediator.Send(new PayBillCommand(
@@ -37,6 +39,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("create-setup-session")]
+    [EnableRateLimiting("Payments")]
     public IActionResult CreateSetupSession([FromBody] CreateSetupRequest request)
     {
         var options = new SessionCreateOptions
@@ -69,6 +72,7 @@ public class PaymentsController : ControllerBase
 
 
     [HttpPost("create-session")]
+    [EnableRateLimiting("Payments")]
     public IActionResult CreateCheckoutSession([FromBody] CheckoutRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
         var metadata = new Dictionary<string, string>
@@ -125,6 +129,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("webhook")]
+    [EnableRateLimiting("StripeWebhook")]
     public async Task<IActionResult> Webhook()
     {
 
