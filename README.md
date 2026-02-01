@@ -141,7 +141,31 @@ ConnectionStrings__DefaultConnection
 Jwt__Key
 Stripe__SecretKey
 Stripe__WebhookSecret
+Seq__Url
 ```
+
+### Database Migrations (Production)
+In production, migrations should be executed **outside** the API startup (CI/CD step or a one-off job) to avoid startup failures or lock contention.
+
+**Option A — CI/CD step**
+```bash
+dotnet ef database update --project FinFlow.Infrastructure --startup-project FinFlow.API
+```
+
+**Option B — One-off migration job (Docker)**
+```bash
+docker run --rm \
+  -e ConnectionStrings__DefaultConnection="$CONNECTION_STRING" \
+  -e Jwt__Key="$JWT_KEY" \
+  -e Stripe__SecretKey="$STRIPE_SECRET_KEY" \
+  -e Stripe__WebhookSecret="$STRIPE_WEBHOOK_SECRET" \
+  -e Seq__Url="$SEQ_URL" \
+  finflow-api:latest \
+  dotnet ef database update --project FinFlow.Infrastructure --startup-project FinFlow.API
+```
+
+> ✅ **Deploy flow (recommended):** run migrations once during deployment, then start the API containers.
+
 
 ### Stripe Payment (Local)
 ```bash
