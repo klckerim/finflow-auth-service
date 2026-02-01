@@ -116,12 +116,25 @@ builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembl
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 // Serilog
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
+var seqUrl = builder.Configuration["Seq:Url"];
+if (string.IsNullOrWhiteSpace(seqUrl) && builder.Environment.IsProduction())
+{
+    throw new InvalidOperationException("Seq URL is not configured. Please set 'Seq:Url' in your configuration.");
+}
+
+var loggerConfiguration = new LoggerConfiguration()
+    .MinimumLevel.Is(builder.Environment.IsProduction()
+        ? Serilog.Events.LogEventLevel.Information
+        : Serilog.Events.LogEventLevel.Debug)
     .WriteTo.Console()
-    .WriteTo.File("logs/finflow-.log", rollingInterval: RollingInterval.Day)
-    .WriteTo.Seq(builder.Configuration["Seq:Url"] ?? "http://localhost:5341")
-    .CreateLogger();
+    .WriteTo.File("logs/finflow-.log", rollingInterval: RollingInterval.Day);
+
+if (!string.IsNullOrWhiteSpace(seqUrl))
+{
+    loggerConfiguration = loggerConfiguration.WriteTo.Seq(seqUrl);
+}
+
+Log.Logger = loggerConfiguration.CreateLogger();
 
 builder.Host.UseSerilog();
 
@@ -140,7 +153,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = false;
+    options.RequireHttpsMetadata = builder.Environment.IsProduction();
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -237,14 +250,11 @@ var app = builder.Build();
 // Middleware Pipeline
 // ------------------------------
 
-if (app.Environment.IsProduction())
-{
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<FinFlowDbContext>();
-    db.Database.Migrate();
-}
-
 var stripeKey = builder.Configuration["Stripe:SecretKey"];
+if (string.IsNullOrWhiteSpace(stripeKey))
+{
+    throw new InvalidOperationException("Stripe secret key is not configured. Please set 'Stripe:SecretKey' in your configuration.");
+}
 Stripe.StripeConfiguration.ApiKey = stripeKey;
 
 if (app.Environment.IsDevelopment())
@@ -267,6 +277,12 @@ if (app.Environment.IsDevelopment())
 // Root endpoint (health check için)
 app.MapGet("/", () => Results.Ok("FinFlow API is running 🚀"));
 
+if (app.Environment.IsProduction())
+{
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
 app.UseForwardedHeaders();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("AllowFrontend");
