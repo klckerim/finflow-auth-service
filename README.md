@@ -139,10 +139,20 @@ Minimum configuration used by the API:
 ```bash
 ConnectionStrings__DefaultConnection
 Jwt__Key
+Jwt__Issuer
+Jwt__Audience
+FRONTEND_URLS
 Stripe__SecretKey
 Stripe__WebhookSecret
+Stripe__SuccessUrl
+Stripe__CancelUrl
 Seq__Url
 ```
+
+> ℹ️ **Notes**
+> - `FRONTEND_URLS` should be a comma-separated list of allowed origins for CORS (e.g. `http://localhost:3000,https://finflow-swart.vercel.app`).
+> - `Seq__Url` is optional in development but required in production (the API will throw if missing).
+> - `Stripe__SuccessUrl` and `Stripe__CancelUrl` should point to your UI routes that handle checkout outcomes.
 
 ### Database Migrations (Production)
 In production, migrations should be executed **outside** the API startup (CI/CD step or a one-off job) to avoid startup failures or lock contention.
@@ -171,3 +181,13 @@ docker run --rm \
 ```bash
 stripe listen --forward-to http://localhost:5001/api/payments/webhook
 ```
+
+---
+
+## 🔎 Helpful Endpoints
+- Swagger UI: http://localhost:5001/swagger
+
+## 🧰 pgAdmin (Docker Compose)
+- URL: http://localhost:5050
+- Email: `admin@finflow.com`
+- Password: `adminpass`
