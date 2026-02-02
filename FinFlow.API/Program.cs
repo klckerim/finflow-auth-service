@@ -117,9 +117,11 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 
 // Serilog
 var seqUrl = builder.Configuration["Seq:Url"];
-if (string.IsNullOrWhiteSpace(seqUrl) && builder.Environment.IsProduction())
+var isSeqUrlValid = !string.IsNullOrWhiteSpace(seqUrl)
+    && Uri.TryCreate(seqUrl, UriKind.Absolute, out _);
+if (!isSeqUrlValid && builder.Environment.IsProduction())
 {
-    throw new InvalidOperationException("Seq URL is not configured. Please set 'Seq:Url' in your configuration.");
+    Console.WriteLine("Seq URL is not configured or invalid. Skipping Seq sink.");
 }
 
 var loggerConfiguration = new LoggerConfiguration()
@@ -129,7 +131,7 @@ var loggerConfiguration = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/finflow-.log", rollingInterval: RollingInterval.Day);
 
-if (!string.IsNullOrWhiteSpace(seqUrl))
+if (isSeqUrlValid && !string.IsNullOrWhiteSpace(seqUrl))
 {
     loggerConfiguration = loggerConfiguration.WriteTo.Seq(seqUrl);
 }

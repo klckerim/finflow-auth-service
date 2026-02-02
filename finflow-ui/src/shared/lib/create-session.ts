@@ -16,14 +16,22 @@ export async function CreatePaymentSession(walletId: string, amount: number = 20
         body: JSON.stringify({ walletId, amount, currency })
     });
 
-    const { sessionId } = await res.json();
+    const payload = await res.json();
+
+    if (!res.ok) {
+        const errorMessage = payload?.message ?? "No Payment Session Information";
+        throw new Error(errorMessage);
+    }
+
+    const { sessionId } = payload as { sessionId?: string };
+    if (!sessionId) {
+        throw new Error("Stripe sessionId missing from response.");
+    }
 
     const stripe = await stripePromise;
-    stripe?.redirectToCheckout({ sessionId });
+    await stripe?.redirectToCheckout({ sessionId });
 
-
-    if (!res.ok) throw new Error("No Payment Session Information");
-    return res.json();
+    return payload;
 }
 
 export async function startCardSetup(userId: string) {
@@ -35,12 +43,21 @@ export async function startCardSetup(userId: string) {
         body: JSON.stringify({ userId }) //customerEmail optional
     });
 
-    const { sessionId } = await res.json();
+    const payload = await res.json();
+
+    if (!res.ok) {
+        const errorMessage = payload?.message ?? "No Payment Setup Session Information";
+        throw new Error(errorMessage);
+    }
+
+    const { sessionId } = payload as { sessionId?: string };
+    if (!sessionId) {
+        throw new Error("Stripe setup sessionId missing from response.");
+    }
 
     const stripe = await stripePromise;
-    stripe?.redirectToCheckout({ sessionId });
+    await stripe?.redirectToCheckout({ sessionId });
 
-    if (!res.ok) throw new Error("No Payment Setup Session Information");
-    return res.json();
+    return payload;
 }
 

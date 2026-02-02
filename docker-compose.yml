@@ -30,6 +30,11 @@ services:
       Jwt__Key: 8e04aJboR63wLHyntYkA+NqetwFglo13cUkdoRJbkmc=
       Jwt__Issuer: FinFlowAPI
       Jwt__Audience: FinFlowUsers
+      Stripe__SecretKey: sk_test_change_me
+      Stripe__WebhookSecret: whsec_change_me
+      Stripe__SuccessUrl: http://localhost:3000/dashboard
+      Stripe__CancelUrl: http://localhost:3000/dashboard
+      FRONTEND_URLS: http://localhost:3000
     networks:
       - finflow-net
 
@@ -44,6 +49,7 @@ services:
       - api
     environment:
       - NEXT_PUBLIC_API_BASE_URL=http://finflow-api:80
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_change_me
     networks:
       - finflow-net
 
