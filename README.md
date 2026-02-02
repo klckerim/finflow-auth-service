@@ -80,9 +80,15 @@ docker compose up --build
 ```
 
 **Services**
-- API: http://localhost:5001
+- API: http://localhost:5001 (container listens on port 80)
 - UI: http://localhost:3000
 - pgAdmin: http://localhost:5050
+
+**Default Docker credentials & config**
+- Postgres: `finflowuser` / `finflowpass` (DB: `finflowdb`, port `5432`)
+- pgAdmin: `admin@finflow.com` / `adminpass`
+- Stripe keys in `docker-compose.yml` are placeholders (`sk_test_change_me`, `whsec_change_me`, `pk_test_change_me`) — replace them if you want real webhook/checkout flows.
+
 
 > ℹ️ **Note:** If you only run the UI inside Docker, you do not need `npm install` on your host.  
 > You only need `npm install` when running the UI directly on your machine (e.g., `npm run dev` for IDE/TS tooling).
