@@ -63,6 +63,7 @@ public class TokenService : ITokenService
             ValidIssuer = _config["Jwt:Issuer"],
             ValidateAudience = true,
             ValidAudience = _config["Jwt:Audience"],
+            ValidateLifetime = false,
             ClockSkew = TimeSpan.Zero
         };
 

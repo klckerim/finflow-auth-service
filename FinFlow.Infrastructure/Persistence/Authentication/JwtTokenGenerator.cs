@@ -20,12 +20,27 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
     public string GenerateAccessToken(Guid userId, string email)
     {
-        throw new NotImplementedException();
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(ClaimTypes.Name, email)
+        };
+
+        return BuildToken(claims, DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes));
     }
 
     public string GenerateRefreshToken(Guid userId, string email)
     {
-        throw new NotImplementedException();
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(ClaimTypes.Name, email),
+            new Claim("typ", "refresh")
+        };
+
+        return BuildToken(claims, DateTime.UtcNow.AddDays(7));
     }
 
     public string GenerateToken(User user)
@@ -38,6 +53,21 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
+        return BuildToken(claims, DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes));
+    }
+
+    public DateTime GetAccessTokenExpiration()
+    {
+        return DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes);
+    }
+
+    public DateTime GetRefreshTokenExpiration()
+    {
+        return DateTime.UtcNow.AddDays(7);
+    }
+
+    private string BuildToken(IEnumerable<Claim> claims, DateTime expiresAt)
+    {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -45,19 +75,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             issuer: _jwtSettings.Issuer,
             audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
+            expires: expiresAt,
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    public DateTime GetAccessTokenExpiration()
-    {
-        throw new NotImplementedException();
-    }
-
-    public DateTime GetRefreshTokenExpiration()
-    {
-        throw new NotImplementedException();
     }
 }

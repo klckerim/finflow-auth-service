@@ -29,8 +29,7 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, Authenti
         }
 
         // 2. Refresh Token'ı işaretle (revoked)
-        var token = user.RefreshTokens.First(rt => rt.Token == request.RefreshToken);
-        token.RevokedAt = DateTime.UtcNow;
+        await _userRepository.RevokeRefreshTokenAsync(request.RefreshToken, cancellationToken);
 
         // 3. Yeni JWT ve Refresh Token üret
         string newJwt = _jwtTokenGenerator.GenerateToken(user);
@@ -39,8 +38,8 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, Authenti
         user.RefreshTokens.Add(newRefreshToken);
 
         // 4. Kullanıcıyı güncelle
-        await _userRepository.UpdateAsync(newRefreshToken, cancellationToken);
-
+        await _userRepository.AddRefreshTokenAsync(newRefreshToken, cancellationToken);
+        
         // 5. Sonucu dön
         return new AuthenticationResult(user, newJwt, newRefreshToken.Token);
     }

@@ -39,8 +39,7 @@ public class LoginUserHandler : IRequestHandler<LoginUserCommand, LoginResponseD
 
         // user.RefreshTokens.Add(refreshToken);
 
-        await _userRepository.UpdateAsync(refreshToken, cancellationToken);
-
+        await _userRepository.AddRefreshTokenAsync(refreshToken, cancellationToken);
 
         return new LoginResponseDto(
             user,

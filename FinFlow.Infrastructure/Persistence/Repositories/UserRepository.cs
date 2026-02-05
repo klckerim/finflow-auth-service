@@ -64,37 +64,27 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == refreshToken && rt.IsActive));
         }
 
-        public async Task UpdateAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
+        public async Task AddRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
         {
-            try
+            using var context = _contextFactory.CreateDbContext();
+
+            context.RefreshTokens.Add(refreshToken);
+
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task RevokeRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var token = await context.RefreshTokens
+                .FirstOrDefaultAsync(rt => rt.Token == refreshToken, cancellationToken);
+            if (token == null)
             {
-                using var context = _contextFactory.CreateDbContext();
-
-                // RefreshToken'ı doğrudan context'e ekle
-                context.RefreshTokens.Add(refreshToken);
-
-                await context.SaveChangesAsync(cancellationToken);
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                var entry = ex.Entries.Single();
-                var databaseValues = await entry.GetDatabaseValuesAsync();
-
-                if (databaseValues == null)
-                {
-                    // Record was deleted
-                    throw new Exception("The record was deleted by another user.");
-                }
-                else
-                {
-                    // Record was updated
-                    entry.OriginalValues.SetValues(databaseValues);
-                    // Retry the operation or inform the user
-                }
+                return;
             }
 
-
-
+            token.RevokedAt = DateTime.UtcNow;
+            await context.SaveChangesAsync(cancellationToken);
         }
 
 
