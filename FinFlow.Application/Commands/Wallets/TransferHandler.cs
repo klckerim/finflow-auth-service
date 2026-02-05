@@ -3,73 +3,21 @@ using MediatR;
 
 public class TransferHandler : IRequestHandler<TransferCommand>
 {
-    private readonly ITransactionRepository _transactionRepository;
     private readonly IWalletRepository _walletRepository;
 
-    public TransferHandler(
-        IWalletRepository walletRepository,
-        ITransactionRepository transactionRepository)
+    public TransferHandler(IWalletRepository walletRepository)
     {
         _walletRepository = walletRepository;
-        _transactionRepository = transactionRepository;
     }
 
     public async Task<Unit> Handle(TransferCommand request, CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrWhiteSpace(request.IdempotencyKey))
-        {
-            var existing = await _transactionRepository.GetByIdempotencyKeyAsync(
-                request.IdempotencyKey,
-                TransactionType.TransferOut,
-                cancellationToken);
-            if (existing != null)
-            {
-                return Unit.Value;
-            }
-        }
-
-        var fromWallet = await _walletRepository.GetByIdAsync(request.FromWalletId, cancellationToken);
-        if (fromWallet == null)
-            throw new AppException(ErrorCodes.SourceWalletNotFound, "Source wallet not found.");
-
-        var toWallet = await _walletRepository.GetByIdAsync(request.ToWalletId, cancellationToken);
-        if (toWallet == null)
-            throw new AppException(ErrorCodes.RecipientWalletNotFound, "Recipient wallet not found.");
-
-
-        if (fromWallet.Balance < request.Amount)
-            throw new AppException(ErrorCodes.InsufficientBalance, "Insufficient balance.");
-
-        if (fromWallet.Currency != toWallet.Currency)
-            throw new AppException(ErrorCodes.RecipientWalletCurrency, "", 400, new Dictionary<string, object> { { "Currency", fromWallet.Currency } });
-
-        fromWallet.Balance -= request.Amount;
-        toWallet.Balance += request.Amount;
-
-        // Transaction kayıtları
-        var fromTransaction = new Transaction
-        {
-            WalletId = fromWallet.Id,
-            Amount = -request.Amount,
-            Type = TransactionType.TransferOut,
-            Description = $"Transfer to wallet {toWallet.Name}",
-            IdempotencyKey = request.IdempotencyKey
-        };
-
-        var toTransaction = new Transaction
-        {
-            WalletId = toWallet.Id,
-            Amount = request.Amount,
-            Type = TransactionType.TransferIn,
-            Description = $"Transfer from wallet {fromWallet.Name}",
-            IdempotencyKey = request.IdempotencyKey
-        };
-
-        await _transactionRepository.AddAsync(fromTransaction, cancellationToken);
-        await _transactionRepository.AddAsync(toTransaction, cancellationToken);
-
-        await _walletRepository.UpdateAsync(fromWallet);
-        await _walletRepository.UpdateAsync(toWallet);
+        await _walletRepository.TransferWithTransactionsAsync(
+             request.FromWalletId,
+             request.ToWalletId,
+             request.Amount,
+             request.IdempotencyKey,
+             cancellationToken);
 
         return Unit.Value;
     }

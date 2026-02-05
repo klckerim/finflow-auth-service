@@ -37,29 +37,14 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
         // Wallet payment
         if (request.PaymentType == PaymentType.Wallet && request.WalletId.HasValue)
         {
-            var wallet = await _walletRepo.GetByIdAsync(request.WalletId.Value, ct);
-            if (wallet == null)
-                throw new AppException(ErrorCodes.WalletNotFound, "Wallet not found.");
+            var transactionId = await _walletRepo.DecreaseBalanceWithTransactionAsync(
+                request.WalletId.Value,
+                request.Amount,
+                request.Description,
+                request.IdempotencyKey,
+                ct);
 
-            if (wallet.Balance < request.Amount)
-                throw new AppException(ErrorCodes.InsufficientBalance, "Insufficient wallet balance");
-
-            wallet.Balance -= request.Amount;
-            await _walletRepo.UpdateAsync(wallet);
-
-            var transaction = new Transaction
-            {
-                WalletId = wallet.Id,
-                Amount = request.Amount,
-                Type = TransactionType.BillPayment,
-                Description = request.Description,
-                CreatedAt = DateTime.UtcNow,
-                IdempotencyKey = request.IdempotencyKey
-            };
-
-            await _txRepo.AddAsync(transaction, ct);
-
-            return transaction.Id;
+            return transactionId;
         }
 
         // Card payment

@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 public class CardsController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<TransactionsController> _logger;
+    private readonly ILogger<CardsController> _logger;
 
-    public CardsController(IMediator mediator, ILogger<TransactionsController> logger)
+    public CardsController(IMediator mediator, ILogger<CardsController> logger)
     {
         _mediator = mediator;
         _logger = logger;
