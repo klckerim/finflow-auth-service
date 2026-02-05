@@ -1,5 +1,4 @@
-
-# 🌟 FinFlow – End-to-End Fintech Demo
+# 🌟 FinFlow – End-to-End Fintech Case Study
 
 ![.NET](https://img.shields.io/badge/.NET-9-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black)
@@ -10,70 +9,48 @@
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Version](https://img.shields.io/badge/Version-1.0.0-lightgrey)
 
-
-**FinFlow** is a small, modern fintech playground — designed to demonstrate pragmatic architecture, reliable payments, and clear developer experience. Think of this README as the project's living guide.
+**FinFlow** is a fintech playground that showcases clean architecture, reliable payments, and a clear developer experience.
 
 ---
 
 ## 🌐 Live Demo
-Try the project live here: [FinFlow Live](https://finflow-swart.vercel.app)
-
-Reach test data here: [Stripe Testing Guide](https://docs.stripe.com/testing)
+- **App:** https://finflow-swart.vercel.app
+- **Stripe test data:** https://docs.stripe.com/testing
 
 ⚠️ Use mock data only. Do not use real payment information.
 
 ---
 
 ## 🛠 Tech Stack
-- 🖥️ **Backend:** .NET 9 Web API, Clean Architecture, MediatR, FluentValidation  
-- 🌐 **Frontend:** Next.js 14, Tailwind CSS, shadcn/ui  
-- 🗄️ **Database:** PostgreSQL with EF Core (transactional)  
-- 💳 **Payment:** Stripe integration (Checkout + Webhooks) 
-- 🐳 **Deployment/Infra:** Docker, Docker Compose
+- **Backend:** .NET 9 Web API, Clean Architecture, MediatR, FluentValidation
+- **Frontend:** Next.js 14, Tailwind CSS, shadcn/ui
+- **Database:** PostgreSQL with EF Core
+- **Payments:** Stripe (Checkout + Webhooks)
+- **Infra:** Docker, Docker Compose
 
 ---
 
 ## ⚡ Key Features
-- User registration, login & JWT-based authentication with refresh tokens  
-- Wallet creation & multi-wallet per user  
-- Deposit, withdrawal, and transfer flows  
-- Stripe Checkout integration with webhook-driven balance updates  
-- Transaction history and basic analytics  
-- Dockerized local development and deployment ready  
-
----
-
-## 🚀 Showcase Flow
-1. User creates wallet → balance initialized in PostgreSQL  
-2. Deposit/Withdrawal → PostgreSQL transaction recorded + Stripe webhook handled  
-3. Dashboard → Top wallets, recent transactions, and Stripe test payments demonstrated  
+- User registration, login, JWT auth, refresh tokens
+- Wallet creation & multi-wallet per user
+- Deposit, withdrawal, transfer flows
+- Stripe Checkout + webhook-driven balance updates
+- Transaction history and basic analytics
+- Fully dockerized local stack
 
 ---
 
 ## 📂 Project Structure
-- `FinFlow.API` → ASP.NET Core Web API (controllers, endpoints) 
-- `FinFlow.Application` → Business logic (CQRS, services, handlers)  
-- `FinFlow.Domain` → Core domain entities & rules  
-- `FinFlow.Infrastructure` → EF Core, DbContext, Stripe integration 
-- `finflow-ui` → Next.js 14 frontend dashboard 
-
-
+- `FinFlow.API` → ASP.NET Core Web API (controllers, endpoints)
+- `FinFlow.Application` → Business logic (CQRS, services, handlers)
+- `FinFlow.Domain` → Core domain entities & rules
+- `FinFlow.Infrastructure` → EF Core, DbContext, Stripe integration
+- `finflow-ui` → Next.js 14 frontend dashboard
 
 ---
 
-## 💡 Learning Highlights
-- Real-world fintech flows: secure payments, transactional integrity, webhook handling  
-- Clean Architecture & CQRS patterns for maintainable, testable code  
-- Dockerized development environment for reproducibility  
-- Developer-friendly, portfolio-ready codebase  
-
----
-## 📌 Installation & Local Development
-
-Choose one of the following setups. Docker Compose is the fastest way to boot the full stack.
-
-### ✅ Option A: Docker Compose (Full Stack)
-This starts PostgreSQL, API, UI, and pgAdmin together.
+## ✅ Quick Start (Docker Compose)
+This is the fastest way to run the full stack locally.
 
 ```bash
 docker compose up --build
@@ -84,21 +61,19 @@ docker compose up --build
 - UI: http://localhost:3000
 - pgAdmin: http://localhost:5050
 
-**Default Docker credentials & config**
+**Default credentials & config**
 - Postgres: `finflowuser` / `finflowpass` (DB: `finflowdb`, port `5432`)
 - pgAdmin: `admin@finflow.com` / `adminpass`
-- Stripe keys in `docker-compose.yml` are placeholders (`sk_test_change_me`, `whsec_change_me`, `pk_test_change_me`) — replace them if you want real webhook/checkout flows.
+- Stripe keys in `docker-compose.yml` are placeholders (`sk_test_change_me`, `whsec_change_me`, `pk_test_change_me`). Replace them to test real webhook/checkout flows.
 
-
-> ℹ️ **Note:** If you only run the UI inside Docker, you do not need `npm install` on your host.  
-> You only need `npm install` when running the UI directly on your machine (e.g., `npm run dev` for IDE/TS tooling).
+> ℹ️ If you only run the UI in Docker, you do **not** need `npm install` on your host.
 
 ---
 
-### ✅ Option B: Local Development (Docker-free)
+## 🧑‍💻 Local Development (No Docker)
 
-#### 1) Start PostgreSQL
-Use the same connection values used by the API:
+### 1) Start PostgreSQL
+Use the same connection values expected by the API:
 
 ```
 Host=localhost
@@ -108,7 +83,8 @@ Username=finflowuser
 Password=finflowpass
 ```
 
-If you prefer Docker for Postgres only:
+If you want Postgres via Docker only:
+
 ```bash
 docker run --name finflow-postgres \
   -e POSTGRES_USER=finflowuser \
@@ -118,30 +94,33 @@ docker run --name finflow-postgres \
   -d postgres:15
 ```
 
-#### 2) Run the API (.NET 9)
+### 2) Run the API (.NET 9)
 From repo root:
+
 ```bash
 dotnet restore
 dotnet ef database update --project FinFlow.Infrastructure --startup-project FinFlow.API
 dotnet run --project FinFlow.API
 ```
 
-API will be available on: **http://localhost:5001**
+API: **http://localhost:5001**
 
-#### 3) Run the UI (Next.js)
+### 3) Run the UI (Next.js)
 From `finflow-ui`:
+
 ```bash
 cd finflow-ui
 npm install
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5001 npm run dev
 ```
 
-UI will be available on: **http://localhost:3000**
+UI: **http://localhost:3000**
 
 ---
 
-### Environment Variables
+## ⚙️ Environment Variables
 Minimum configuration used by the API:
+
 ```bash
 ConnectionStrings__DefaultConnection
 Jwt__Key
@@ -155,20 +134,31 @@ Stripe__CancelUrl
 Seq__Url
 ```
 
-> ℹ️ **Notes**
-> - `FRONTEND_URLS` should be a comma-separated list of allowed origins for CORS (e.g. `http://localhost:3000,https://finflow-swart.vercel.app`).
-> - `Seq__Url` is optional in development but required in production (the API will throw if missing).
-> - `Stripe__SuccessUrl` and `Stripe__CancelUrl` should point to your UI routes that handle checkout outcomes.
+**Notes**
+- `FRONTEND_URLS` is a comma-separated list of allowed origins (CORS).
+- `Seq__Url` is optional in development, required in production.
+- `Stripe__SuccessUrl` and `Stripe__CancelUrl` should point to UI routes that handle checkout outcomes.
 
-### Database Migrations (Production)
-In production, migrations should be executed **outside** the API startup (CI/CD step or a one-off job) to avoid startup failures or lock contention.
+---
 
-**Option A — CI/CD step**
+## 🧪 Stripe Webhook (Local)
+Forward Stripe webhooks to your API:
+
+```bash
+stripe listen --forward-to http://localhost:5001/api/payments/webhook
+```
+
+---
+
+## 🚀 Database Migrations (Production)
+Run migrations **outside** API startup (CI/CD or a one-off job).
+
+**CI/CD step**
 ```bash
 dotnet ef database update --project FinFlow.Infrastructure --startup-project FinFlow.API
 ```
 
-**Option B — One-off migration job (Docker)**
+**One-off Docker job**
 ```bash
 docker run --rm \
   -e ConnectionStrings__DefaultConnection="$CONNECTION_STRING" \
@@ -180,20 +170,8 @@ docker run --rm \
   dotnet ef database update --project FinFlow.Infrastructure --startup-project FinFlow.API
 ```
 
-> ✅ **Deploy flow (recommended):** run migrations once during deployment, then start the API containers.
-
-
-### Stripe Payment (Local)
-```bash
-stripe listen --forward-to http://localhost:5001/api/payments/webhook
-```
-
 ---
 
 ## 🔎 Helpful Endpoints
 - Swagger UI: http://localhost:5001/swagger
-
-## 🧰 pgAdmin (Docker Compose)
-- URL: http://localhost:5050
-- Email: `admin@finflow.com`
-- Password: `adminpass`
+- pgAdmin (Docker): http://localhost:5050
