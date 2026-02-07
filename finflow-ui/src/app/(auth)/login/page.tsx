@@ -71,9 +71,14 @@ export default function LoginPage() {
   return (
     <FadeInWrapper>
       <div className="flex min-h-screen bg-[#0f0f0f] text-white">
-        <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
-          <h1 className="text-4xl font-bold mb-4">{t("dashboard.welcomeTo")}</h1>
-          <p className="text-lg max-w-md text-gray-300 text-center">
+        <div className="hidden md:flex w-1/2 bg-[#0b1120] text-white flex-col justify-center items-center p-12">
+          <span className="text-xs uppercase tracking-[0.4em] text-blue-300 mb-6">
+            FinFlow Portal
+          </span>
+          <h1 className="text-4xl font-bold mb-4 text-center">
+            {t("dashboard.welcomeTo")}
+          </h1>
+          <p className="text-lg max-w-md text-gray-300 text-center leading-relaxed">
             {t("common.str_ManageWallets")} ✨
           </p>
           <Image
@@ -87,11 +92,17 @@ export default function LoginPage() {
         </div>
 
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 px-6">
-          <div className="w-full max-w-md p-8 bg-[#1f2937] border border-gray-700 rounded-2xl shadow-xl">
+          <div className="w-full max-w-md p-8 bg-[#111827] border border-white/10 rounded-3xl shadow-2xl">
+            <p className="text-xs uppercase tracking-[0.3em] text-blue-400 text-center mb-3">
+              {t("common.str_Login")}
+            </p>
             <h2 className="text-3xl font-bold mb-2 text-center">
               {t("common.str_WelcomeToPortal")}
             </h2>
-            <p className="text-center text-gray-400 mb-6 text-sm"> {t("common.str_Login")}</p>
+            <p className="text-center text-gray-400 mb-8 text-sm leading-relaxed">
+              Hesabınıza güvenli şekilde giriş yapın ve tüm finansal işlemlerinizi tek panelden
+              yönetin.
+            </p>
 
             <form className="space-y-4" onSubmit={handleLogin} aria-busy={loading}>
               <div>
@@ -138,7 +149,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading || !email || !password}
-                className="w-full bg-primary hover:bg-blue-700 mt-4 rounded-soft py-2 text-white font-semibold transition-all duration-150"
+                className="w-full bg-primary hover:bg-blue-700 mt-6 rounded-full py-2 text-white font-semibold transition-all duration-150"
               >
                 {loading ? (
                   <Lottie animationData={loadingAnimation} loop style={{ width: 40, height: 40 }} />
@@ -148,21 +159,31 @@ export default function LoginPage() {
 
               </Button>
 
-              <div className="flex items-center justify-between text-sm text-blue-400 mt-2">
+              <div className="flex items-center justify-between text-sm text-blue-400 mt-3">
                 <Link href="/forgot-password" className="hover:underline">
                   {t("common.str_ForgotPassword")}
                 </Link>
               </div>
 
-              <div className="text-center text-sm text-gray-500 mt-4">{t("common.str_LogWith")}</div>
+              <div className="text-center text-xs text-gray-500 mt-6 uppercase tracking-[0.3em]">
+                {t("common.str_LogWith")}
+              </div>
 
               <div className="flex gap-4 mt-2">
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
+                <Button
+                  variant="outline"
+                  className="flex-1 rounded-xl bg-white text-black hover:bg-gray-100"
+                  type="button"
+                >
                   <Image src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" width={20} height={20} />
                   {t("common.str_ContinueWithGoogle")}
                 </Button>
 
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
+                <Button
+                  variant="outline"
+                  className="flex-1 rounded-xl bg-white text-black hover:bg-gray-100"
+                  type="button"
+                >
                   <Image src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" width={20} height={20} />
                   {t("common.str_ContinueWithApple")}
                 </Button>
