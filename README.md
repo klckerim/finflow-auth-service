@@ -1,4 +1,4 @@
-# 🌟 FinFlow – End-to-End Fintech Case Study
+# FinFlow – End-to-End Fintech Case Study
 
 ![.NET](https://img.shields.io/badge/.NET-9-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black)
@@ -13,7 +13,7 @@
 
 ---
 
-## 🌐 Live Demo
+## Live Demo
 - **App:** https://finflow-swart.vercel.app
 - **Stripe test data:** https://docs.stripe.com/testing
 
@@ -21,7 +21,7 @@
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 - **Backend:** .NET 9 Web API, Clean Architecture, MediatR, FluentValidation
 - **Frontend:** Next.js 14, Tailwind CSS, shadcn/ui
 - **Database:** PostgreSQL with EF Core
@@ -30,7 +30,7 @@
 
 ---
 
-## ⚡ Key Features
+## Key Features
 - User registration, login, JWT auth, refresh tokens
 - Wallet creation & multi-wallet per user
 - Deposit, withdrawal, transfer flows
@@ -40,7 +40,7 @@
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 - `FinFlow.API` → ASP.NET Core Web API (controllers, endpoints)
 - `FinFlow.Application` → Business logic (CQRS, services, handlers)
 - `FinFlow.Domain` → Core domain entities & rules
@@ -49,7 +49,7 @@
 
 ---
 
-## ✅ Quick Start (Docker Compose)
+## Quick Start (Docker Compose)
 This is the fastest way to run the full stack locally.
 
 ```bash
@@ -70,7 +70,7 @@ docker compose up --build
 
 ---
 
-## 🧑‍💻 Local Development (No Docker)
+## Local Development (No Docker)
 
 ### 1) Start PostgreSQL
 Use the same connection values expected by the API:
@@ -118,7 +118,7 @@ UI: **http://localhost:3000**
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 Minimum configuration used by the API:
 
 ```bash
@@ -141,7 +141,7 @@ Seq__Url
 
 ---
 
-## 🧪 Stripe Webhook (Local)
+## Stripe Webhook (Local)
 Forward Stripe webhooks to your API:
 
 ```bash
@@ -150,7 +150,7 @@ stripe listen --forward-to http://localhost:5001/api/payments/webhook
 
 ---
 
-## 🚀 Database Migrations (Production)
+## Database Migrations (Production)
 Run migrations **outside** API startup (CI/CD or a one-off job).
 
 **CI/CD step**
