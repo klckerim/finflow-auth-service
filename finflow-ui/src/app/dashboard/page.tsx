@@ -196,7 +196,7 @@ export default function DashboardPage() {
 
           {/* TOP METRİKLER */}
           <motion.section
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 rounded-3xl bg-background/80 p-4 md:p-6 shadow-sm border border-muted/40"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
