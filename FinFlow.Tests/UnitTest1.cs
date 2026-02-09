@@ -7,7 +7,7 @@ public class RefreshTokenTests
     [Fact]
     public void Create_ShouldInitializeActiveToken()
     {
-        var token = RefreshToken.Create();
+        var token = RefreshToken.Create(SecurityHelpers.GenerateUrlSafeToken());
 
         Assert.False(token.IsExpired);
         Assert.False(token.IsRevoked);

@@ -3,13 +3,20 @@ namespace FinFlow.Domain.Entities;
 
 public class RefreshToken
 {
-    public static RefreshToken Create()
+    public static RefreshToken Create(string token)
     {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            throw new ArgumentException("Refresh token cannot be empty.", nameof(token));
+        }
+
+        var now = DateTime.UtcNow;
+
         return new RefreshToken
         {
-            Token = Guid.NewGuid().ToString(),
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            Created = DateTime.UtcNow,
+            Token = token,
+            ExpiresAt = now.AddDays(7),
+            Created = now,
         };
     }
 
