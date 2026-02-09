@@ -33,7 +33,7 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, Authenti
 
         // 3. Yeni JWT ve Refresh Token üret
         string newJwt = _jwtTokenGenerator.GenerateToken(user);
-        var newRefreshToken = RefreshToken.Create(); // static factory method olabilir
+        var newRefreshToken = RefreshToken.Create(SecurityHelpers.GenerateUrlSafeToken());
 
         user.RefreshTokens.Add(newRefreshToken);
 
