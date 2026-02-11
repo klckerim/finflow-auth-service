@@ -2,10 +2,8 @@ using System.Security.Claims;
 using Asp.Versioning;
 using FinFlow.API.Models;
 using FinFlow.Application.Commands.Users;
-using FinFlow.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -36,45 +34,31 @@ namespace FinFlow.API.Controllers
         [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
         {
-            try
+            var command = new LoginUserCommand(request.Email, request.Password);
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            SetRefreshTokenCookie(result.RefreshToken);
+
+            _logger.LogInformation("User {Email} logged in successfully.", request.Email);
+
+            return Ok(new AuthenticationResponse
             {
-                var command = new LoginUserCommand(request.Email, request.Password);
-
-                var result = await _mediator.Send(command, cancellationToken);
-
-                SetRefreshTokenCookie(result.RefreshToken);
-
-                _logger.LogInformation("User {Email} logged in successfully.", request.Email);
-
-                return Ok(new AuthenticationResponse
-                {
-                    UserId = result.User.Id,
-                    Email = result.User.Email,
-                    FullName = result.User.FullName,
-                    Role = result.User.Role.ToString(),
-                    Token = result.AccessToken
-                });
-            }
-            catch (OperationCanceledException e)
-            {
-                throw new Exception(e.Message, e);
-            }
+                UserId = result.User.Id,
+                Email = result.User.Email,
+                FullName = result.User.FullName,
+                Role = result.User.Role.ToString(),
+                Token = result.AccessToken
+            });
         }
 
         [HttpPost("register")]
         [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {
-            try
-            {
-                var userId = await _mediator.Send(command, cancellationToken);
-                _logger.LogInformation("User registered successfully with ID {UserId}", userId);
-                return Ok(new { userId });
-            }
-            catch (OperationCanceledException e)
-            {
-                throw new Exception(e.Message, e);
-            }
+            var userId = await _mediator.Send(command, cancellationToken);
+            _logger.LogInformation("User registered successfully with ID {UserId}", userId);
+            return Ok(new { userId });
         }
 
         [HttpPost("logout")]
@@ -156,21 +140,14 @@ namespace FinFlow.API.Controllers
         [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand req, CancellationToken ct)
         {
-            try
-            {
-                var demoEnabled = _config.GetValue<bool>("Demo:Enabled");
+            var demoEnabled = _config.GetValue<bool>("Demo:Enabled");
 
-                var resetUrl = await _mediator.Send(req, ct);
-                _logger.LogInformation("User registered successfully with ID {Email}", req.Email);
+            var resetUrl = await _mediator.Send(req, ct);
+            _logger.LogInformation("Password reset requested for {Email}", req.Email);
 
-                if (demoEnabled)
-                {
-                    return Ok(new { message = "If an account exists, a reset link is generated.", resetUrl });
-                }
-            }
-            catch (OperationCanceledException e)
+            if (demoEnabled)
             {
-                throw new Exception(e.Message, e);
+                return Ok(new { message = "If an account exists, a reset link is generated.", resetUrl });
             }
 
             return Ok(new { message = "If an account exists, a reset link has been sent." });
@@ -194,17 +171,9 @@ namespace FinFlow.API.Controllers
         [EnableRateLimiting("AuthSensitive")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand req, CancellationToken ct)
         {
-            try
-            {
-                var resetUrl = await _mediator.Send(req, ct);
-                return Ok(new { message = "Password has been reset." });
-            }
-            catch (OperationCanceledException e)
-            {
-                throw new Exception(e.Message, e);
-            }
+            await _mediator.Send(req, ct);
+            return Ok(new { message = "Password has been reset." });
         }
     }
 
 }
-
