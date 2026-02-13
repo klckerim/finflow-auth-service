@@ -172,6 +172,11 @@ docker run --rm \
 
 ---
 
+---
+
+## System Design Diagram
+A detailed architecture and flow diagram is available in `docs/system-design-diagram.md`.
+
 ## 🔎 Helpful Endpoints
 - Swagger UI: http://localhost:5001/swagger
 - pgAdmin (Docker): http://localhost:5050
