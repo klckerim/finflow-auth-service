@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-label="FinFlow detailed system design diagram">
+  <defs>
+    <style>
+      .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .label { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .small { font: 500 12px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .box { rx: 14; ry: 14; stroke-width: 2; }
+      .line { stroke: #334155; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .line2 { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,4 L0,8 z" fill="#334155" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="980" fill="#f8fafc"/>
+  <text x="48" y="52" class="title">FinFlow – Detaylı Sistem Tasarım Diyagramı</text>
+
+  <!-- Section headers -->
+  <text x="48" y="95" class="subtitle">1) Sistem Bağlamı (Container View)</text>
+  <text x="48" y="460" class="subtitle">2) Backend İç Mimari (Clean Architecture + CQRS)</text>
+
+  <!-- Top area frame -->
+  <rect x="40" y="110" width="1520" height="320" fill="#ffffff" stroke="#cbd5e1" stroke-dasharray="6 6" class="box"/>
+
+  <!-- User -->
+  <rect x="90" y="210" width="180" height="80" fill="#dbeafe" stroke="#2563eb" class="box"/>
+  <text x="128" y="248" class="label">Son Kullanıcı</text>
+
+  <!-- UI -->
+  <rect x="370" y="190" width="240" height="120" fill="#dcfce7" stroke="#16a34a" class="box"/>
+  <text x="430" y="230" class="label">finflow-ui</text>
+  <text x="420" y="255" class="small">Next.js 14</text>
+  <text x="402" y="275" class="small">JWT + API çağrıları</text>
+
+  <!-- API -->
+  <rect x="700" y="175" width="280" height="150" fill="#fef3c7" stroke="#d97706" class="box"/>
+  <text x="805" y="215" text-anchor="middle" class="label">FinFlow.API</text>
+  <text x="805" y="240" text-anchor="middle" class="small">ASP.NET Core Web API</text>
+  <text x="805" y="260" text-anchor="middle" class="small">Controllers + Middleware</text>
+  <text x="805" y="280" text-anchor="middle" class="small">Auth, RateLimit, CORS</text>
+
+  <!-- DB -->
+  <rect x="1070" y="160" width="230" height="100" fill="#ede9fe" stroke="#7c3aed" class="box"/>
+  <text x="1185" y="200" text-anchor="middle" class="label">PostgreSQL 15</text>
+  <text x="1185" y="223" text-anchor="middle" class="small">finflowdb</text>
+
+  <!-- Stripe -->
+  <rect x="1070" y="285" width="230" height="100" fill="#ffe4e6" stroke="#e11d48" class="box"/>
+  <text x="1185" y="325" text-anchor="middle" class="label">Stripe API</text>
+  <text x="1185" y="348" text-anchor="middle" class="small">Checkout + Webhook</text>
+
+  <!-- Seq -->
+  <rect x="1340" y="160" width="180" height="100" fill="#e2e8f0" stroke="#475569" class="box"/>
+  <text x="1430" y="200" text-anchor="middle" class="label">Seq</text>
+  <text x="1430" y="223" text-anchor="middle" class="small">(Opsiyonel Log)</text>
+
+  <!-- pgAdmin -->
+  <rect x="1340" y="285" width="180" height="100" fill="#e2e8f0" stroke="#475569" class="box"/>
+  <text x="1430" y="325" text-anchor="middle" class="label">pgAdmin</text>
+  <text x="1430" y="348" text-anchor="middle" class="small">DB Yönetimi</text>
+
+  <!-- Top arrows -->
+  <path d="M270 250 L370 250" class="line"/>
+  <text x="305" y="238" class="small">HTTPS</text>
+
+  <path d="M610 250 L700 250" class="line"/>
+  <text x="635" y="238" class="small">REST + JWT</text>
+
+  <path d="M980 220 L1070 210" class="line"/>
+  <text x="995" y="198" class="small">EF Core / Npgsql</text>
+
+  <path d="M980 285 L1070 325" class="line"/>
+  <text x="995" y="315" class="small">Checkout/Webhook</text>
+
+  <path d="M980 188 L1340 188" class="line2"/>
+  <text x="1125" y="176" class="small">Serilog Sink</text>
+
+  <path d="M1430 285 L1185 260" class="line2"/>
+
+  <!-- Bottom architecture frame -->
+  <rect x="40" y="475" width="1520" height="470" fill="#ffffff" stroke="#cbd5e1" stroke-dasharray="6 6" class="box"/>
+
+  <!-- Controller -->
+  <rect x="80" y="560" width="240" height="100" fill="#dbeafe" stroke="#2563eb" class="box"/>
+  <text x="200" y="602" text-anchor="middle" class="label">Controllers</text>
+  <text x="200" y="625" text-anchor="middle" class="small">Auth/Wallets/Payments</text>
+
+  <!-- MediatR -->
+  <rect x="390" y="560" width="210" height="100" fill="#dcfce7" stroke="#16a34a" class="box"/>
+  <text x="495" y="602" text-anchor="middle" class="label">MediatR</text>
+  <text x="495" y="625" text-anchor="middle" class="small">Command/Query Bus</text>
+
+  <!-- Validation -->
+  <rect x="650" y="560" width="220" height="100" fill="#fef9c3" stroke="#ca8a04" class="box"/>
+  <text x="760" y="602" text-anchor="middle" class="label">ValidationBehavior</text>
+  <text x="760" y="625" text-anchor="middle" class="small">FluentValidation</text>
+
+  <!-- Handlers -->
+  <rect x="930" y="545" width="270" height="130" fill="#ffedd5" stroke="#ea580c" class="box"/>
+  <text x="1065" y="590" text-anchor="middle" class="label">Application Handlers</text>
+  <text x="1065" y="613" text-anchor="middle" class="small">Login/Transfer/Deposit/Queries</text>
+  <text x="1065" y="636" text-anchor="middle" class="small">Business Rules</text>
+
+  <!-- Interfaces/ports -->
+  <rect x="1260" y="530" width="260" height="160" fill="#e0e7ff" stroke="#4338ca" class="box"/>
+  <text x="1390" y="573" text-anchor="middle" class="label">Interfaces (Ports)</text>
+  <text x="1390" y="596" text-anchor="middle" class="small">IUserRepository</text>
+  <text x="1390" y="616" text-anchor="middle" class="small">IWalletRepository</text>
+  <text x="1390" y="636" text-anchor="middle" class="small">ITransactionRepository</text>
+  <text x="1390" y="656" text-anchor="middle" class="small">IAuthRepository / ITokenService</text>
+
+  <!-- Infra -->
+  <rect x="1080" y="760" width="230" height="120" fill="#ede9fe" stroke="#7c3aed" class="box"/>
+  <text x="1195" y="805" text-anchor="middle" class="label">Infrastructure</text>
+  <text x="1195" y="828" text-anchor="middle" class="small">Repositories + DbContext</text>
+
+  <!-- DB bottom -->
+  <rect x="1370" y="760" width="150" height="120" fill="#f5d0fe" stroke="#a21caf" class="box"/>
+  <text x="1445" y="807" text-anchor="middle" class="label">PostgreSQL</text>
+
+  <!-- JWT -->
+  <rect x="820" y="760" width="220" height="120" fill="#fee2e2" stroke="#dc2626" class="box"/>
+  <text x="930" y="805" text-anchor="middle" class="label">JwtTokenGenerator</text>
+  <text x="930" y="828" text-anchor="middle" class="small">Access + Refresh Token</text>
+
+  <!-- Arrows bottom -->
+  <path d="M320 610 L390 610" class="line"/>
+  <path d="M600 610 L650 610" class="line"/>
+  <path d="M870 610 L930 610" class="line"/>
+  <path d="M1200 610 L1260 610" class="line"/>
+  <path d="M1390 690 L1195 760" class="line2"/>
+  <path d="M1310 820 L1370 820" class="line"/>
+  <path d="M1065 675 L930 760" class="line2"/>
+
+  <!-- legend -->
+  <rect x="80" y="730" width="700" height="170" fill="#f8fafc" stroke="#cbd5e1" class="box"/>
+  <text x="100" y="762" class="label">Temel Akış Özeti</text>
+  <text x="100" y="790" class="small">• UI, JWT ile API endpointlerine erişir.</text>
+  <text x="100" y="815" class="small">• Controller istekleri MediatR üzerinden Handler'lara yönlendirir.</text>
+  <text x="100" y="840" class="small">• Handler, interface/port üzerinden repository'leri çağırır.</text>
+  <text x="100" y="865" class="small">• Ödeme akışlarında Stripe webhook API'yi tetikler; deposit işlemine yansır.</text>
+</svg>

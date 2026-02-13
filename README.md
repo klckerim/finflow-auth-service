@@ -49,6 +49,13 @@
 
 ---
 
+## Detailed System Design Diagram
+For the detailed architecture and flow diagrams, see:
+
+- [`docs/system-design-diagram.md`](docs/system-design-diagram.md)
+
+---
+
 ## Quick Start (Docker Compose)
 This is the fastest way to run the full stack locally.
 
