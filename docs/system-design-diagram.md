@@ -8,7 +8,7 @@ This document maps the runtime architecture of **FinFlow** across client, API, a
 flowchart TB
     U[End User\nBrowser / Mobile] --> UI[Next.js 14 UI\nfinflow-ui]
 
-    subgraph Docker Network (finflow-net)
+    subgraph DockerNetwork[Docker Network: finflow-net]
       UI -->|HTTPS/JSON\nJWT + Cookies| API[FinFlow.API\nASP.NET Core 9]
       API --> APP[FinFlow.Application\nCQRS + MediatR + Validators]
       APP --> INF[FinFlow.Infrastructure\nRepositories + EF Core + Stripe Services]
@@ -127,7 +127,7 @@ flowchart TB
     RL[Rate Limiter Policies\nAuthSensitive / Payments / StripeWebhook]
     AUTH[JWT Authentication & Authorization]
     CTRL[API Controllers]
-    LOG[Serilog\nConsole + File (+ Seq optional)]
+    LOG[Serilog\nConsole and File, Seq optional]
 
     Req --> FWD --> EX --> CORS --> RL --> AUTH --> CTRL
     CTRL --> LOG
@@ -198,4 +198,3 @@ flowchart LR
     PGc --> DBc
     APIc --> Stripe[(Stripe Cloud)]
 ```
-
