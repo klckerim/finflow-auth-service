@@ -49,15 +49,16 @@ public class PaymentsController : ControllerBase
             SuccessUrl = _config["Stripe:SuccessUrl"],
             CancelUrl = _config["Stripe:CancelUrl"],
             Metadata = new Dictionary<string, string>
-        {
-            { "userId", request.UserId.ToString() }
-        }
+            {
+                { "userId", request.UserId.ToString() }
+            }
         };
 
         if (!string.IsNullOrEmpty(request.CustomerEmail))
             options.CustomerEmail = request.CustomerEmail;
 
         var service = new SessionService();
+
         var session = service.Create(options);
 
         if (session == null)
@@ -117,7 +118,18 @@ public class PaymentsController : ControllerBase
         };
 
         var service = new SessionService();
-        var session = service.Create(options);
+
+        Session session;
+
+        if (!string.IsNullOrWhiteSpace(idempotencyKey))
+        {
+            session = service.Create(options, new RequestOptions { IdempotencyKey = idempotencyKey });
+        }
+        else
+        {
+            session = service.Create(options);
+        }
+
         if (session == null)
         {
             _logger.LogError("Failed to create Stripe session.");
@@ -165,7 +177,6 @@ public class PaymentsController : ControllerBase
                     _logger.LogError("Session is null in webhook event.");
                     return BadRequest("Invalid session data.");
                 }
-
 
                 if (session.Mode == "setup" || (session.Metadata != null && session.Metadata.ContainsKey("userId")))
                 {
@@ -216,7 +227,6 @@ public class PaymentsController : ControllerBase
                         _logger.LogError(ex, "Failed to process setup session.");
                     }
                 }
-
                 else if (session.Mode == "payment" && session.Metadata != null && session.Metadata.TryGetValue("walletId", out var walletIdStr))
                 {
                     if (Guid.TryParse(walletIdStr, out var walletGuid))
