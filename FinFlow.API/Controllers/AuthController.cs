@@ -102,12 +102,17 @@ namespace FinFlow.API.Controllers
 
         [HttpPost("refresh-token")]
         [EnableRateLimiting("AuthSensitive")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
         {
-            var command = new RefreshTokenCommand(request.RefreshToken);
+            if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken) || string.IsNullOrWhiteSpace(refreshToken))
+            {
+                _logger.LogWarning("Refresh token cookie is missing.");
+                return Unauthorized(new { message = "Refresh token is missing." });
+            }
 
-            var result = await _mediator.Send(command);
+            var command = new RefreshTokenCommand(refreshToken);
 
+            var result = await _mediator.Send(command, cancellationToken);
             // RefreshToken'ı HttpOnly cookie'ye yazalım
             SetRefreshTokenCookie(result.RefreshToken);
 

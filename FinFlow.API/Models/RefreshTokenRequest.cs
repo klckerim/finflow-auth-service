@@ -2,6 +2,6 @@ namespace FinFlow.API.Models;
 
 public class RefreshTokenRequest
 {
-    public string AccessToken { get; set; } = string.Empty;
-    public string RefreshToken { get; set; } = string.Empty;
+    // Bu sınıf boş olabilir çünkü refresh token'ı cookie'den alacağız
+    // Ancak ileride ek alanlar eklemek isterssk buraya ekleyebiliriz
 }
