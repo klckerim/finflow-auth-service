@@ -46,15 +46,6 @@ namespace FinFlow.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.PasswordResetTokenExpiry > DateTime.UtcNow, cancellationToken);
         }
 
-        public async Task<User?> GetUserByRefreshTokenAsync(string token)
-        {
-            using var context = _contextFactory.CreateDbContext();
-
-            return await context.Users
-                .Include(u => u.RefreshTokens)
-                .FirstOrDefaultAsync(u => u.RefreshTokens.Any(rt => rt.Token == token));
-        }
-
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
         {
             using var context = _contextFactory.CreateDbContext();

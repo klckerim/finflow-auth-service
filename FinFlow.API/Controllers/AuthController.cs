@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Asp.Versioning;
 using FinFlow.API.Models;
 using FinFlow.Application.Commands.Users;
+using FinFlow.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
@@ -18,15 +19,17 @@ namespace FinFlow.API.Controllers
         private readonly IMediator _mediator;
         private readonly ILogger<AuthController> _logger;
         private readonly IAuthRepository _repo;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
 
 
-        public AuthController(IMediator mediator, ILogger<AuthController> logger, IAuthRepository repo, IConfiguration config)
+        public AuthController(IMediator mediator, ILogger<AuthController> logger, IAuthRepository repo, IUserRepository userRepository, IConfiguration config)
         {
             _mediator = mediator;
             _logger = logger;
             _config = config;
             _repo = repo;
+            _userRepository = userRepository;
 
         }
 
@@ -62,13 +65,15 @@ namespace FinFlow.API.Controllers
         }
 
         [HttpPost("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout(CancellationToken cancellationToken)
         {
-            // Refresh token cookie’sini sil
-            if (Request.Cookies.ContainsKey("refreshToken"))
+            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken)
+                && !string.IsNullOrWhiteSpace(refreshToken))
             {
+                await _userRepository.RevokeRefreshTokenAsync(refreshToken, cancellationToken);
                 Response.Cookies.Delete("refreshToken");
             }
+
             _logger.LogInformation("User logged out successfully.");
 
             return Ok(new { message = "Logged out successfully" });
@@ -102,7 +107,7 @@ namespace FinFlow.API.Controllers
 
         [HttpPost("refresh-token")]
         [EnableRateLimiting("AuthSensitive")]
-        public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest? _, CancellationToken cancellationToken)
         {
             if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken) || string.IsNullOrWhiteSpace(refreshToken))
             {
@@ -113,7 +118,7 @@ namespace FinFlow.API.Controllers
             var command = new RefreshTokenCommand(refreshToken);
 
             var result = await _mediator.Send(command, cancellationToken);
-            // RefreshToken'ı HttpOnly cookie'ye yazalım
+            // RefreshToken'ı HttpOnly cookie'ye yaz
             SetRefreshTokenCookie(result.RefreshToken);
 
             _logger.LogInformation("Refresh token used for user {UserId}", result.User.Id);
@@ -130,12 +135,16 @@ namespace FinFlow.API.Controllers
 
         private void SetRefreshTokenCookie(string refreshToken)
         {
+            var isProduction = HttpContext.RequestServices
+                .GetRequiredService<IHostEnvironment>()
+                .IsProduction();
+
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, // HTTPS üzerinden gönderilecek
+                Secure = isProduction,
                 Expires = DateTime.UtcNow.AddDays(7), // 7 gün geçerli
-                SameSite = SameSiteMode.Lax // CSRF koruması için
+                SameSite = isProduction ? SameSiteMode.None : SameSiteMode.Lax
             };
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
@@ -157,7 +166,6 @@ namespace FinFlow.API.Controllers
 
             return Ok(new { message = "If an account exists, a reset link has been sent." });
         }
-
 
         [HttpGet("validate-reset-token")]
         [EnableRateLimiting("AuthSensitive")]

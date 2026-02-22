@@ -10,7 +10,6 @@ namespace FinFlow.Application.Interfaces
         Task<User?> GetByPasswordResetTokenAsync(string token, CancellationToken cancellationToken);
         Task AddRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken);
         Task RevokeRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken);
-        Task<User?> GetUserByRefreshTokenAsync(string token);
         Task<User?> GetByRefreshTokenAsync(string refreshToken);
     }
 }
