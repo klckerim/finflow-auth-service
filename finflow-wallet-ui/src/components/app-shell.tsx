@@ -10,7 +10,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="app-shell">
       <Sidebar isOpen={isMenuOpen} onNavigate={() => setIsMenuOpen(false)} />
-      {isMenuOpen ? <button aria-label="Close menu" className="sidebar-backdrop" onClick={() => setIsMenuOpen(false)} type="button" /> : null}
+      {isMenuOpen ? (
+        <button
+          aria-label="Close menu"
+          className="sidebar-backdrop"
+          onClick={() => setIsMenuOpen(false)}
+          type="button"
+        />
+      ) : null}
       <main className="main-content">
         <Topbar onMenuToggle={() => setIsMenuOpen((prev) => !prev)} />
         {children}
