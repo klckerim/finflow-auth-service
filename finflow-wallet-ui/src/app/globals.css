@@ -1,0 +1,227 @@
+:root {
+  color-scheme: dark;
+  --bg: #070b1a;
+  --bg-soft: #0d1324;
+  --panel: linear-gradient(145deg, #131b33, #10162d);
+  --border: #27304c;
+  --text: #ebefff;
+  --muted: #9aa4c7;
+  --accent: #7f8cff;
+  --accent-soft: #4a59cc;
+  --success: #2fdd9b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at 0 0, #131b37 0%, #070b1a 45%);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: min(440px, 100%);
+  display: grid;
+  gap: 12px;
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.auth-card.wide {
+  width: min(720px, 100%);
+}
+
+.auth-card label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.auth-card input {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 12px 14px;
+}
+
+.badge {
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(127, 140, 255, 0.2);
+  color: #c8ceff;
+  font-size: 12px;
+}
+
+.primary-button {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(100deg, var(--accent), var(--accent-soft));
+  cursor: pointer;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 14px;
+}
+
+.quick-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.quick-links a {
+  text-decoration: none;
+  color: #d6dcff;
+  background: rgba(127, 140, 255, 0.15);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.app-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 260px 1fr;
+}
+
+.sidebar-panel {
+  border-right: 1px solid var(--border);
+  padding: 28px 18px;
+  background: rgba(7, 11, 26, 0.95);
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.brand-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.sidebar-nav {
+  display: grid;
+  gap: 8px;
+}
+
+.sidebar-link {
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  color: #d7ddfa;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-link:hover {
+  border-color: var(--border);
+  background: rgba(127, 140, 255, 0.12);
+}
+
+.main-content {
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.topbar-title {
+  margin: 0 0 6px;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.overview-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.card {
+  background: var(--panel);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.metric-value {
+  margin: 8px 0;
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.trend {
+  color: var(--success);
+}
+
+.section-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.transaction-list {
+  display: grid;
+  gap: 10px;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(16, 22, 45, 0.75);
+  border-radius: 12px;
+  border: 1px solid #202949;
+}
+
+@media (max-width: 880px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
