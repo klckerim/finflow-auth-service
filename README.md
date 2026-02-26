@@ -141,6 +141,8 @@ Seq__Url
 
 ---
 
+---
+
 ## Stripe Webhook (Local)
 Forward Stripe webhooks to your API:
 
