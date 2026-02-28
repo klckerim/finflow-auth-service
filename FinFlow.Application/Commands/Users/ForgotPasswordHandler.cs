@@ -41,7 +41,7 @@ namespace FinFlow.Application.Commands.Users
                 return resetUrl;
             }
 
-            return "";
+            return string.Empty;
         }
     }
 }

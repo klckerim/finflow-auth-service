@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using FinFlow.Application.Interfaces;
 using FinFlow.Application.Models;
 using FinFlow.Domain.Entities;
@@ -25,7 +26,7 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, Authenti
 
         if (user is null)
         {
-            throw new Exception(ErrorCodes.InvalidRefreshToken);
+            throw new AppException(ErrorCodes.InvalidRefreshToken, "Refresh token is invalid or expired.", StatusCodes.Status401Unauthorized);
         }
 
         // 2. Refresh Token'ı işaretle (revoked)
@@ -39,7 +40,7 @@ public class RefreshTokenHandler : IRequestHandler<RefreshTokenCommand, Authenti
 
         // 4. Kullanıcıyı güncelle
         await _userRepository.AddRefreshTokenAsync(newRefreshToken, cancellationToken);
-        
+
         // 5. Sonucu dön
         return new AuthenticationResult(user, newJwt, newRefreshToken.Token);
     }

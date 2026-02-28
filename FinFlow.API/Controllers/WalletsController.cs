@@ -28,7 +28,7 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateWalletCommand command)
     {
         if (id != command.WalletId)
-            throw new Exception("Wallet not found.");
+            throw new AppException(ErrorCodes.WalletsNotMatch, "Route wallet ID does not match payload wallet ID.", StatusCodes.Status400BadRequest);
 
         var success = await _mediator.Send(command);
 
@@ -70,7 +70,7 @@ public class WalletsController : ControllerBase
     }
 
     [HttpPost("{walletId}/deposit")]
-     public async Task<IActionResult> Deposit(
+    public async Task<IActionResult> Deposit(
         Guid walletId,
         [FromBody] decimal amount,
         [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
@@ -87,7 +87,7 @@ public class WalletsController : ControllerBase
         [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
         if (walletId != transferDto.FromWalletId)
-            throw new Exception(ErrorCodes.WalletsNotMatch);
+            throw new AppException(ErrorCodes.WalletsNotMatch, "Route wallet ID does not match source wallet ID.", StatusCodes.Status400BadRequest);
 
         await _mediator.Send(new TransferCommand(transferDto.FromWalletId, transferDto.ToWalletId, transferDto.Amount, idempotencyKey));
         _logger.LogInformation("Transferred {Amount} from wallet {FromWalletId} to wallet {ToWalletId}",
