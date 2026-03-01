@@ -44,26 +44,33 @@
 }
 
 :root {
-  --radius: 0.75rem; /* Köşe yuvarlaklığı artırıldı */
+  --radius: 0.75rem;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --shadow-soft: 0 10px 30px -16px oklch(18% 0.02 250 / 0.28);
+  --shadow-card: 0 14px 35px -22px oklch(20% 0.02 250 / 0.35);
+
   --background: oklch(95% 0.01 220);
   --foreground: oklch(15% 0.02 220);
   --card: oklch(98% 0 0);
   --card-foreground: oklch(15% 0.02 220);
   --popover: oklch(98% 0 0);
   --popover-foreground: oklch(20% 0.03 220);
-  --primary: oklch(45% 0.18 260); /* Derin mavi */
+  --primary: oklch(45% 0.18 260);
   --primary-foreground: oklch(98% 0 0);
   --secondary: oklch(92% 0.01 220);
   --secondary-foreground: oklch(25% 0.03 220);
   --muted: oklch(92% 0.01 220);
   --muted-foreground: oklch(50% 0.03 220);
-  --accent: oklch(45% 0.15 320); /* Mor ton */
+  --accent: oklch(45% 0.15 320);
   --accent-foreground: oklch(98% 0 0);
   --destructive: oklch(65% 0.23 25);
   --border: oklch(85% 0.01 220);
   --input: oklch(92% 0.01 220);
   --ring: oklch(45% 0.18 260);
-  --chart-1: oklch(65% 0.22 150); /* Uyumlu grafik renkleri */
+  --chart-1: oklch(65% 0.22 150);
   --chart-2: oklch(65% 0.22 200);
   --chart-3: oklch(65% 0.22 260);
   --chart-4: oklch(65% 0.22 320);
@@ -79,30 +86,30 @@
 }
 
 .dark {
-  --background: oklch(12% 0.02 220); /* Daha koyu arkaplan */
+  --background: oklch(12% 0.02 220);
   --foreground: oklch(95% 0.01 220);
-  --card: oklch(15% 0.03 220); /* Kartlar daha belirgin */
+  --card: oklch(15% 0.03 220);
   --card-foreground: oklch(92% 0.01 220);
   --popover: oklch(15% 0.03 220);
   --popover-foreground: oklch(92% 0.01 220);
-  --primary: oklch(55% 0.18 260); /* Daha canlı birincil renk */
+  --primary: oklch(55% 0.18 260);
   --primary-foreground: oklch(15% 0.02 220);
-  --secondary: oklch(20% 0.05 260); /* Daha derin ikincil */
+  --secondary: oklch(20% 0.05 260);
   --secondary-foreground: oklch(90% 0.01 220);
   --muted: oklch(18% 0.03 220);
   --muted-foreground: oklch(65% 0.05 220);
-  --accent: oklch(55% 0.15 320); /* Canlı aksan rengi */
+  --accent: oklch(55% 0.15 320);
   --accent-foreground: oklch(15% 0.02 220);
   --destructive: oklch(65% 0.23 25);
-  --border: oklch(20% 0.05 220 / 60%); /* Saydam borderlar */
+  --border: oklch(20% 0.05 220 / 60%);
   --input: oklch(15% 0.03 220);
   --ring: oklch(55% 0.18 260);
-  --chart-1: oklch(75% 0.22 150); /* Daha parlak grafikler */
+  --chart-1: oklch(75% 0.22 150);
   --chart-2: oklch(75% 0.22 200);
   --chart-3: oklch(75% 0.22 260);
   --chart-4: oklch(75% 0.22 320);
   --chart-5: oklch(75% 0.22 30);
-  --sidebar: oklch(15% 0.03 220); /* Sidebar koyulaştı */
+  --sidebar: oklch(15% 0.03 220);
   --sidebar-foreground: oklch(90% 0.01 220);
   --sidebar-primary: oklch(55% 0.18 260);
   --sidebar-primary-foreground: oklch(15% 0.02 220);
@@ -115,14 +122,40 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    transition: background-color 0.2s, border-color 0.2s; /* Pürüzsüz geçişler */
+    transition: background-color 0.2s, border-color 0.2s;
   }
+
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1; /* Tipografi iyileştirme */
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
+@layer components {
+  .ff-surface {
+    @apply rounded-2xl border border-border/70 bg-card;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .ff-card {
+    @apply ff-surface p-6;
+    box-shadow: var(--shadow-card);
+  }
+
+  .ff-section {
+    @apply space-y-4;
+    margin-top: var(--space-3);
+  }
+
+  .ff-table {
+    @apply w-full overflow-hidden rounded-2xl border border-border/70 bg-card;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .ff-alert {
+    @apply rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive;
+  }
+}
 
 html {
   @apply bg-white text-black;

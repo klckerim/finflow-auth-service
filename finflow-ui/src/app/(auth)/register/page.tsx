@@ -161,7 +161,7 @@ export default function RegisterPage() {
               </div>
 
               {error && (
-                <p id="register-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
+                <p id="register-error" className="ff-alert" role="alert" aria-live="polite">
                   {error}
                 </p>
               )}

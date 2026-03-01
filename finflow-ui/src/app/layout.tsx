@@ -26,11 +26,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex min-h-screen w-full bg-background text-foreground">
               <Sidebar />
               <MobileNav />
-              <div className="flex-1 flex flex-col transition-all duration-300">
+              <div className="flex min-h-screen flex-1 flex-col md:ml-64">
                 <Navbar />
-                <main className="flex-1 p-6 md:p-0 overflow-y-auto">
-                  {children}
-                </main>
+                <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">{children}</main>
               </div>
             </div>
           </LocaleProvider>

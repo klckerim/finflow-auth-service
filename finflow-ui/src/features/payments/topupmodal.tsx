@@ -9,6 +9,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { useLocale } from "@/context/locale-context";
+import { Input } from "@/components/ui/input";
 
 const AddMoneyModal = ({ walletId, currency, onTopUp }: any) => {
     const [amount, setAmount] = useState<number>(0);
@@ -19,12 +20,12 @@ const AddMoneyModal = ({ walletId, currency, onTopUp }: any) => {
             <DialogTrigger asChild>
                 <Button>{t("common.str_AddMoney")}</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>{t("common.str_AddMoneyToWallet")}</DialogTitle>
                 </DialogHeader>
-                <div className="flex flex-col gap-4 mt-4">
-                    <input
+                <div className="mt-4 flex flex-col gap-4">
+                    <Input
                         id="topup-amount"
                         type="number"
                         min={1}
@@ -32,7 +33,7 @@ const AddMoneyModal = ({ walletId, currency, onTopUp }: any) => {
                         value={amount}
                         onChange={(e) => setAmount(parseFloat(e.target.value))}
                         placeholder={t("dashboard.amountIn", { currency: currency })}
-                        className="border rounded px-2 py-1 w-full"
+                        className="w-full"
                     />
                 </div>
                 <DialogFooter>

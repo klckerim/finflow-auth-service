@@ -46,12 +46,12 @@ export default function TransactionsPage() {
 
   return (
     <ProtectedRoute>
-      <h1 className="text-2xl font-bold mb-6 text-foreground">💸 {tr("common.str_Transactions")}</h1>
+      <h1 className="mb-6 text-2xl font-semibold text-foreground">💸 {tr("common.str_Transactions")}</h1>
 
       {/* Desktop Table */}
-      <div className="hidden md:block overflow-x-auto w-full rounded-lg border border-border shadow-sm">
-        <table className="w-full bg-background">
-          <thead className="bg-muted">
+      <div className="ff-table hidden w-full overflow-x-auto md:block">
+        <table className="w-full">
+          <thead className="bg-muted/40">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 {tr("common.type")}
@@ -98,14 +98,14 @@ export default function TransactionsPage() {
       </div>
 
       {/* Mobile List */}
-      <div className="md:hidden space-y-3">
+      <div className="space-y-3 md:hidden">
         {transactions.map((t) => (
           <div
             key={t.id}
-            className="bg-background p-4 rounded-lg border border-border shadow-sm"
+            className="ff-surface rounded-xl p-4"
           >
             <div className="flex justify-between items-start mb-2">
-              <span className="text-sm font-medium bg-muted px-2 py-1 rounded-md">
+              <span className="rounded-md bg-muted/70 px-2 py-1 text-sm font-medium">
                 {tr(t.type)}
               </span>
               <span

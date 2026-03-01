@@ -1,8 +1,4 @@
-// components/QuickActions.tsx
-/**
- * Quick actions component - Displays 3-4 frequently used actions as icons.
- */
-import { Plus, Send, CreditCard, History } from "lucide-react";
+import { Plus, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useLocale } from "@/context/locale-context";
@@ -24,17 +20,17 @@ const QuickActions = () => {
   ];
 
   return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">{t("common.str_QuickActions")}</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="ff-card">
+      <h2 className="mb-4 text-xl font-semibold">{t("common.str_QuickActions")}</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {actions.map((action, index) => (
           <Link href={action.path} key={index}>
             <Button
               variant="outline"
-              className="flex flex-col items-center justify-center h-28 w-full p-4 hover:bg-accent transition-colors"
+              className="h-28 w-full flex-col gap-2 rounded-xl border-border/70 bg-background/70 hover:bg-accent/20"
             >
-              <div className="mb-2">{action.icon}</div>
-              <span className="text-sm">{action.label}</span>
+              <div>{action.icon}</div>
+              <span className="text-sm font-medium">{action.label}</span>
             </Button>
           </Link>
         ))}

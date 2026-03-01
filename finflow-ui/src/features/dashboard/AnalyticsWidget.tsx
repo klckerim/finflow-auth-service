@@ -1,13 +1,7 @@
-// components/AnalyticsWidget.tsx
-/**
- * Analytics widget summary for dashboard charts.
- */
-
 import { useMemo } from "react";
 import { useLocale } from "@/context/locale-context";
 import { useWalletStore } from "@/app/store/walletStore";
 import { BarChart, TrendingUp, Wallet } from "lucide-react";
-
 
 const AnalyticsWidget = () => {
   const { t } = useLocale();
@@ -33,14 +27,14 @@ const AnalyticsWidget = () => {
   }, [wallets]);
 
   return (
-    <div className="mt-8 border rounded-lg p-6 bg-card">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold">{t("common.str_FinancialAnalysis")}</h2>
+    <div className="ff-card">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">{t("common.str_FinancialAnalysis")}</h2>
         <BarChart className="h-5 w-5 text-primary" />
       </div>
-      
+
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-lg border bg-muted/30 p-4">
+        <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Wallet className="h-4 w-4 text-primary" />
             {t("common.str_TotalBalance")}
@@ -49,7 +43,7 @@ const AnalyticsWidget = () => {
             {summary.totalBalance.toLocaleString()} {summary.currency}
           </div>
         </div>
-        <div className="rounded-lg border bg-muted/30 p-4">
+        <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <TrendingUp className="h-4 w-4 text-primary" />
             {t("common.str_TopWallet")}
@@ -61,20 +55,20 @@ const AnalyticsWidget = () => {
             {summary.topWallet.balance.toLocaleString()} {summary.topWallet.currency}
           </p>
         </div>
-        <div className="rounded-lg border bg-muted/30 p-4">
+        <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
           <div className="text-sm text-muted-foreground">{t("common.str_WalletCount")}</div>
           <div className="mt-2 text-2xl font-semibold">{summary.walletCount}</div>
           <p className="text-sm text-muted-foreground">{t("common.str_ActiveWallets")}</p>
         </div>
       </div>
 
-      <div className="mt-6 rounded-lg border bg-muted/20 p-4">
+      <div className="mt-6 rounded-xl border border-border/70 bg-muted/10 p-4">
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>{t("common.str_WalletDistribution")}</span>
           <span>{t("common.str_Last30Days")}</span>
         </div>
         {summary.chartItems.length === 0 ? (
-          <div className="h-32 flex items-center justify-center text-sm text-muted-foreground">
+          <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">
             {t("common.str_FinancialCharts")}
           </div>
         ) : (
