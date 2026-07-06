@@ -5,6 +5,7 @@ export type Transaction = {
   paymentMethodId: string,
   description: string;
   type: string;
+  category?: string;
   amount: number;
   createdAt: string;
   currency: string

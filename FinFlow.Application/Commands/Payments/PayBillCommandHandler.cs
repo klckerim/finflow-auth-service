@@ -9,18 +9,21 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
     private readonly IUserRepository _userRepository;
     private readonly ITransactionRepository _txRepo;
     private readonly IStripePaymentService _stripe;
+    private readonly ITransactionCategorizationService _categorizationService;
 
     public PayBillCommandHandler(IWalletRepository walletRepo,
                                  ITransactionRepository txRepo,
                                  IStripePaymentService stripe,
                                  IPaymentMethodRepository paymentMethodRepo,
-                                 IUserRepository userRepository)
+                                 IUserRepository userRepository,
+                                 ITransactionCategorizationService categorizationService)
     {
         _walletRepo = walletRepo;
         _txRepo = txRepo;
         _stripe = stripe;
         _paymentMethodRepo = paymentMethodRepo;
         _userRepository = userRepository;
+        _categorizationService = categorizationService;
     }
 
     public async Task<Guid> Handle(PayBillCommand request, CancellationToken ct)
@@ -65,11 +68,15 @@ public class PayBillCommandHandler : IRequestHandler<PayBillCommand, Guid>
                 if (!paymentResult.Succeeded)
                     throw new AppException(ErrorCodes.CardPaymentFailed, "Card payment failed");
 
+                // Best-effort AI categorization from the free-text bill description; falls back to Other on any failure.
+                var category = await _categorizationService.CategorizeAsync(request.Description, request.Amount, TransactionType.BillPayment, ct);
+
                 var transaction = new Transaction
                 {
                     PaymentMethodId = request.CardId,
                     Amount = request.Amount,
                     Type = TransactionType.BillPayment,
+                    Category = category,
                     Description = request.Description,
                     CreatedAt = DateTime.UtcNow,
                     IdempotencyKey = request.IdempotencyKey

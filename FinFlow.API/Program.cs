@@ -39,6 +39,16 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<ITransactionCategorizationService, ClaudeTransactionCategorizationService>();
+builder.Services.AddScoped<IAiAssistantService, ClaudeAiAssistantService>();
+
+// Anthropic (Claude) API client, shared by AI categorization and the AI assistant
+builder.Services.AddHttpClient("Anthropic", client =>
+{
+    client.BaseAddress = new Uri("https://api.anthropic.com/");
+    client.DefaultRequestHeaders.Add("x-api-key", builder.Configuration["Anthropic:ApiKey"] ?? string.Empty);
+    client.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
+});
 
 // MediatR
 builder.Services.AddMediatR(typeof(RegisterUserHandler).Assembly);
@@ -103,6 +113,18 @@ builder.Services.AddRateLimiter(options =>
         factory: _ => new FixedWindowRateLimiterOptions
         {
             PermitLimit = 120,
+            Window = TimeSpan.FromMinutes(1),
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        }));
+
+    // AI assistant calls spend real LLM tokens, so keep this tighter than general endpoints.
+    options.AddPolicy("Assistant", context =>
+    RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        factory: _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
             Window = TimeSpan.FromMinutes(1),
             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
             QueueLimit = 0

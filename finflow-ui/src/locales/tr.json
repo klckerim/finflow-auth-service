@@ -266,7 +266,17 @@
     "str_RequestNewLink": "Yeni bağlantı iste",
     "str_PasswordRequirements": "Rakamlar, büyük/küçük harfler ve semboller içeren 8+ karakter kullanın.",
     "str_ConfirmPassword": "Şifreyi onayla",
-    "str_EnterPasswordAgain": "Şifrenizi tekrar girin"
+    "str_EnterPasswordAgain": "Şifrenizi tekrar girin",
+    "str_Category": "Kategori",
+    "str_Uncategorized": "Kategorisiz",
+    "str_CategorizeWithAi": "AI ile Kategorize Et",
+    "str_Categorizing": "Kategorize ediliyor...",
+    "str_CategorizeSuccess": "{count} işlem kategorize edildi",
+    "str_AiAssistant": "AI Asistan",
+    "str_AskAiAssistant": "AI Asistana Sor",
+    "str_AssistantPlaceholder": "Harcamaların, bakiyen hakkında sor...",
+    "str_AssistantWelcome": "\"Geçen ay ne kadar harcadım?\" gibi sorular sorabilirsin.",
+    "str_AssistantError": "Üzgünüm, bir şeyler ters gitti. Lütfen tekrar dene."
   },
   "warningsMessages": {
     "profileSaved": "Profil başarıyla güncellendi!",
@@ -380,5 +390,14 @@
   "Payment": "Ödeme",
   "TransferOut": "Para Transferi (Gönderim)",
   "TransferIn": "Para Transferi (Alım)",
-  "BillPayment": "Fatura Ödeme"
+  "BillPayment": "Fatura Ödeme",
+  "Groceries": "Market",
+  "Dining": "Yemek",
+  "Transport": "Ulaşım",
+  "Bills": "Faturalar",
+  "Shopping": "Alışveriş",
+  "Entertainment": "Eğlence",
+  "Income": "Gelir",
+  "Transfer": "Transfer",
+  "Other": "Diğer"
 }

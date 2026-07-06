@@ -29,6 +29,7 @@ public class GetTransactionsByUserIdQueryHandler : IRequestHandler<GetTransactio
             Id = t.Id,
             Amount = t.Amount,
             Type = t.Type.ToString(),
+            Category = t.Category?.ToString(),
             CreatedAt = t.CreatedAt,
             Currency = t.Wallet?.Currency ?? "USD",
             Description = t.Description

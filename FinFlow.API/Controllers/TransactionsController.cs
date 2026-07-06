@@ -41,4 +41,13 @@ public class TransactionsController : ControllerBase
         _logger.LogInformation("Retrieved {Count} transactions for card {CardId}", transactions.Count, cardId);
         return Ok(transactions);
     }
+
+    // Backfills AI categories for a user's previously uncategorized transactions (e.g. seed/demo data).
+    [HttpPost("user/{userId}/categorize")]
+    public async Task<IActionResult> Categorize(Guid userId, CancellationToken cancellationToken)
+    {
+        var categorizedCount = await _mediator.Send(new BulkCategorizeTransactionsCommand(userId), cancellationToken);
+        _logger.LogInformation("Categorized {Count} transactions for user {UserId}", categorizedCount, userId);
+        return Ok(new { categorizedCount });
+    }
 }

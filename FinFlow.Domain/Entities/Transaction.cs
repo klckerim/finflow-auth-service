@@ -17,6 +17,8 @@ public class Transaction
 
     public TransactionType Type { get; set; }
 
+    public TransactionCategory? Category { get; set; }
+
     public string? Description { get; set; }
 
     public string? IdempotencyKey { get; set; }

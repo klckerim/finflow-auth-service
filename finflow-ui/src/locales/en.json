@@ -266,7 +266,17 @@
     "str_RequestNewLink": "Request new link",
     "str_PasswordRequirements": "Use 8+ chars with numbers, upper/lowercase and symbol.",
     "str_ConfirmPassword": "Confirm password",
-    "str_EnterPasswordAgain": "Enter your password again"
+    "str_EnterPasswordAgain": "Enter your password again",
+    "str_Category": "Category",
+    "str_Uncategorized": "Uncategorized",
+    "str_CategorizeWithAi": "Categorize with AI",
+    "str_Categorizing": "Categorizing...",
+    "str_CategorizeSuccess": "Categorized {count} transactions",
+    "str_AiAssistant": "AI Assistant",
+    "str_AskAiAssistant": "Ask AI Assistant",
+    "str_AssistantPlaceholder": "Ask about your spending, balance...",
+    "str_AssistantWelcome": "Ask me things like \"How much did I spend last month?\"",
+    "str_AssistantError": "Sorry, something went wrong. Please try again."
   },
   "warningsMessages": {
     "profileSaved": "Profile updated successfully!",
@@ -380,5 +390,14 @@
   "Payment": "Payment",
   "TransferOut": "Transfer Out",
   "TransferIn": "Transfer In",
-  "BillPayment": "Bill Payment"
+  "BillPayment": "Bill Payment",
+  "Groceries": "Groceries",
+  "Dining": "Dining",
+  "Transport": "Transport",
+  "Bills": "Bills",
+  "Shopping": "Shopping",
+  "Entertainment": "Entertainment",
+  "Income": "Income",
+  "Transfer": "Transfer",
+  "Other": "Other"
 }
