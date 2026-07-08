@@ -36,7 +36,7 @@
 - Deposit, withdrawal, transfer flows
 - Stripe Checkout + webhook-driven balance updates
 - Transaction history and basic analytics
-- AI-powered transaction categorization and a tool-calling AI financial assistant (Claude API — see [AI Features](#ai-features))
+- AI-powered transaction categorization and a tool-calling AI financial assistant (Gemini primary, Claude automatic fallback — see [AI Features](#ai-features))
 - Fully dockerized local stack
 
 ---
@@ -132,6 +132,7 @@ Stripe__SecretKey
 Stripe__WebhookSecret
 Stripe__SuccessUrl
 Stripe__CancelUrl
+Gemini__ApiKey
 Anthropic__ApiKey
 Seq__Url
 ```
@@ -154,20 +155,28 @@ stripe listen --forward-to http://localhost:5001/api/payments/webhook
 
 ## AI Features
 
-FinFlow uses the Anthropic Claude API (`/v1/messages`) for two features, both integrated with tool/function calling rather than free-text parsing:
+FinFlow uses two LLM providers behind a common `IAiProvider` abstraction (`FinFlow.Application/Interfaces/IAiProvider.cs`): **Google Gemini as the primary provider**, with **automatic fallback to Anthropic Claude** whenever Gemini times out, rate-limits (429), errors (5xx), or returns an empty/unusable response. Both features are integrated with tool/function calling rather than free-text parsing:
 
-- **AI transaction categorization** — bill payments (wallet or card) are classified into a spending category (`Groceries`, `Dining`, `Transport`, `Bills`, `Shopping`, `Entertainment`, `Income`, `Transfer`, `Other`) by forcing a single `categorize_transaction` tool call whose input schema restricts the result to those values (structured output, no parsing of free text). Deposits and transfers are categorized deterministically (`Income` / `Transfer`) without an LLM call, since their descriptions are system-generated and carry no signal. Categorization is best-effort: on any failure (missing key, timeout, bad response) it falls back to `Other` and never blocks the underlying money movement. Use `POST /api/v1/transactions/user/{userId}/categorize` to backfill categories on existing/seed transactions.
-- **AI Financial Assistant** — `POST /api/v1/assistant/ask` (JWT-protected) answers natural-language questions (e.g. "how much did I spend last month?") by letting Claude call `get_wallets` / `get_recent_transactions` tools that are dispatched to the existing MediatR queries. The `userId` used by those tools always comes from the authenticated JWT, never from the request body or anything the model outputs, so the assistant can only ever see the caller's own data.
+- **AI transaction categorization** — bill payments (wallet or card) are classified into a spending category (`Groceries`, `Dining`, `Transport`, `Bills`, `Shopping`, `Entertainment`, `Income`, `Transfer`, `Other`) by forcing a single `categorize_transaction` tool/function call whose schema restricts the result to those values (structured output, no parsing of free text). Deposits and transfers are categorized deterministically (`Income` / `Transfer`) without an LLM call, since their descriptions are system-generated and carry no signal. Use `POST /api/v1/transactions/user/{userId}/categorize` to backfill categories on existing/seed transactions.
+- **AI Financial Assistant** — `POST /api/v1/assistant/ask` (JWT-protected) answers natural-language questions (e.g. "how much did I spend last month?") by letting the model call `get_wallets` / `get_recent_transactions` tools, dispatched through the shared `IAssistantToolExecutor` (`FinFlow.Application/Services/AssistantToolExecutor.cs`) to the existing MediatR queries — reused as-is by both providers. The `userId` used by those tools always comes from the authenticated JWT, never from the request body or anything the model outputs, so the assistant can only ever see the caller's own data.
 
-**Required environment variables** (see `Anthropic` section in `appsettings.json` / `docker-compose.yml`):
+**Architecture**
+- `IAiProvider` — the common interface every provider implements (`CategorizeAsync`, `AskAsync`). `GeminiAiProvider` (`FinFlow.API/Services/GeminiAiProvider.cs`) calls the Google Generative Language API directly over HTTP; `ClaudeAiProvider` (`FinFlow.API/Services/ClaudeAiProvider.cs`) uses the official `Anthropic` NuGet SDK.
+- `FallbackTransactionCategorizationService` / `FallbackAiAssistantService` (`FinFlow.Application/Services/`) are the app-facing services the rest of the codebase depends on (via the pre-existing `ITransactionCategorizationService` / `IAiAssistantService` contracts — no other code changed). They take the primary and fallback `IAiProvider` via keyed DI (`[FromKeyedServices("primary"/"fallback")]`) and depend on nothing else, so they're fully unit-testable with fake providers. If a provider fails, it throws `AiProviderUnavailableException`; the orchestrator logs it and tries the next provider. If both fail, categorization degrades to `Other` and the assistant returns an apology — never an exception, since AI must never block money movement.
+- Provider selection (Gemini primary, Anthropic fallback) is wired once in `Program.cs` via `AddKeyedScoped<IAiProvider, ...>("primary"/"fallback")`.
+
+**Required environment variables** (see `Gemini` / `Anthropic` sections in `appsettings.json` / `docker-compose.yml`) — model names and keys are always read from configuration, never hardcoded:
 
 ```bash
-Anthropic__ApiKey            # required to actually call Claude; falls back gracefully if unset
+Gemini__ApiKey                   # primary provider; required to actually call Gemini
+Gemini__CategorizationModel      # default: gemini-2.5-flash
+Gemini__AssistantModel           # default: gemini-2.5-flash
+Anthropic__ApiKey                # fallback provider; required to actually call Claude
 Anthropic__CategorizationModel   # default: claude-haiku-4-5-20251001
 Anthropic__AssistantModel        # default: claude-sonnet-5
 ```
 
-Without a real `Anthropic__ApiKey`, both features fail closed (categorization returns `Other`, the assistant returns an explanatory message) instead of crashing the app — the same pattern already used for the Stripe key.
+Without real keys, both providers fail closed in sequence and the features degrade gracefully (categorization returns `Other`, the assistant returns an explanatory message) instead of crashing the app — the same pattern already used for the Stripe key. Note: the Gemini model name should be verified against current Google AI Studio availability for your account before relying on it in production — `Gemini__CategorizationModel` / `Gemini__AssistantModel` make this a config change, not a code change.
 
 ---
 

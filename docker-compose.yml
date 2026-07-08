@@ -34,6 +34,9 @@ services:
       Stripe__WebhookSecret: whsec_change_me
       Stripe__SuccessUrl: http://localhost:3000/dashboard
       Stripe__CancelUrl: http://localhost:3000/dashboard
+      Gemini__ApiKey: gemini-key-change-me
+      Gemini__CategorizationModel: gemini-2.5-flash
+      Gemini__AssistantModel: gemini-2.5-flash
       Anthropic__ApiKey: sk-ant-change-me
       Anthropic__CategorizationModel: claude-haiku-4-5-20251001
       Anthropic__AssistantModel: claude-sonnet-5
