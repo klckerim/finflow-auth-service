@@ -266,7 +266,17 @@
     "str_RequestNewLink": "Neuen Link anfordern",
     "str_PasswordRequirements": "Verwenden Sie mindestens 8 Zeichen mit Zahlen, Groß-/Kleinbuchstaben und Sonderzeichen.",
     "str_ConfirmPassword": "Passwort bestätigen",
-    "str_EnterPasswordAgain": "Geben Sie Ihr Passwort erneut ein."
+    "str_EnterPasswordAgain": "Geben Sie Ihr Passwort erneut ein.",
+    "str_Category": "Kategorie",
+    "str_Uncategorized": "Nicht kategorisiert",
+    "str_CategorizeWithAi": "Mit KI kategorisieren",
+    "str_Categorizing": "Wird kategorisiert...",
+    "str_CategorizeSuccess": "{count} Transaktionen kategorisiert",
+    "str_AiAssistant": "KI-Assistent",
+    "str_AskAiAssistant": "KI-Assistenten fragen",
+    "str_AssistantPlaceholder": "Frag nach Ausgaben, Kontostand...",
+    "str_AssistantWelcome": "Frag mich zum Beispiel: \"Wie viel habe ich letzten Monat ausgegeben?\"",
+    "str_AssistantError": "Entschuldigung, etwas ist schiefgelaufen. Bitte versuche es erneut."
   },
   "warningsMessages": {
     "profileSaved": "Profil erfolgreich aktualisiert!",
@@ -380,5 +390,14 @@
   "Payment": "Zahlung",
   "TransferOut": "Überweisung (Ausgehend)",
   "TransferIn": "Überweisung (Eingehend)",
-  "BillPayment": "Rechnungszahlung"
+  "BillPayment": "Rechnungszahlung",
+  "Groceries": "Lebensmittel",
+  "Dining": "Restaurants",
+  "Transport": "Transport",
+  "Bills": "Rechnungen",
+  "Shopping": "Einkaufen",
+  "Entertainment": "Unterhaltung",
+  "Income": "Einkommen",
+  "Transfer": "Überweisung",
+  "Other": "Sonstiges"
 }

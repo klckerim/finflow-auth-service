@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 public class WalletRepository : IWalletRepository
 {
     private readonly IDbContextFactory<FinFlowDbContext> _contextFactory;
+    private readonly ITransactionCategorizationService _categorizationService;
 
-    public WalletRepository(IDbContextFactory<FinFlowDbContext> contextFactory)
+    public WalletRepository(IDbContextFactory<FinFlowDbContext> contextFactory, ITransactionCategorizationService categorizationService)
     {
         _contextFactory = contextFactory;
+        _categorizationService = categorizationService;
     }
 
     public async Task AddAsync(Wallet wallet)
@@ -75,6 +77,7 @@ public class WalletRepository : IWalletRepository
                 WalletId = walletId,
                 Amount = amount,
                 Type = TransactionType.Deposit,
+                Category = TransactionCategory.Income,
                 Description = "Money has been deposited.",
                 IdempotencyKey = idempotencyKey
             });
@@ -114,11 +117,15 @@ public class WalletRepository : IWalletRepository
 
             wallet.Balance -= amount;
 
+            // Best-effort AI categorization from the free-text bill description; falls back to Other on any failure.
+            var category = await _categorizationService.CategorizeAsync(description, amount, TransactionType.BillPayment, ct);
+
             var transactionEntry = new Transaction
             {
                 WalletId = walletId,
                 Amount = amount,
                 Type = TransactionType.BillPayment,
+                Category = category,
                 Description = description,
                 IdempotencyKey = idempotencyKey
             };
@@ -189,6 +196,7 @@ public class WalletRepository : IWalletRepository
                     WalletId = fromWallet.Id,
                     Amount = -amount,
                     Type = TransactionType.TransferOut,
+                    Category = TransactionCategory.Transfer,
                     Description = $"Transfer to wallet {toWallet.Name}",
                     IdempotencyKey = idempotencyKey
                 },
@@ -197,6 +205,7 @@ public class WalletRepository : IWalletRepository
                     WalletId = toWallet.Id,
                     Amount = amount,
                     Type = TransactionType.TransferIn,
+                    Category = TransactionCategory.Transfer,
                     Description = $"Transfer from wallet {fromWallet.Name}",
                     IdempotencyKey = idempotencyKey
                 });

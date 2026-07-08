@@ -8,4 +8,6 @@ public interface ITransactionRepository
     Task<List<Transaction>> GetTransactionsByUserIdAsync(Guid userId, int limit = 20, CancellationToken cancellationToken = default);
     Task<List<Transaction>> GetTransactionsByWalletIdAsync(Guid walletId, int limit = 20, CancellationToken cancellationToken = default);
     Task<List<Transaction>> GetTransactionsByCardIdAsync(Guid paymentMethodId, int limit = 20,  CancellationToken cancellationToken = default);
+    Task<List<Transaction>> GetUncategorizedTransactionsByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+    Task UpdateCategoryAsync(Guid transactionId, TransactionCategory category, CancellationToken cancellationToken = default);
 }

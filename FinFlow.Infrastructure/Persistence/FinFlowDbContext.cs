@@ -49,6 +49,11 @@ namespace FinFlow.Infrastructure.Persistence
                 .HasForeignKey(t => t.WalletId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.Category)
+                .HasConversion<string>()
+                .HasMaxLength(50);
+
             modelBuilder.Entity<ResetPasswordToken>()
                 .HasOne(rpt => rpt.User)
                 .WithMany()

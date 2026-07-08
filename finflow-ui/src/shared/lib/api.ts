@@ -27,6 +27,46 @@ export async function getTransactionsByUserId(userId: string, limit: number = 20
   return res.json();
 }
 
+export async function bulkCategorizeTransactions(userId: string): Promise<{ categorizedCount: number }> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/user/${userId}/categorize`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (!res.ok) {
+    const msg = await parseApiResponseError(res);
+    throw new Error(msg.errorCode);
+  }
+
+  return res.json();
+}
+
+export type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export async function askAssistant(message: string, history: ChatMessage[]): Promise<string> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/assistant/ask`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify({ message, history }),
+  });
+
+  if (!res.ok) {
+    const msg = await parseApiResponseError(res);
+    throw new Error(msg.errorCode);
+  }
+
+  const data = await res.json();
+  return data.answer as string;
+}
+
 export async function getCardsByUserId(userId: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/cards/user/${userId}`);
   if (!res.ok) throw new Error("No Cards Information");

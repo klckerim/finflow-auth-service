@@ -73,4 +73,32 @@ public class TransactionRepository : ITransactionRepository
             .Take(limit)
             .ToListAsync();
     }
+
+    public async Task<List<Transaction>> GetUncategorizedTransactionsByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var context = _contextFactory.CreateDbContext();
+
+        return await context.Transactions
+            .Include(t => t.Wallet)
+            .Include(t => t.PaymentMethod)
+            .Where(t => t.Category == null &&
+                        ((t.Wallet != null && t.Wallet.UserId == userId) ||
+                         (t.PaymentMethod != null && t.PaymentMethod.UserId == userId)))
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task UpdateCategoryAsync(Guid transactionId, TransactionCategory category, CancellationToken cancellationToken = default)
+    {
+        var context = _contextFactory.CreateDbContext();
+
+        var transaction = await context.Transactions.FirstOrDefaultAsync(t => t.Id == transactionId, cancellationToken);
+        if (transaction is null)
+        {
+            return;
+        }
+
+        transaction.Category = category;
+        await context.SaveChangesAsync(cancellationToken);
+    }
 }

@@ -34,6 +34,9 @@ services:
       Stripe__WebhookSecret: whsec_change_me
       Stripe__SuccessUrl: http://localhost:3000/dashboard
       Stripe__CancelUrl: http://localhost:3000/dashboard
+      Anthropic__ApiKey: sk-ant-change-me
+      Anthropic__CategorizationModel: claude-haiku-4-5-20251001
+      Anthropic__AssistantModel: claude-sonnet-5
       FRONTEND_URLS: http://localhost:3000
     networks:
       - finflow-net

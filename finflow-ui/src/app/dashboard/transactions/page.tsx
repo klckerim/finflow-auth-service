@@ -1,10 +1,12 @@
 "use client";
 import { Skeleton } from "@/components/layout/skeleton";
+import { Badge } from "@/components/ui/badge";
 import ProtectedRoute from "@/components/utils/ProtectedRoute";
 import { useAuth } from "@/context/auth-context";
 import { useLocale } from "@/context/locale-context";
-import { getTransactionsByUserId } from "@/shared/lib/api";
+import { bulkCategorizeTransactions, getTransactionsByUserId } from "@/shared/lib/api";
 import { parseUnknownError } from "@/shared/lib/api-error-handler";
+import { toast } from "sonner";
 import router from "next/router";
 import { useEffect, useState } from "react";
 
@@ -12,7 +14,34 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const { user, isLoading } = useAuth();
   const [transactionsLoading, setTransactionsLoading] = useState(true);
+  const [categorizing, setCategorizing] = useState(false);
   const { t: tr } = useLocale();
+
+  const loadTransactions = async (userId: string) => {
+    try {
+      setTransactionsLoading(true);
+      const response = await getTransactionsByUserId(userId, 50);
+      setTransactions(response);
+    } catch (err) {
+      parseUnknownError(err);
+    } finally {
+      setTransactionsLoading(false);
+    }
+  };
+
+  const handleCategorize = async () => {
+    if (!user) return;
+    try {
+      setCategorizing(true);
+      const result = await bulkCategorizeTransactions(user.userId);
+      toast.success(tr("common.str_CategorizeSuccess", { count: result.categorizedCount }));
+      await loadTransactions(user.userId);
+    } catch (err) {
+      parseUnknownError(err);
+    } finally {
+      setCategorizing(false);
+    }
+  };
 
   // Auth kontrolü
   useEffect(() => {
@@ -22,17 +51,7 @@ export default function TransactionsPage() {
   // Transactionları çek
   useEffect(() => {
     if (user) {
-      (async () => {
-        try {
-          setTransactionsLoading(true);
-          const response = await getTransactionsByUserId(user.userId, 50);
-          setTransactions(response);
-        } catch (err) {
-          parseUnknownError(err);
-        } finally {
-          setTransactionsLoading(false);
-        }
-      })();
+      loadTransactions(user.userId);
     }
   }, [user]);
 
@@ -46,7 +65,16 @@ export default function TransactionsPage() {
 
   return (
     <ProtectedRoute>
-      <h1 className="text-2xl font-bold mb-6 text-foreground">💸 {tr("common.str_Transactions")}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <h1 className="text-2xl font-bold text-foreground">💸 {tr("common.str_Transactions")}</h1>
+        <button
+          onClick={handleCategorize}
+          disabled={categorizing}
+          className="text-sm font-medium px-3 py-2 rounded-md border border-border bg-background hover:bg-muted/50 transition-colors disabled:opacity-50"
+        >
+          {categorizing ? `✨ ${tr("common.str_Categorizing")}` : `✨ ${tr("common.str_CategorizeWithAi")}`}
+        </button>
+      </div>
 
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto w-full rounded-lg border border-border shadow-sm">
@@ -61,6 +89,9 @@ export default function TransactionsPage() {
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 {tr("common.description")}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                {tr("common.str_Category")}
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 {tr("common.date")}
@@ -87,6 +118,11 @@ export default function TransactionsPage() {
                 </td>
                 <td className="px-4 py-4 text-sm text-muted-foreground max-w-xs truncate">
                   {t.description}
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap text-sm">
+                  <Badge variant="secondary">
+                    {t.category ? tr(t.category) : tr("common.str_Uncategorized")}
+                  </Badge>
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap text-sm text-muted-foreground">
                   {new Date(t.createdAt).toLocaleString()}
@@ -121,8 +157,13 @@ export default function TransactionsPage() {
             <div className="text-sm text-muted-foreground mb-2 line-clamp-2">
               {t.description}
             </div>
-            <div className="text-xs text-muted-foreground">
-              {new Date(t.createdAt).toLocaleString()}
+            <div className="flex items-center justify-between">
+              <Badge variant="secondary">
+                {t.category ? tr(t.category) : tr("common.str_Uncategorized")}
+              </Badge>
+              <div className="text-xs text-muted-foreground">
+                {new Date(t.createdAt).toLocaleString()}
+              </div>
             </div>
           </div>
         ))}
