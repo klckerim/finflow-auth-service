@@ -81,7 +81,7 @@ public class TransactionRepository : ITransactionRepository
         return await context.Transactions
             .Include(t => t.Wallet)
             .Include(t => t.PaymentMethod)
-            .Where(t => t.Category == null &&
+            .Where(t => (t.Category == null || t.Category == TransactionCategory.Other) &&
                         ((t.Wallet != null && t.Wallet.UserId == userId) ||
                          (t.PaymentMethod != null && t.PaymentMethod.UserId == userId)))
             .OrderByDescending(t => t.CreatedAt)
