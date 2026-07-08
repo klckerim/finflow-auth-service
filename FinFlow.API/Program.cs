@@ -18,6 +18,7 @@ using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Anthropic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,15 +40,27 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-builder.Services.AddScoped<ITransactionCategorizationService, ClaudeTransactionCategorizationService>();
-builder.Services.AddScoped<IAiAssistantService, ClaudeAiAssistantService>();
 
-// Anthropic (Claude) API client, shared by AI categorization and the AI assistant
-builder.Services.AddHttpClient("Anthropic", client =>
+// AI: common IAiProvider abstraction, Gemini as primary and Anthropic as automatic fallback
+// (timeout/429/5xx/empty response). The Fallback* services are the app-facing contracts consumed
+// by the rest of the codebase and depend only on IAiProvider, so they're unit-testable with fakes.
+builder.Services.AddScoped<IAssistantToolExecutor, AssistantToolExecutor>();
+builder.Services.AddKeyedScoped<IAiProvider, GeminiAiProvider>("primary");
+builder.Services.AddKeyedScoped<IAiProvider, ClaudeAiProvider>("fallback");
+builder.Services.AddScoped<ITransactionCategorizationService, FallbackTransactionCategorizationService>();
+builder.Services.AddScoped<IAiAssistantService, FallbackAiAssistantService>();
+
+// Anthropic (Claude) official SDK client, used by ClaudeAiProvider (fallback)
+builder.Services.AddSingleton(new AnthropicClient
 {
-    client.BaseAddress = new Uri("https://api.anthropic.com/");
-    client.DefaultRequestHeaders.Add("x-api-key", builder.Configuration["Anthropic:ApiKey"] ?? string.Empty);
-    client.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
+    ApiKey = builder.Configuration["Anthropic:ApiKey"] ?? string.Empty,
+    Timeout = TimeSpan.FromSeconds(25)
+});
+
+// Gemini API client, used by GeminiAiProvider (primary) — API key goes in the query string per request
+builder.Services.AddHttpClient("Gemini", client =>
+{
+    client.BaseAddress = new Uri("https://generativelanguage.googleapis.com/");
 });
 
 // MediatR
