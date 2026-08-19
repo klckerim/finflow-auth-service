@@ -6,4 +6,7 @@ obj/
 *.user
 *.suo
 *.cache
+
+# macOS
 .DS_Store
+._*
