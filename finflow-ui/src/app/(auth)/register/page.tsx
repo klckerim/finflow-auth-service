@@ -178,24 +178,6 @@ export default function RegisterPage() {
                 )}
               </Button>
 
-              <div className="flex items-center my-4">
-                <div className="flex-grow h-px bg-gray-600" />
-                <span className="px-2 text-gray-400 text-sm">{t("common.or")}</span>
-                <div className="flex-grow h-px bg-gray-600" />
-              </div>
-
-              <div className="flex gap-4">
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
-                  <Image src="/icons/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" width={20} height={20} />
-                  {t("common.str_ContinueWithGoogle")}
-                </Button>
-
-                <Button variant="outline" className="flex-1 rounded-xl bg-white text-black" type="button">
-                  <Image src="/icons/apple-icon.svg" alt="Apple" className="w-5 h-5 mr-2" width={20} height={20} />
-                  {t("common.str_ContinueWithApple")}
-                </Button>
-              </div>
-
               <div className="text-center mt-4 text-sm text-gray-400">
                 {t("common.str_AlreadySignUp")}{" "}
                 <Link href="/login" className="text-blue-400 hover:underline">
