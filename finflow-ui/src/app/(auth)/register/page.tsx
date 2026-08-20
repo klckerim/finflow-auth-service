@@ -75,24 +75,8 @@ export default function RegisterPage() {
 
   return (
     <FadeInWrapper>
-      <div className="flex min-h-screen bg-[#0f0f0f] text-white">
-        {/* Sol görsel alanı */}
-        <div className="hidden md:flex w-1/2 bg-[#111827] text-white flex-col justify-center items-center p-10">
-          <h1 className="text-4xl font-bold mb-4">{t("common.str_JoinTo")}</h1>
-          <p className="text-lg max-w-md text-gray-300 text-center">
-            {t("common.str_Roadway")}  🚀
-          </p>
-          <Image
-            src="/images/finance-illustration.svg"
-            alt="Finance illustration"
-            className="w-80 mt-8"
-            width={320}
-            height={320}
-            priority
-          />
-        </div>
+      <div className="flex justify-center items-center min-h-screen bg-[#0f0f0f] text-white">
 
-        {/* Sağ form alanı */}
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 px-6">
           <div className="w-full max-w-md p-8 bg-[#1f2937] border border-gray-700 rounded-2xl shadow-xl">
             <h2 className="text-3xl font-bold mb-2 text-center">
