@@ -1,6 +1,6 @@
-import * as SecureStore from "expo-secure-store";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { getApiErrorMessage, login as apiLogin, register as apiRegister, setAccessToken } from "./api";
+import { storage } from "./storage";
 import { User } from "./types";
 
 const TOKEN_KEY = "finflow_token";
@@ -24,8 +24,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (async () => {
       try {
         const [token, storedUser] = await Promise.all([
-          SecureStore.getItemAsync(TOKEN_KEY),
-          SecureStore.getItemAsync(USER_KEY),
+          storage.getItem(TOKEN_KEY),
+          storage.getItem(USER_KEY),
         ]);
 
         if (token && storedUser) {
@@ -42,8 +42,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAccessToken(token);
     setUser(sessionUser);
     await Promise.all([
-      SecureStore.setItemAsync(TOKEN_KEY, token),
-      SecureStore.setItemAsync(USER_KEY, JSON.stringify(sessionUser)),
+      storage.setItem(TOKEN_KEY, token),
+      storage.setItem(USER_KEY, JSON.stringify(sessionUser)),
     ]);
   }
 
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function logout() {
     setAccessToken(null);
     setUser(null);
-    await Promise.all([SecureStore.deleteItemAsync(TOKEN_KEY), SecureStore.deleteItemAsync(USER_KEY)]);
+    await Promise.all([storage.deleteItem(TOKEN_KEY), storage.deleteItem(USER_KEY)]);
   }
 
   return (
