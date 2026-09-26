@@ -33,11 +33,22 @@
 ## Key Features
 - User registration, login, JWT auth, refresh tokens
 - Wallet creation & multi-wallet per user
-- Deposit, withdrawal, transfer flows
+- Stripe-backed deposits, bill payments and wallet-to-wallet transfers
+- JWT-scoped API with per-resource ownership checks (see [API Security Model](#api-security-model))
 - Stripe Checkout + webhook-driven balance updates
 - Transaction history and basic analytics
 - AI-powered transaction categorization and a tool-calling AI financial assistant (Gemini primary, Claude automatic fallback — see [AI Features](#ai-features))
 - Fully dockerized local stack
+
+---
+
+## API Security Model
+
+- **Authenticated by default.** Every controller that touches user data (`Wallets`, `Transactions`, `Cards`, `Payments`, `Assistant`) carries `[Authorize]`. The only anonymous endpoints are the auth flows (login, register, refresh, password reset) and the Stripe webhook, which is authenticated by its `Stripe-Signature` header instead. `EndpointAuthorizationConventionTests` fails the build if a new endpoint ships without `[Authorize]` and isn't on its explicit allowlist.
+- **Identity comes from the JWT, never the request.** The caller's id and email are read from the token. Wallet creation, card setup and bill payments ignore any user id or email in the body. Routes that still contain `/user/{userId}` (kept for UI compatibility) return `403` unless it matches the token.
+- **Ownership on every resource id.** Wallet and card ids from the route or body are checked with `IResourceOwnershipService`. Another user's resource returns `404`, the same as a missing one, so ids can't be probed. Transfers only require the *source* wallet to be the caller's.
+- **Money only enters through Stripe.** There is no direct deposit endpoint. Top-ups go through Stripe Checkout for one of the caller's wallets and are applied by the verified webhook.
+- **UI.** All protected calls go through `authFetch` (`finflow-ui/src/shared/lib/auth-fetch.ts`), which sends the access token, refreshes it once via the HttpOnly refresh-token cookie on a `401`, and sends the user back to login if the refresh fails.
 
 ---
 
