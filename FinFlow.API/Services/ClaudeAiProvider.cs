@@ -75,7 +75,7 @@ public class ClaudeAiProvider : IAiProvider
                         Content = $"Transaction type: {type}. Amount: {amount}. Description: \"{description ?? "(none)"}\". Classify this personal-finance transaction."
                     }
                 ]
-            }).WaitAsync(cancellationToken);
+            }, cancellationToken).WaitAsync(cancellationToken);
 
             foreach (var block in response.Content)
             {
@@ -95,6 +95,10 @@ public class ClaudeAiProvider : IAiProvider
         catch (AiProviderUnavailableException)
         {
             throw;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw; // user cancellation must not trigger fallback
         }
         catch (Exception ex)
         {
@@ -135,7 +139,7 @@ public class ClaudeAiProvider : IAiProvider
                     System = "You are FinFlow's financial assistant. Answer only using data returned by tools. Be concise and reply in the language the user used.",
                     Tools = tools,
                     Messages = messages
-                }).WaitAsync(cancellationToken);
+                }, cancellationToken).WaitAsync(cancellationToken);
 
                 var toolUses = new List<ToolUseBlock>();
                 var textParts = new List<string>();

@@ -47,6 +47,7 @@
 - `FinFlow.Domain` → Core domain entities & rules
 - `FinFlow.Infrastructure` → EF Core, DbContext, Stripe integration
 - `finflow-ui` → Next.js 14 frontend dashboard
+- `finflow-mobile` → Expo (React Native) mobile frontend — see `finflow-mobile/README.md`
 
 ---
 
