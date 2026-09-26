@@ -245,13 +245,14 @@ public class GeminiAiProvider : IAiProvider
                 foreach (var (functionName, functionArgs) in functionCalls)
                 {
                     var arguments = ToArgumentDictionary(functionArgs);
-                    var result = await _toolExecutor.ExecuteAsync(userId, functionName, arguments, cancellationToken);
+                    var result = await _toolExecutor.ExecuteSafelyAsync(userId, functionName, arguments, _logger, cancellationToken);
                     responseParts.Add(new JsonObject
                     {
                         ["functionResponse"] = new JsonObject
                         {
                             ["name"] = functionName,
-                            ["response"] = new JsonObject { ["result"] = result }
+                            // Gemini's convention for a failed call is an "error" key in the response object.
+                            ["response"] = new JsonObject { [result.IsError ? "error" : "result"] = result.Content }
                         }
                     });
                 }
