@@ -13,6 +13,7 @@ import { useAuth } from "@/context/auth-context";
 import { getCardsByUserId, getWalletsByUser } from "@/shared/lib/api";
 import { generateIdempotencyKey } from "@/shared/lib/idempotency";
 import { formatAmount } from "@/shared/lib/utils";
+import { authFetch } from "@/shared/lib/auth-fetch";
 
 export default function PayBillPage() {
     const { user } = useAuth();
@@ -84,7 +85,6 @@ export default function PayBillPage() {
 
         try {
             const payload: any = {
-                Email: user?.email,
                 BillId: billReference,
                 Amount: billAmount,
                 PaymentType: paymentMethod === "wallet" ? 0 : 1,
@@ -95,7 +95,7 @@ export default function PayBillPage() {
             if (paymentMethod === "card") payload.CardId = selectedCard;
 
             const idempotencyKey = generateIdempotencyKey();
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/bill`, {
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/bill`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

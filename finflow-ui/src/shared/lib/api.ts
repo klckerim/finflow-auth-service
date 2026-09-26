@@ -2,37 +2,35 @@ import { Wallet as WalletType } from "@/shared/types/wallet";
 import { Card as CardType } from "@/shared/types/card";
 import { generateIdempotencyKey } from "./idempotency"
 import { parseApiResponseError, parseUnknownError } from "./api-error-handler";
+import { authFetch } from "./auth-fetch";
 
 export async function getWalletsByUser(userId: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/user/${userId}`);
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/user/${userId}`);
   if (!res.ok) throw new Error("No Wallets Information");
   return res.json();
 }
 
 export async function getTransactionsByCardId(cardId: string, limit: number = 20) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/card/${cardId}?limit=${limit}`);
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/card/${cardId}?limit=${limit}`);
   if (!res.ok) throw new Error("No Transactions Information");
   return res.json();
 }
 
 export async function getTransactionsByWalletId(walletId: string, limit: number = 20) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/wallet/${walletId}?limit=${limit}`);
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/wallet/${walletId}?limit=${limit}`);
   if (!res.ok) throw new Error("No Transactions Information");
   return res.json();
 }
 
 export async function getTransactionsByUserId(userId: string, limit: number = 20) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/user/${userId}?limit=${limit}`);
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/user/${userId}?limit=${limit}`);
   if (!res.ok) throw new Error("No Transactions Information");
   return res.json();
 }
 
 export async function bulkCategorizeTransactions(userId: string): Promise<{ categorizedCount: number }> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/user/${userId}/categorize`, {
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/transactions/user/${userId}/categorize`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
   });
 
   if (!res.ok) {
@@ -49,11 +47,10 @@ export type ChatMessage = {
 };
 
 export async function askAssistant(message: string, history: ChatMessage[]): Promise<string> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/assistant/ask`, {
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/assistant/ask`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify({ message, history }),
   });
@@ -68,18 +65,15 @@ export async function askAssistant(message: string, history: ChatMessage[]): Pro
 }
 
 export async function getCardsByUserId(userId: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/cards/user/${userId}`);
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/cards/user/${userId}`);
   if (!res.ok) throw new Error("No Cards Information");
   return res.json();
 }
 
 export async function getCardById(id: string): Promise<CardType | null> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/cards/${id}`, {
+    const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/cards/${id}`, {
       cache: "no-store",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
     });
 
     if (!res.ok) {
@@ -102,7 +96,7 @@ export async function transferAmount(walletId: string, data: {
 }) {
 
   const idempotencyKey = generateIdempotencyKey();
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${walletId}/transfer`, {
+  const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${walletId}/transfer`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -122,11 +116,8 @@ export async function transferAmount(walletId: string, data: {
 
 export async function getWalletById(id: string): Promise<WalletType | null> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
+    const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
       cache: "no-store",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
     });
 
     if (!res.ok) {
@@ -144,7 +135,7 @@ export async function getWalletById(id: string): Promise<WalletType | null> {
 
 export async function updateWalletById(id: string, data: { name: string; }) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
+    const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -170,7 +161,7 @@ export async function updateWalletById(id: string, data: { name: string; }) {
 export const deleteWalletById = async (id: string) => {
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
+    const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets/${id}`, {
       method: "DELETE",
     });
     if (!res.ok) {

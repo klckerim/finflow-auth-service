@@ -64,7 +64,7 @@ export default function CardsPage() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <h1 className="text-3xl font-bold tracking-tight">💳 {t("card.myCards")}</h1>
-          <Button variant="outline" onClick={() => startCardSetup(user?.userId as string)}>
+          <Button variant="outline" onClick={() => startCardSetup()}>
             <Plus size={18} className="mr-2" />
             {t("card.addNewCard")}
           </Button>
@@ -76,7 +76,7 @@ export default function CardsPage() {
           <div className="flex flex-col items-center justify-center text-center gap-6 mt-12">
             <img src="/icons/credit-card.svg" alt="No Cards" className="w-48 h-48 sm:w-64 sm:h-64 opacity-80" />
             <h2 className="text-2xl font-semibold">{t("card.noCards")}</h2>
-            <Button size="lg" onClick={() => startCardSetup(user?.userId as string)}>
+            <Button size="lg" onClick={() => startCardSetup()}>
               🚀 {t("card.addFirstCard")}
             </Button>
           </div>

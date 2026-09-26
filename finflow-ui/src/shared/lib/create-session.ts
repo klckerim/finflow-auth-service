@@ -2,12 +2,13 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import { generateIdempotencyKey } from "./idempotency";
+import { authFetch } from "./auth-fetch";
 
 export async function CreatePaymentSession(walletId: string, amount: number = 20, currency: string = "usd") {
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
     const idempotencyKey = generateIdempotencyKey();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/create-session`, {
+    const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/create-session`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -34,13 +35,14 @@ export async function CreatePaymentSession(walletId: string, amount: number = 20
     return payload;
 }
 
-export async function startCardSetup(userId: string) {
+export async function startCardSetup() {
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/create-setup-session`, {
+    const res = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payments/create-setup-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }) //customerEmail optional
+        // The card is attached to the JWT user server-side; customerEmail is optional.
+        body: JSON.stringify({})
     });
 
     const payload = await res.json();

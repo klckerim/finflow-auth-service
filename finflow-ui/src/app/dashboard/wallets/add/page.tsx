@@ -13,6 +13,7 @@ import { parseApiResponseError, parseUnknownError } from "@/shared/lib/api-error
 import { motion } from "framer-motion";
 import { Wallet, Info } from "lucide-react";
 import { useLocale } from "@/context/locale-context";
+import { authFetch } from "@/shared/lib/auth-fetch";
 
 const AddWalletPage = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const AddWalletPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets`, {
+      const response = await authFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/wallets`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
