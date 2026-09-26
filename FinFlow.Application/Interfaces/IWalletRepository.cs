@@ -4,6 +4,7 @@ public interface IWalletRepository
 {
     Task<Wallet?> GetByIdAsync(Guid walletId, CancellationToken cancellationToken);
     Task<List<Wallet>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+    Task<bool> IsOwnedByAsync(Guid walletId, Guid userId, CancellationToken cancellationToken = default);
     Task AddAsync(Wallet wallet);
     Task UpdateAsync(Wallet wallet);
     Task DeleteAsync(Wallet wallet);

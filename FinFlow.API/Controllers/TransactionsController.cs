@@ -4,17 +4,21 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+// Transactions are only readable by the owner of the user/wallet/card they belong to.
 [ApiController]
+[Authorize]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class TransactionsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IResourceOwnershipService _ownership;
     private readonly ILogger<TransactionsController> _logger;
 
-    public TransactionsController(IMediator mediator, ILogger<TransactionsController> logger)
+    public TransactionsController(IMediator mediator, IResourceOwnershipService ownership, ILogger<TransactionsController> logger)
     {
         _mediator = mediator;
+        _ownership = ownership;
         _logger = logger;
     }
 
@@ -22,6 +26,11 @@ public class TransactionsController : ControllerBase
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetByUserId(Guid userId, [FromQuery] int limit = 20)
     {
+        if (User.GetUserId() is not { } callerId)
+            return Unauthorized();
+        if (callerId != userId)
+            return Forbid();
+
         var transactions = await _mediator.Send(new GetTransactionsByUserIdQuery(userId, limit));
         _logger.LogInformation("Retrieved {Count} transactions for user {UserId}", transactions.Count, userId);
         return Ok(transactions);
@@ -31,6 +40,9 @@ public class TransactionsController : ControllerBase
     [HttpGet("wallet/{walletId}")]
     public async Task<IActionResult> GetByWalletId(Guid walletId, [FromQuery] int limit = 20)
     {
+        if (User.GetUserId() is not { } callerId || !await _ownership.OwnsWalletAsync(callerId, walletId, HttpContext.RequestAborted))
+            return NotFound();
+
         var transactions = await _mediator.Send(new GetTransactionsByWalletIdQuery(walletId, limit));
         _logger.LogInformation("Retrieved {Count} transactions for wallet {WalletId}", transactions.Count, walletId);
         return Ok(transactions);
@@ -39,6 +51,9 @@ public class TransactionsController : ControllerBase
     [HttpGet("card/{cardId}")]
     public async Task<IActionResult> GetByCardId(Guid cardId, [FromQuery] int limit = 20)
     {
+        if (User.GetUserId() is not { } callerId || !await _ownership.OwnsPaymentMethodAsync(callerId, cardId, HttpContext.RequestAborted))
+            return NotFound();
+
         var transactions = await _mediator.Send(new GetTransactionsByCardIdQuery(cardId, limit));
         _logger.LogInformation("Retrieved {Count} transactions for card {CardId}", transactions.Count, cardId);
         return Ok(transactions);

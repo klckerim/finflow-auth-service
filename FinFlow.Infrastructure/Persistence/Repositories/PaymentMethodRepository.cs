@@ -35,6 +35,12 @@ public class PaymentMethodRepository : IPaymentMethodRepository
         .Where(p => p.UserId == userId).ToListAsync(ct);
     }
 
+    public async Task<bool> IsOwnedByAsync(Guid cardId, Guid userId, CancellationToken ct = default)
+    {
+        await using var db = await _contextFactory.CreateDbContextAsync(ct);
+        return await db.PaymentMethods.AnyAsync(p => p.Id == cardId && p.UserId == userId, ct);
+    }
+
     public async Task<PaymentMethod?> GetByIdAsync(Guid cardId, CancellationToken ct)
     {
         await using var db = await _contextFactory.CreateDbContextAsync(ct);

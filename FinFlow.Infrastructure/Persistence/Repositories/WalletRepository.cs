@@ -36,6 +36,12 @@ public class WalletRepository : IWalletRepository
     }
 
 
+    public async Task<bool> IsOwnedByAsync(Guid walletId, Guid userId, CancellationToken cancellationToken = default)
+    {
+        await using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+        return await context.Wallets.AnyAsync(w => w.Id == walletId && w.UserId == userId, cancellationToken);
+    }
+
     public async Task<List<Wallet>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {
         var context = _contextFactory.CreateDbContext();

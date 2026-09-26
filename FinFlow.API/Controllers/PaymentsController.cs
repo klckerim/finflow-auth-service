@@ -1,22 +1,29 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using MediatR;
 using Stripe;
 using Microsoft.AspNetCore.RateLimiting;
 
+// Payment actions run as the JWT user: the paying user, the wallet/card being charged and the
+// wallet being topped up are all checked against the token. Only the Stripe webhook is
+// anonymous — it is authenticated by its Stripe-Signature header instead.
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class PaymentsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IResourceOwnershipService _ownership;
     private readonly ILogger<PaymentsController> _logger;
     private readonly IConfiguration _config;
 
-    public PaymentsController(ILogger<PaymentsController> logger, IMediator mediator, IConfiguration config)
+    public PaymentsController(ILogger<PaymentsController> logger, IMediator mediator, IResourceOwnershipService ownership, IConfiguration config)
     {
         _logger = logger;
         _config = config;
         _mediator = mediator;
+        _ownership = ownership;
     }
 
 
@@ -24,8 +31,19 @@ public class PaymentsController : ControllerBase
     [EnableRateLimiting("Payments")]
     public async Task<IActionResult> PayBill([FromBody] PayBillRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
+        if (User.GetUserId() is not { } callerId || User.GetEmail() is not { } callerEmail)
+            return Unauthorized();
+
+        // The wallet or card being charged must be the caller's own.
+        var ct = HttpContext.RequestAborted;
+        if (request.WalletId is { } walletId && !await _ownership.OwnsWalletAsync(callerId, walletId, ct))
+            return NotFound();
+        if (request.CardId is { } cardId && !await _ownership.OwnsPaymentMethodAsync(callerId, cardId, ct))
+            return NotFound();
+
         var paymentId = await _mediator.Send(new PayBillCommand(
-            request.Email,
+            // The paying user (whose Stripe customer is charged for card payments) comes from the token.
+            callerEmail,
             request.Amount,
             request.WalletId,
             request.CardId,
@@ -42,6 +60,10 @@ public class PaymentsController : ControllerBase
     [EnableRateLimiting("Payments")]
     public IActionResult CreateSetupSession([FromBody] CreateSetupRequest request)
     {
+        // The card is always attached to the caller; a userId in the body is ignored.
+        if (User.GetUserId() is not { } callerId)
+            return Unauthorized();
+
         var options = new SessionCreateOptions
         {
             PaymentMethodTypes = new List<string> { "card" },
@@ -50,7 +72,7 @@ public class PaymentsController : ControllerBase
             CancelUrl = _config["Stripe:CancelUrl"],
             Metadata = new Dictionary<string, string>
             {
-                { "userId", request.UserId.ToString() }
+                { "userId", callerId.ToString() }
             }
         };
 
@@ -74,11 +96,17 @@ public class PaymentsController : ControllerBase
 
     [HttpPost("create-session")]
     [EnableRateLimiting("Payments")]
-    public IActionResult CreateCheckoutSession([FromBody] CheckoutRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
+    public async Task<IActionResult> CreateCheckoutSession([FromBody] CheckoutRequest request, [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey)
     {
+        // The webhook credits this wallet once the payment succeeds, so it must be one of the caller's.
+        if (!Guid.TryParse(request.WalletId, out var walletId))
+            return BadRequest(new { message = "A valid walletId is required." });
+        if (User.GetUserId() is not { } callerId || !await _ownership.OwnsWalletAsync(callerId, walletId, HttpContext.RequestAborted))
+            return NotFound();
+
         var metadata = new Dictionary<string, string>
         {
-            { "walletId", request.WalletId ?? Guid.Empty.ToString() },
+            { "walletId", walletId.ToString() },
             { "amount", request.Amount.ToString() },
             { "currency", request.Currency ?? "usd" }
         };
@@ -141,6 +169,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("webhook")]
+    [AllowAnonymous]
     [EnableRateLimiting("StripeWebhook")]
     public async Task<IActionResult> Webhook()
     {

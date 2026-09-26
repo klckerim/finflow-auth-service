@@ -40,6 +40,7 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IResourceOwnershipService, ResourceOwnershipService>();
 
 // AI: common IAiProvider abstraction, Gemini as primary and Anthropic as automatic fallback
 // (timeout/429/5xx/empty response). The Fallback* services are the app-facing contracts consumed

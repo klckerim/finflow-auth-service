@@ -62,7 +62,7 @@ public class TransactionsControllerCategorizeTests
             ? Array.Empty<Claim>()
             : new[] { new Claim(ClaimTypes.NameIdentifier, callerId.Value.ToString()) };
 
-        return new TransactionsController(_mediator, NullLogger<TransactionsController>.Instance)
+        return new TransactionsController(_mediator, Substitute.For<IResourceOwnershipService>(), NullLogger<TransactionsController>.Instance)
         {
             ControllerContext = new ControllerContext
             {
