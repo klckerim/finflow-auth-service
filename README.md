@@ -158,12 +158,9 @@ stripe listen --forward-to http://localhost:5001/api/payments/webhook
 FinFlow uses two LLM providers behind a common `IAiProvider` abstraction (`FinFlow.Application/Interfaces/IAiProvider.cs`): **Google Gemini as the primary provider**, with **automatic fallback to Anthropic Claude** whenever Gemini times out, rate-limits (429), errors (5xx), or returns an empty/unusable response. Both features are integrated with tool/function calling rather than free-text parsing:
 
 - **AI transaction categorization** — bill payments (wallet or card) are classified into a spending category (`Groceries`, `Dining`, `Transport`, `Bills`, `Shopping`, `Entertainment`, `Income`, `Transfer`, `Other`) by forcing a single `categorize_transaction` tool/function call whose schema restricts the result to those values (structured output, no parsing of free text). Deposits and transfers are categorized deterministically (`Income` / `Transfer`) without an LLM call, since their descriptions are system-generated and carry no signal. Use `POST /api/v1/transactions/user/{userId}/categorize` to backfill categories on existing/seed transactions.
-- **AI Financial Assistant** — `POST /api/v1/assistant/ask` (JWT-protected) answers natural-language questions (e.g. "how much did I spend last month?") by letting the model call `get_wallets` / `get_recent_transactions` tools, dispatched through the shared `IAssistantToolExecutor` (`FinFlow.Application/Services/AssistantToolExecutor.cs`) to the existing MediatR queries — reused as-is by both providers. The `userId` used by those tools always comes from the authenticated JWT, never from the request body or anything the model outputs, so the assistant can only ever see the caller's own data.
+- **AI Financial Assistant** — `POST /api/v1/assistant/ask` (JWT-protected) answers natural-language questions (e.g. "how much did I spend last month?") by letting the model call `get_wallets` / `get_recent_transactions` tools, dispatched through the shared `IAssistantToolExecutor` (`FinFlow.Application/Services/AssistantToolExecutor.cs`) to the existing MediatR queries — reused as-is by both providers. The `userId` used by those tools always comes from the authenticated JWT, never from the request body or anything the model outputs.
 
-**Architecture**
-- `IAiProvider` — the common interface every provider implements (`CategorizeAsync`, `AskAsync`). `GeminiAiProvider` (`FinFlow.API/Services/GeminiAiProvider.cs`) calls the Google Generative Language API directly over HTTP; `ClaudeAiProvider` (`FinFlow.API/Services/ClaudeAiProvider.cs`) uses the official `Anthropic` NuGet SDK.
-- `FallbackTransactionCategorizationService` / `FallbackAiAssistantService` (`FinFlow.Application/Services/`) are the app-facing services the rest of the codebase depends on (via the pre-existing `ITransactionCategorizationService` / `IAiAssistantService` contracts — no other code changed). They take the primary and fallback `IAiProvider` via keyed DI (`[FromKeyedServices("primary"/"fallback")]`) and depend on nothing else, so they're fully unit-testable with fake providers. If a provider fails, it throws `AiProviderUnavailableException`; the orchestrator logs it and tries the next provider. If both fail, categorization degrades to `Other` and the assistant returns an apology — never an exception, since AI must never block money movement.
-- Provider selection (Gemini primary, Anthropic fallback) is wired once in `Program.cs` via `AddKeyedScoped<IAiProvider, ...>("primary"/"fallback")`.
+How the pieces fit together is described in [AI Architecture](#ai-architecture).
 
 **Required environment variables** (see `Gemini` / `Anthropic` sections in `appsettings.json` / `docker-compose.yml`) — model names and keys are always read from configuration, never hardcoded:
 
@@ -177,6 +174,90 @@ Anthropic__AssistantModel        # default: claude-sonnet-5
 ```
 
 Without real keys, both providers fail closed in sequence and the features degrade gracefully (categorization returns `Other`, the assistant returns an explanatory message) instead of crashing the app — the same pattern already used for the Stripe key. Note: the Gemini model name should be verified against current Google AI Studio availability for your account before relying on it in production — `Gemini__CategorizationModel` / `Gemini__AssistantModel` make this a config change, not a code change.
+
+---
+
+## AI Architecture
+
+The AI code follows the same Clean Architecture split as the rest of the API: the **orchestration and tool logic live in `FinFlow.Application`** and depend only on interfaces; the **provider-specific wire code lives in `FinFlow.API/Services`**. Nothing outside the AI slice knows which LLM answered.
+
+```mermaid
+flowchart LR
+    subgraph API["FinFlow.API"]
+        AC["AssistantController<br/>POST /assistant/ask (JWT)"]
+        TC["TransactionsController<br/>POST /transactions/user/{id}/categorize"]
+        G["GeminiAiProvider<br/>(raw HTTP, primary)"]
+        C["ClaudeAiProvider<br/>(Anthropic SDK, fallback)"]
+    end
+    subgraph APP["FinFlow.Application"]
+        FA["FallbackAiAssistantService<br/>: IAiAssistantService"]
+        FC["FallbackTransactionCategorizationService<br/>: ITransactionCategorizationService"]
+        TE["AssistantToolExecutor<br/>: IAssistantToolExecutor"]
+        Q["MediatR queries<br/>GetWallets / GetTransactions"]
+    end
+    AC --> FA
+    TC --> FC
+    PB["PayBill / WalletRepository"] --> FC
+    FA -- "1. primary" --> G
+    FA -. "2. on failure" .-> C
+    FC -- "1. primary" --> G
+    FC -. "2. on failure" .-> C
+    G --> TE
+    C --> TE
+    TE --> Q
+```
+
+### Components
+
+| Component | Layer | Responsibility |
+|---|---|---|
+| `IAiProvider` | Application | Common provider contract: `CategorizeAsync`, `AskAsync`. Any failure must surface as `AiProviderUnavailableException`. |
+| `GeminiAiProvider` | API | Google Generative Language API over raw HTTP (`generateContent`, function calling). Primary. |
+| `ClaudeAiProvider` | API | Anthropic Messages API via the official `Anthropic` NuGet SDK (tool use). Fallback. |
+| `FallbackTransactionCategorizationService` | Application | Primary → fallback → `Other`. Never throws. |
+| `FallbackAiAssistantService` | Application | Primary → fallback → apology message. Never throws. |
+| `IAssistantToolExecutor` / `AssistantToolExecutor` | Application | Single, provider-agnostic tool surface (`get_wallets`, `get_recent_transactions`) mapped to existing MediatR queries. |
+| `AssistantToolResult` | Application | Tool outcome (`Content`, `IsError`) that each provider translates into its own error format. |
+
+Provider selection is wired once in `Program.cs` with keyed DI — `AddKeyedScoped<IAiProvider, GeminiAiProvider>("primary")` and `AddKeyedScoped<IAiProvider, ClaudeAiProvider>("fallback")` — so swapping the order is a one-line change.
+
+### Fallback and degradation
+
+Each orchestrator tries the primary provider, then the fallback, then degrades to a safe default. AI is never allowed to block money movement or return a 500.
+
+| Primary | Fallback | Categorization result | Assistant result |
+|---|---|---|---|
+| ✅ | not called | primary's category | primary's answer |
+| ❌ | ✅ | fallback's category | fallback's answer |
+| ❌ | ❌ | `TransactionCategory.Other` | "Sorry, I couldn't reach the AI assistant right now." |
+
+Providers report *why* they failed through the `reason` in `AiProviderUnavailableException` (logged, not shown to users): `not_configured`, `timeout`, `rate_limited`, `server_error`, `network_error`, `empty_response` / `empty_or_invalid_response`, `tool_round_limit_exceeded`, `unexpected_error`.
+
+### Categorization: structured output via a forced tool call
+
+Categorization never parses free text. The provider is forced to call a single `categorize_transaction` tool whose `category` parameter is an `enum` of `TransactionCategory` names, and the returned value is validated with `Enum.TryParse`. Anything else counts as `empty_or_invalid_response` and triggers the fallback. Deposits and transfers skip the LLM entirely (`Income` / `Transfer`) because their descriptions are system-generated.
+
+### Assistant: tool-calling loop
+
+1. The controller resolves `userId` from the JWT (`ClaimTypes.NameIdentifier`) and passes it down. The model never supplies or sees a user id.
+2. The provider sends the conversation plus tool schemas (built from `IAssistantToolExecutor.GetToolDefinitions()`).
+3. For every tool call in the response, the provider runs the tool through `ExecuteSafelyAsync` and sends all results back in one turn.
+4. The loop ends when the model answers with text, or after 4 tool rounds (`tool_round_limit_exceeded` → fallback).
+
+**Tool failures are data, not crashes.** An unknown tool, an invalid argument, or a failing query produces `AssistantToolResult.Error(...)`, which is returned to the model as an error result — `tool_result.is_error = true` for Claude, `functionResponse.response.error` for Gemini. The model can then tell the user the data is unavailable instead of the whole turn failing. Exception details stay in the logs; the model only gets a generic message that tells it not to guess values. Only caller cancellation propagates.
+
+### Testing
+
+The orchestrators and the tool executor depend only on interfaces, so they are unit-tested with NSubstitute mocks and no network calls (`FinFlow.Tests`):
+
+- `FallbackTransactionCategorizationServiceTests` — primary success, fallback on `AiProviderUnavailableException` and on unexpected exceptions, `Other` when both fail, inputs/token forwarded to both providers.
+- `FallbackAiAssistantServiceTests` — same matrix for the assistant, including that the JWT `userId` reaches the fallback unchanged.
+- `BulkCategorizeTransactionsHandlerTests` — every uncategorized transaction is categorized and persisted; no AI call when there is nothing to do.
+- `AssistantToolExecutorTests` — error results for failing queries, unknown tools and invalid ids; cancellation propagates.
+
+```bash
+dotnet test FinFlow.Tests
+```
 
 ---
 
