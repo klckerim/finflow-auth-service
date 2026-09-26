@@ -56,6 +56,15 @@ public class AssistantToolExecutor : IAssistantToolExecutor
                             return AssistantToolResult.Error($"Invalid walletId '{walletIdRaw}': expected a wallet id (GUID) as returned by get_wallets.");
                         }
 
+                        // walletId comes from the model, so it is untrusted input: only query it if the
+                        // wallet belongs to the JWT user. Same message for "missing" and "not yours" so the
+                        // tool can't be used to probe other users' wallet ids.
+                        var ownWallets = await _mediator.Send(new GetWalletsByUserIdQuery(userId), cancellationToken);
+                        if (!ownWallets.Any(wallet => wallet.Id == walletId))
+                        {
+                            return AssistantToolResult.Error($"Wallet '{walletId}' was not found among the user's wallets. Use get_wallets to list valid wallet ids.");
+                        }
+
                         var walletTransactions = await _mediator.Send(new GetTransactionsByWalletIdQuery(walletId, limit), cancellationToken);
                         return AssistantToolResult.Success(JsonSerializer.Serialize(walletTransactions));
                     }

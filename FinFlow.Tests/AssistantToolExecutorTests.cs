@@ -62,6 +62,38 @@ public class AssistantToolExecutorTests
     }
 
     [Fact]
+    public async Task ExecuteAsync_ShouldReturnErrorResult_AndNotQueryWallet_WhenWalletBelongsToAnotherUser()
+    {
+        var userId = Guid.NewGuid();
+        var otherUsersWalletId = Guid.NewGuid();
+        _mediator.Send(new GetWalletsByUserIdQuery(userId), Arg.Any<CancellationToken>())
+            .Returns(new List<WalletDto> { new() { Id = Guid.NewGuid() } });
+        var arguments = new Dictionary<string, string?> { ["walletId"] = otherUsersWalletId.ToString() };
+
+        var result = await _executor.ExecuteAsync(userId, "get_recent_transactions", arguments);
+
+        Assert.True(result.IsError);
+        await _mediator.DidNotReceive().Send(Arg.Any<GetTransactionsByWalletIdQuery>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_ShouldReturnWalletTransactions_WhenWalletBelongsToUser()
+    {
+        var userId = Guid.NewGuid();
+        var walletId = Guid.NewGuid();
+        _mediator.Send(new GetWalletsByUserIdQuery(userId), Arg.Any<CancellationToken>())
+            .Returns(new List<WalletDto> { new() { Id = walletId } });
+        _mediator.Send(new GetTransactionsByWalletIdQuery(walletId, 5), Arg.Any<CancellationToken>())
+            .Returns(new List<TransactionDto>());
+        var arguments = new Dictionary<string, string?> { ["walletId"] = walletId.ToString(), ["limit"] = "5" };
+
+        var result = await _executor.ExecuteAsync(userId, "get_recent_transactions", arguments);
+
+        Assert.False(result.IsError);
+        await _mediator.Received(1).Send(new GetTransactionsByWalletIdQuery(walletId, 5), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task ExecuteAsync_ShouldPropagateCallerCancellation()
     {
         using var cts = new CancellationTokenSource();

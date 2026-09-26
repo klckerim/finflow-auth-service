@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FinFlow.Application\FinFlow.Application.csproj" />
     <ProjectReference Include="..\FinFlow.Domain\FinFlow.Domain.csproj" />
+    <ProjectReference Include="..\FinFlow.API\FinFlow.API.csproj" />
   </ItemGroup>
 
 </Project>

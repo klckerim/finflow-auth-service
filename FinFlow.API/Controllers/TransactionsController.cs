@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -43,9 +45,19 @@ public class TransactionsController : ControllerBase
     }
 
     // Backfills AI categories for a user's previously uncategorized transactions (e.g. seed/demo data).
+    // Triggers paid LLM calls, so it requires a JWT and only lets callers categorize their own
+    // transactions; the route userId is kept for UI compatibility but must match the token.
+    [Authorize]
     [HttpPost("user/{userId}/categorize")]
     public async Task<IActionResult> Categorize(Guid userId, CancellationToken cancellationToken)
     {
+        var callerIdRaw = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(callerIdRaw, out var callerId))
+            return Unauthorized(new { message = "User ID not found." });
+
+        if (callerId != userId)
+            return Forbid();
+
         var categorizedCount = await _mediator.Send(new BulkCategorizeTransactionsCommand(userId), cancellationToken);
         _logger.LogInformation("Categorized {Count} transactions for user {UserId}", categorizedCount, userId);
         return Ok(new { categorizedCount });

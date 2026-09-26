@@ -157,7 +157,7 @@ stripe listen --forward-to http://localhost:5001/api/payments/webhook
 
 FinFlow uses two LLM providers behind a common `IAiProvider` abstraction (`FinFlow.Application/Interfaces/IAiProvider.cs`): **Google Gemini as the primary provider**, with **automatic fallback to Anthropic Claude** whenever Gemini times out, rate-limits (429), errors (5xx), or returns an empty/unusable response. Both features are integrated with tool/function calling rather than free-text parsing:
 
-- **AI transaction categorization** — bill payments (wallet or card) are classified into a spending category (`Groceries`, `Dining`, `Transport`, `Bills`, `Shopping`, `Entertainment`, `Income`, `Transfer`, `Other`) by forcing a single `categorize_transaction` tool/function call whose schema restricts the result to those values (structured output, no parsing of free text). Deposits and transfers are categorized deterministically (`Income` / `Transfer`) without an LLM call, since their descriptions are system-generated and carry no signal. Use `POST /api/v1/transactions/user/{userId}/categorize` to backfill categories on existing/seed transactions.
+- **AI transaction categorization** — bill payments (wallet or card) are classified into a spending category (`Groceries`, `Dining`, `Transport`, `Bills`, `Shopping`, `Entertainment`, `Income`, `Transfer`, `Other`) by forcing a single `categorize_transaction` tool/function call whose schema restricts the result to those values (structured output, no parsing of free text). Deposits and transfers are categorized deterministically (`Income` / `Transfer`) without an LLM call, since their descriptions are system-generated and carry no signal. Use `POST /api/v1/transactions/user/{userId}/categorize` (JWT-protected; `userId` must be the caller's own) to backfill categories on existing/seed transactions.
 - **AI Financial Assistant** — `POST /api/v1/assistant/ask` (JWT-protected) answers natural-language questions (e.g. "how much did I spend last month?") by letting the model call `get_wallets` / `get_recent_transactions` tools, dispatched through the shared `IAssistantToolExecutor` (`FinFlow.Application/Services/AssistantToolExecutor.cs`) to the existing MediatR queries — reused as-is by both providers. The `userId` used by those tools always comes from the authenticated JWT, never from the request body or anything the model outputs.
 
 How the pieces fit together is described in [AI Architecture](#ai-architecture).
@@ -185,7 +185,7 @@ The AI code follows the same Clean Architecture split as the rest of the API: th
 flowchart LR
     subgraph API["FinFlow.API"]
         AC["AssistantController<br/>POST /assistant/ask (JWT)"]
-        TC["TransactionsController<br/>POST /transactions/user/{id}/categorize"]
+        TC["TransactionsController<br/>POST /transactions/user/{id}/categorize (JWT)"]
         G["GeminiAiProvider<br/>(raw HTTP, primary)"]
         C["ClaudeAiProvider<br/>(Anthropic SDK, fallback)"]
     end
@@ -244,6 +244,10 @@ Categorization never parses free text. The provider is forced to call a single `
 3. For every tool call in the response, the provider runs the tool through `ExecuteSafelyAsync` and sends all results back in one turn.
 4. The loop ends when the model answers with text, or after 4 tool rounds (`tool_round_limit_exceeded` → fallback).
 
+**Tool arguments are untrusted input.** Anything the model passes to a tool can be steered by prompt injection, so the tools enforce authorization themselves instead of trusting the model: `get_wallets` and the default `get_recent_transactions` query are scoped to the JWT `userId`, and a model-supplied `walletId` is only queried after checking that it belongs to that user. A foreign or unknown wallet id returns the same "not found" error, so the tool can't be used to probe other users' wallets.
+
+**Endpoints that trigger LLM calls require a JWT.** The assistant endpoint takes the `userId` from the token; the categorize endpoint keeps `userId` in the route for UI compatibility but returns `403` unless it matches the token, since every call spends provider quota.
+
 **Tool failures are data, not crashes.** An unknown tool, an invalid argument, or a failing query produces `AssistantToolResult.Error(...)`, which is returned to the model as an error result — `tool_result.is_error = true` for Claude, `functionResponse.response.error` for Gemini. The model can then tell the user the data is unavailable instead of the whole turn failing. Exception details stay in the logs; the model only gets a generic message that tells it not to guess values. Only caller cancellation propagates.
 
 ### Testing
@@ -253,7 +257,8 @@ The orchestrators and the tool executor depend only on interfaces, so they are u
 - `FallbackTransactionCategorizationServiceTests` — primary success, fallback on `AiProviderUnavailableException` and on unexpected exceptions, `Other` when both fail, inputs/token forwarded to both providers.
 - `FallbackAiAssistantServiceTests` — same matrix for the assistant, including that the JWT `userId` reaches the fallback unchanged.
 - `BulkCategorizeTransactionsHandlerTests` — every uncategorized transaction is categorized and persisted; no AI call when there is nothing to do.
-- `AssistantToolExecutorTests` — error results for failing queries, unknown tools and invalid ids; cancellation propagates.
+- `AssistantToolExecutorTests` — error results for failing queries, unknown tools and invalid ids; another user's `walletId` is rejected without querying it; cancellation propagates.
+- `TransactionsControllerCategorizeTests` — the categorize endpoint requires `[Authorize]`, returns `403` for another user's id and `401` without a user claim, and never calls the AI in those cases.
 
 ```bash
 dotnet test FinFlow.Tests
