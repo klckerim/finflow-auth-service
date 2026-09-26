@@ -181,8 +181,8 @@ public class ClaudeAiProvider : IAiProvider
                 foreach (var toolUse in toolUses)
                 {
                     var arguments = toolUse.Input.ToDictionary(kv => kv.Key, kv => (string?)JsonElementToString(kv.Value));
-                    var result = await _toolExecutor.ExecuteAsync(userId, toolUse.Name, arguments, cancellationToken);
-                    toolResults.Add(new ToolResultBlockParam { ToolUseID = toolUse.ID, Content = result });
+                    var result = await _toolExecutor.ExecuteSafelyAsync(userId, toolUse.Name, arguments, _logger, cancellationToken);
+                    toolResults.Add(new ToolResultBlockParam { ToolUseID = toolUse.ID, Content = result.Content, IsError = result.IsError });
                 }
                 messages.Add(new MessageParam { Role = Role.User, Content = toolResults });
             }

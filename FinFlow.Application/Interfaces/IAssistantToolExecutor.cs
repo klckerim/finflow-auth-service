@@ -6,7 +6,8 @@ public interface IAssistantToolExecutor
     IReadOnlyList<AssistantToolDefinition> GetToolDefinitions();
 
     /// Executes a tool by name for the given (server-side, JWT-resolved) userId.
-    /// Never throws — returns a short error string instead, since a failed tool call
-    /// should be reported back to the model as a tool_result, not abort the turn.
-    Task<string> ExecuteAsync(Guid userId, string toolName, IReadOnlyDictionary<string, string?> arguments, CancellationToken cancellationToken = default);
+    /// Never throws for tool failures — returns an <see cref="AssistantToolResult"/> with
+    /// IsError set instead, since a failed tool call should be reported back to the model
+    /// as an error tool result, not abort the turn. Only cancellation propagates.
+    Task<AssistantToolResult> ExecuteAsync(Guid userId, string toolName, IReadOnlyDictionary<string, string?> arguments, CancellationToken cancellationToken = default);
 }

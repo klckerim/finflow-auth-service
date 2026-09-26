@@ -1,13 +1,16 @@
 using System.Text.Json;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 public class AssistantToolExecutor : IAssistantToolExecutor
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<AssistantToolExecutor> _logger;
 
-    public AssistantToolExecutor(IMediator mediator)
+    public AssistantToolExecutor(IMediator mediator, ILogger<AssistantToolExecutor> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     public IReadOnlyList<AssistantToolDefinition> GetToolDefinitions() =>
@@ -28,7 +31,7 @@ public class AssistantToolExecutor : IAssistantToolExecutor
             Array.Empty<string>())
     ];
 
-    public async Task<string> ExecuteAsync(Guid userId, string toolName, IReadOnlyDictionary<string, string?> arguments, CancellationToken cancellationToken = default)
+    public async Task<AssistantToolResult> ExecuteAsync(Guid userId, string toolName, IReadOnlyDictionary<string, string?> arguments, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -37,7 +40,7 @@ public class AssistantToolExecutor : IAssistantToolExecutor
                 case "get_wallets":
                 {
                     var wallets = await _mediator.Send(new GetWalletsByUserIdQuery(userId), cancellationToken);
-                    return JsonSerializer.Serialize(wallets);
+                    return AssistantToolResult.Success(JsonSerializer.Serialize(wallets));
                 }
                 case "get_recent_transactions":
                 {
@@ -46,22 +49,32 @@ public class AssistantToolExecutor : IAssistantToolExecutor
                         : 20;
                     var walletIdRaw = arguments.TryGetValue("walletId", out var w) ? w : null;
 
-                    if (!string.IsNullOrWhiteSpace(walletIdRaw) && Guid.TryParse(walletIdRaw, out var walletId))
+                    if (!string.IsNullOrWhiteSpace(walletIdRaw))
                     {
+                        if (!Guid.TryParse(walletIdRaw, out var walletId))
+                        {
+                            return AssistantToolResult.Error($"Invalid walletId '{walletIdRaw}': expected a wallet id (GUID) as returned by get_wallets.");
+                        }
+
                         var walletTransactions = await _mediator.Send(new GetTransactionsByWalletIdQuery(walletId, limit), cancellationToken);
-                        return JsonSerializer.Serialize(walletTransactions);
+                        return AssistantToolResult.Success(JsonSerializer.Serialize(walletTransactions));
                     }
 
                     var transactions = await _mediator.Send(new GetTransactionsByUserIdQuery(userId, limit), cancellationToken);
-                    return JsonSerializer.Serialize(transactions);
+                    return AssistantToolResult.Success(JsonSerializer.Serialize(transactions));
                 }
                 default:
-                    return "Unknown tool.";
+                    return AssistantToolResult.Error($"Unknown tool '{toolName}'.");
             }
         }
-        catch (Exception)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            return "Tool execution failed.";
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Assistant tool {ToolName} failed.", toolName);
+            return AssistantToolResult.Error(AssistantToolExecutorExtensions.InternalErrorMessage(toolName));
         }
     }
 }
