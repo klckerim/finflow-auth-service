@@ -137,6 +137,10 @@ public class GeminiAiProvider : IAiProvider
         {
             throw;
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw; // user cancellation must not trigger fallback
+        }
         catch (Exception ex)
         {
             throw new AiProviderUnavailableException(Name, ClassifyFailure(ex), ex);
